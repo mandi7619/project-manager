@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>프로젝트 관리 앱</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans-serif;font-size:14px;color:#1a1a1a;background:#f7f7f5;min-height:100vh}
+.app{max-width:1100px;margin:0 auto;padding:24px 20px}
+h1{font-size:22px;font-weight:600;color:#1a1a1a;margin-bottom:4px}
+.subtitle{font-size:13px;color:#888;margin-bottom:20px}
+.top-nav{display:flex;gap:4px;margin-bottom:20px;border-bottom:1px solid #e5e5e5;flex-wrap:wrap}
+.top-tab{font-size:13px;padding:9px 18px;cursor:pointer;color:#888;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;transition:color 0.15s}
+.top-tab:hover{color:#444}
+.top-tab.active{color:#1a1a1a;font-weight:600;border-bottom:2px solid #1a1a1a}
+.page{display:none}.page.active{display:block}
+.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:18px}
+.metric{background:#fff;border-radius:10px;padding:12px 14px;border:1px solid #ebebeb}
+.metric-label{font-size:11px;color:#888;margin-bottom:4px}
+.metric-value{font-size:22px;font-weight:600;color:#1a1a1a}
+.pb{height:5px;background:#f0f0f0;border-radius:3px;overflow:hidden;margin-top:5px}
+.pbf{height:100%;border-radius:3px;background:#4caf6e;transition:width 0.4s}
+.add-form{background:#fff;border-radius:10px;padding:14px 16px;margin-bottom:16px;display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;border:1px solid #ebebeb}
+.fg{display:flex;flex-direction:column;gap:3px}
+.fg label{font-size:11px;color:#888;font-weight:500}
+.fg input,.fg select{font-size:13px;padding:6px 10px;border-radius:8px;border:1px solid #ddd;background:#fff;color:#1a1a1a;height:34px;outline:none;transition:border-color 0.15s}
+.fg input:focus,.fg select:focus{border-color:#999}
+.btn{height:34px;font-size:13px;padding:0 16px;white-space:nowrap;border-radius:8px;border:1px solid #ddd;background:#fff;color:#1a1a1a;cursor:pointer;font-weight:500;transition:background 0.15s}
+.btn:hover{background:#f5f5f5}
+.btn-primary{background:#1a1a1a;color:#fff;border-color:#1a1a1a}
+.btn-primary:hover{background:#333}
+.badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap}
+.s-todo{background:#ebebeb;color:#555}
+.s-inprogress{background:#dbeafe;color:#1e40af}
+.s-review{background:#fef3c7;color:#92400e}
+.s-done{background:#dcfce7;color:#166534}
+.p-high{background:#fee2e2;color:#991b1b}
+.p-mid{background:#fef3c7;color:#92400e}
+.p-low{background:#dcfce7;color:#166534}
+.stock-ok{background:#dcfce7;color:#166534}
+.stock-low{background:#fef3c7;color:#92400e}
+.stock-out{background:#fee2e2;color:#991b1b}
+.tbl{width:100%;border-collapse:collapse;font-size:13px}
+.tbl th{text-align:left;padding:9px 12px;border-bottom:2px solid #f0f0f0;color:#888;font-weight:600;font-size:11px;white-space:nowrap;text-transform:uppercase;letter-spacing:0.04em}
+.tbl td{padding:9px 12px;border-bottom:1px solid #f5f5f5;vertical-align:middle}
+.tbl tr:hover td{background:#fafafa}
+.tbl-wrap{overflow-x:auto;border:1px solid #ebebeb;border-radius:10px;background:#fff}
+.del-btn{background:none;border:none;cursor:pointer;color:#ccc;font-size:14px;padding:0 4px;transition:color 0.15s}
+.del-btn:hover{color:#ef4444}
+.sub-tab-row{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.sub-tab{font-size:12px;padding:5px 14px;cursor:pointer;color:#888;border-radius:20px;border:1px solid #e5e5e5;background:#fff;transition:all 0.15s;font-weight:500}
+.sub-tab:hover{border-color:#999;color:#444}
+.sub-tab.active{background:#1a1a1a;color:#fff;border-color:#1a1a1a}
+.kanban{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.k-col{background:#f5f5f3;border-radius:10px;padding:12px}
+.k-col-hdr{font-size:12px;font-weight:600;color:#666;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
+.k-cnt{background:#fff;border:1px solid #e5e5e5;border-radius:20px;font-size:11px;padding:1px 8px;color:#888}
+.k-card{background:#fff;border:1px solid #ebebeb;border-radius:8px;padding:10px 12px;margin-bottom:8px;font-size:13px;transition:border-color 0.15s}
+.k-card:hover{border-color:#bbb}
+.k-card:last-child{margin-bottom:0}
+.check-row{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:8px;border:1px solid #ebebeb;background:#fff;margin-bottom:7px;transition:border-color 0.15s}
+.check-row:hover{border-color:#bbb}
+.cb{width:18px;height:18px;border:2px solid #ddd;border-radius:4px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.15s}
+.cb.done{background:#4caf6e;border-color:#4caf6e}
+.cb.done::after{content:'';display:block;width:10px;height:6px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg) translate(1px,-1px)}
+.cn{flex:1;font-size:13px}.cn.done{color:#bbb;text-decoration:line-through}
+.cal-section{border-top:1px solid #ebebeb;margin-top:28px;padding-top:24px}
+.cal-section-title{font-size:15px;font-weight:600;color:#1a1a1a;margin-bottom:6px}
+.cal-section-sub{font-size:12px;color:#888;margin-bottom:16px}
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:14px}
+.leg-item{display:flex;align-items:center;gap:5px;font-size:11px;color:#888}
+.leg-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+.cal-nav{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.cal-nb{background:#fff;border:1px solid #e5e5e5;border-radius:8px;width:32px;height:32px;cursor:pointer;color:#666;font-size:16px;display:flex;align-items:center;justify-content:center;transition:background 0.15s}
+.cal-nb:hover{background:#f5f5f5}
+.cal-mo{font-size:16px;font-weight:600;min-width:110px;text-align:center;color:#1a1a1a}
+.cgrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.cdname{text-align:center;font-size:11px;color:#aaa;padding:5px 0;font-weight:600}
+.ccell{min-height:80px;background:#fff;border:1px solid #ebebeb;border-radius:8px;padding:6px;cursor:pointer;transition:border-color 0.15s}
+.ccell:hover{border-color:#bbb}
+.ccell.empty{background:transparent;border-color:transparent;cursor:default}
+.ccell.today{border:2px solid #4f90e5}
+.cnum{font-size:11px;color:#aaa;margin-bottom:4px;font-weight:500}
+.ccell.today .cnum{color:#1e40af;font-weight:700}
+.cchip{font-size:10px;padding:2px 5px;border-radius:3px;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chip-high{background:#fee2e2;color:#991b1b}
+.chip-mid{background:#fef3c7;color:#92400e}
+.chip-low{background:#dcfce7;color:#166534}
+.chip-done{background:#f0f0f0;color:#aaa;text-decoration:line-through}
+.chip-review{background:#dbeafe;color:#1e40af}
+.chip-incoming{background:#dbeafe;color:#1e40af}
+.cdetail{background:#f7f7f5;border-radius:8px;padding:12px 14px;margin-top:12px;font-size:13px;color:#888;border:1px solid #ebebeb}
+.cdr{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #f0f0f0;font-size:13px;color:#1a1a1a}
+.cdr:last-child{border-bottom:none}
+.done-card{background:#fff;border:1px solid #ebebeb;border-radius:10px;padding:16px 18px;margin-bottom:12px}
+.done-card-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.done-title{font-size:15px;font-weight:600;color:#1a1a1a}
+.done-meta{display:flex;gap:10px;flex-wrap:wrap;font-size:12px;color:#888;margin-bottom:10px}
+.stock-bar-wrap{display:flex;align-items:center;gap:8px}
+.stock-bar{height:8px;background:#f0f0f0;border-radius:4px;overflow:hidden;width:80px}
+.stock-bar-fill{height:100%;border-radius:4px}
+.status-sel{font-size:11px;border:none;background:transparent;cursor:pointer;color:inherit;padding:0;font-weight:600}
+.section-hdr{font-size:12px;font-weight:600;color:#888;margin-bottom:10px;margin-top:4px;text-transform:uppercase;letter-spacing:0.04em}
+.tip{background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:10px 14px;font-size:12px;color:#92400e;margin-top:14px}
+@media(max-width:600px){
+  .metrics{grid-template-columns:repeat(2,1fr)}
+  .kanban{grid-template-columns:repeat(2,1fr)}
+  .cgrid{gap:2px}
+  .ccell{min-height:60px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <h1>프로젝트 관리 앱</h1>
+  <div class="subtitle">태스크 · 재고 · 입고 캘린더 · 완료 프로젝트</div>
+
+  <div class="top-nav">
+    <div class="top-tab active" onclick="goPage('project',this)">프로젝트 관리</div>
+    <div class="top-tab" onclick="goPage('inventory',this)">재고 관리</div>
+    <div class="top-tab" onclick="goPage('incoming',this)">입고 캘린더</div>
+    <div class="top-tab" onclick="goPage('completed',this)">완료 프로젝트</div>
+  </div>
+
+  <!-- 프로젝트 관리 -->
+  <div id="page-project" class="page active">
+    <div class="metrics" id="proj-metrics"></div>
+    <div class="add-form">
+      <div class="fg"><label>태스크명</label><input id="f-name" placeholder="태스크 이름" style="width:150px"></div>
+      <div class="fg"><label>담당자</label><input id="f-assignee" placeholder="담당자" style="width:80px"></div>
+      <div class="fg"><label>마감일</label><input type="date" id="f-date" style="width:135px"></div>
+      <div class="fg"><label>우선순위</label><select id="f-pri"><option value="high">높음</option><option value="mid" selected>중간</option><option value="low">낮음</option></select></div>
+      <div class="fg"><label>상태</label><select id="f-status"><option value="todo">할 일</option><option value="inprogress">진행 중</option><option value="review">검토 중</option><option value="done">완료</option></select></div>
+      <button class="btn btn-primary" onclick="addTask()">+ 태스크 추가</button>
+    </div>
+    <div class="sub-tab-row">
+      <div class="sub-tab active" onclick="switchSub('db',this)">데이터베이스</div>
+      <div class="sub-tab" onclick="switchSub('kanban',this)">워크플로우</div>
+      <div class="sub-tab" onclick="switchSub('checklist',this)">체크리스트</div>
+    </div>
+    <div id="sub-db"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>태스크명</th><th>담당자</th><th>상태</th><th>우선순위</th><th>마감일</th><th>진행률</th><th></th></tr></thead><tbody id="db-body"></tbody></table></div></div>
+    <div id="sub-kanban" style="display:none"><div class="kanban"><div class="k-col"><div class="k-col-hdr">할 일<span class="k-cnt" id="kc-todo">0</span></div><div id="k-todo"></div></div><div class="k-col"><div class="k-col-hdr">진행 중<span class="k-cnt" id="kc-inprogress">0</span></div><div id="k-inprogress"></div></div><div class="k-col"><div class="k-col-hdr">검토 중<span class="k-cnt" id="kc-review">0</span></div><div id="k-review"></div></div><div class="k-col"><div class="k-col-hdr">완료<span class="k-cnt" id="kc-done">0</span></div><div id="k-done"></div></div></div></div>
+    <div id="sub-checklist" style="display:none"><div id="checklist-body"></div></div>
+
+    <div class="cal-section">
+      <div class="cal-section-title">마감일 캘린더</div>
+      <div class="cal-section-sub">태스크를 추가하면 아래 캘린더에 자동으로 반영돼요</div>
+      <div class="legend">
+        <div class="leg-item"><div class="leg-dot" style="background:#fca5a5"></div>높은 우선순위</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#fcd34d"></div>중간 우선순위</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#86efac"></div>낮음 / 완료</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#93c5fd"></div>검토 중</div>
+      </div>
+      <div class="cal-nav">
+        <button class="cal-nb" onclick="tcPrev()">&#8249;</button>
+        <span class="cal-mo" id="tc-month"></span>
+        <button class="cal-nb" onclick="tcNext()">&#8250;</button>
+      </div>
+      <div class="cgrid" id="tc-daynames"></div>
+      <div style="height:5px"></div>
+      <div class="cgrid" id="tc-grid"></div>
+      <div class="cdetail" id="tc-detail">날짜를 클릭하면 해당 마감 태스크를 확인할 수 있어요.</div>
+    </div>
+  </div>
+
+  <!-- 재고 관리 -->
+  <div id="page-inventory" class="page">
+    <div class="metrics" id="inv-metrics"></div>
+    <div class="add-form">
+      <div class="fg"><label>품목명</label><input id="i-name" placeholder="품목명" style="width:120px"></div>
+      <div class="fg"><label>카테고리</label><input id="i-cat" placeholder="카테고리" style="width:90px"></div>
+      <div class="fg"><label>현재 재고</label><input type="number" id="i-qty" placeholder="0" style="width:72px" min="0"></div>
+      <div class="fg"><label>최소 재고</label><input type="number" id="i-min" placeholder="0" style="width:72px" min="0"></div>
+      <div class="fg"><label>단위</label><input id="i-unit" placeholder="개/박스" style="width:64px"></div>
+      <button class="btn btn-primary" onclick="addInventory()">+ 품목 추가</button>
+    </div>
+    <div class="tbl-wrap"><table class="tbl"><thead><tr><th>품목명</th><th>카테고리</th><th>현재 재고</th><th>최소 재고</th><th>상태</th><th>재고량</th><th>수량 조정</th><th></th></tr></thead><tbody id="inv-body"></tbody></table></div>
+    <div class="tip">최소 재고 이하로 떨어지면 자동으로 "부족" / 0이 되면 "품절"로 표시돼요.</div>
+  </div>
+
+  <!-- 입고 캘린더 -->
+  <div id="page-incoming" class="page">
+    <div class="add-form">
+      <div class="fg"><label>품목명</label><input id="ic-name" placeholder="품목명" style="width:120px"></div>
+      <div class="fg"><label>수량</label><input type="number" id="ic-qty" placeholder="0" style="width:72px" min="1"></div>
+      <div class="fg"><label>입고 예정일</label><input type="date" id="ic-date" style="width:135px"></div>
+      <div class="fg"><label>공급업체</label><input id="ic-supplier" placeholder="공급업체" style="width:100px"></div>
+      <div class="fg"><label>상태</label><select id="ic-status"><option value="scheduled">예정</option><option value="confirmed">확정</option><option value="arrived">입고 완료</option></select></div>
+      <button class="btn btn-primary" onclick="addIncoming()">+ 입고 추가</button>
+    </div>
+    <div class="cal-nav"><button class="cal-nb" onclick="icPrev()">&#8249;</button><span class="cal-mo" id="ic-month"></span><button class="cal-nb" onclick="icNext()">&#8250;</button></div>
+    <div class="cgrid" id="ic-daynames"></div><div style="height:5px"></div>
+    <div class="cgrid" id="ic-grid"></div>
+    <div class="cdetail" id="ic-detail">날짜를 클릭하면 입고 예정 품목을 확인할 수 있어요.</div>
+    <div style="height:20px"></div>
+    <div class="section-hdr">입고 전체 목록</div>
+    <div class="tbl-wrap"><table class="tbl"><thead><tr><th>품목명</th><th>수량</th><th>입고 예정일</th><th>공급업체</th><th>상태</th><th></th></tr></thead><tbody id="ic-list-body"></tbody></table></div>
+  </div>
+
+  <!-- 완료 프로젝트 -->
+  <div id="page-completed" class="page">
+    <div class="add-form">
+      <div class="fg"><label>프로젝트명</label><input id="cp-name" placeholder="프로젝트 이름" style="width:140px"></div>
+      <div class="fg"><label>팀</label><input id="cp-team" placeholder="팀명" style="width:80px"></div>
+      <div class="fg"><label>시작일</label><input type="date" id="cp-start" style="width:135px"></div>
+      <div class="fg"><label>종료일</label><input type="date" id="cp-end" style="width:135px"></div>
+      <div class="fg"><label>결과 요약</label><input id="cp-result" placeholder="주요 성과" style="width:180px"></div>
+      <button class="btn btn-primary" onclick="addCompleted()">+ 프로젝트 추가</button>
+    </div>
+    <div id="completed-body"></div>
+  </div>
+</div>
+
+<script>
+const pad=n=>String(n).padStart(2,'0');
+const DAYS=['일','월','화','수','목','금','토'];
+const MONTHS=['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
+
+let tasks=[
+  {id:1,name:'요구사항 정의',assignee:'홍길동',date:'2026-03-28',priority:'high',status:'done'},
+  {id:2,name:'팀 킥오프',assignee:'전체',date:'2026-03-30',priority:'mid',status:'done'},
+  {id:3,name:'개발 환경 세팅',assignee:'이개발',date:'2026-04-01',priority:'mid',status:'done'},
+  {id:4,name:'브랜드 가이드',assignee:'김디자인',date:'2026-04-05',priority:'mid',status:'review'},
+  {id:5,name:'사용자 인터뷰',assignee:'박마케팅',date:'2026-04-07',priority:'mid',status:'review'},
+  {id:6,name:'UI 와이어프레임',assignee:'김디자인',date:'2026-04-08',priority:'mid',status:'todo'},
+  {id:7,name:'랜딩페이지 개발',assignee:'이개발',date:'2026-04-10',priority:'high',status:'inprogress'},
+  {id:8,name:'API 연동',assignee:'이개발',date:'2026-04-12',priority:'high',status:'inprogress'},
+  {id:9,name:'콘텐츠 기획',assignee:'박마케팅',date:'2026-04-14',priority:'low',status:'todo'},
+  {id:10,name:'QA 체크리스트',assignee:'전체',date:'2026-04-15',priority:'low',status:'todo'},
+  {id:11,name:'최종 런칭',assignee:'홍길동',date:'2026-04-15',priority:'high',status:'todo'},
+];
+let taskId=12;
+let inventory=[
+  {id:1,name:'A4 용지',cat:'소모품',qty:150,min:50,unit:'박스'},
+  {id:2,name:'볼펜',cat:'소모품',qty:30,min:20,unit:'개'},
+  {id:3,name:'노트북 거치대',cat:'장비',qty:5,min:3,unit:'개'},
+  {id:4,name:'USB 허브',cat:'장비',qty:2,min:5,unit:'개'},
+  {id:5,name:'명함',cat:'인쇄물',qty:0,min:100,unit:'장'},
+  {id:6,name:'포스트잇',cat:'소모품',qty:80,min:30,unit:'개'},
+];
+let invId=7;
+let incoming=[
+  {id:1,name:'USB 허브',qty:10,date:'2026-04-05',supplier:'테크몰',status:'confirmed'},
+  {id:2,name:'명함',qty:500,date:'2026-04-08',supplier:'명함나라',status:'scheduled'},
+  {id:3,name:'A4 용지',qty:50,date:'2026-04-12',supplier:'오피스플러스',status:'scheduled'},
+  {id:4,name:'볼펜',qty:100,date:'2026-04-15',supplier:'문구사',status:'scheduled'},
+  {id:5,name:'모니터',qty:3,date:'2026-04-20',supplier:'전자마트',status:'confirmed'},
+];
+let icId=6;
+let completedProjects=[
+  {id:1,name:'브랜드 리뉴얼',team:'디자인팀',startDate:'2026-01-05',endDate:'2026-02-28',tasks:['로고 리디자인','컬러 팔레트','브랜드 가이드','소셜 템플릿'],result:'브랜드 가이드북 완성 및 전팀 배포'},
+  {id:2,name:'내부 시스템 구축',team:'개발팀',startDate:'2025-11-01',endDate:'2026-01-31',tasks:['요구사항 분석','DB 설계','API 개발','테스트','배포'],result:'사내 업무 자동화 시스템 정식 오픈'},
+  {id:3,name:'Q4 마케팅 캠페인',team:'마케팅팀',startDate:'2025-10-01',endDate:'2025-12-31',tasks:['캠페인 기획','콘텐츠 제작','광고 집행','성과 분석'],result:'전환율 23% 향상, 신규 가입자 1,200명'},
+];
+let cpId=4;
+let tcYear=2026,tcMonth=3,icYear=2026,icMonth=3;
+
+function sLabel(s){return{todo:'할 일',inprogress:'진행 중',review:'검토 중',done:'완료'}[s]||s}
+function pLabel(p){return{high:'높음',mid:'중간',low:'낮음'}[p]||p}
+function progPct(t){return{done:100,review:80,inprogress:40,todo:0}[t.status]||0}
+function stockSt(i){if(i.qty===0)return'out';if(i.qty<=i.min)return'low';return'ok'}
+function stockLb(s){return{ok:'정상',low:'부족',out:'품절'}[s]}
+function stockCls(s){return{ok:'stock-ok',low:'stock-low',out:'stock-out'}[s]}
+function icStLb(s){return{scheduled:'예정',confirmed:'확정',arrived:'입고 완료'}[s]||s}
+function icStSty(s){if(s==='arrived')return'background:#dcfce7;color:#166534';if(s==='confirmed')return'background:#dbeafe;color:#1e40af';return'background:#ebebeb;color:#555'}
+function chipCls(t){if(t.status==='done')return'chip-done';if(t.status==='review')return'chip-review';return t.priority==='high'?'chip-high':t.priority==='mid'?'chip-mid':'chip-low'}
+
+function renderProjMetrics(){
+  const total=tasks.length,done=tasks.filter(t=>t.status==='done').length;
+  const pct=total?Math.round(done/total*100):0;
+  const today=new Date();today.setHours(0,0,0,0);
+  const up=tasks.filter(t=>t.status!=='done'&&t.date).map(t=>({...t,d:new Date(t.date)})).filter(t=>t.d>=today).sort((a,b)=>a.d-b.d);
+  const nxt=up.length?up[0].date.slice(5).replace('-','/')+' '+up[0].name.slice(0,5)+'…':'-';
+  document.getElementById('proj-metrics').innerHTML=`
+    <div class="metric"><div class="metric-label">전체 태스크</div><div class="metric-value">${total}</div></div>
+    <div class="metric"><div class="metric-label">완료</div><div class="metric-value" style="color:#166534">${done}</div></div>
+    <div class="metric"><div class="metric-label">진행률</div><div class="metric-value">${pct}%</div><div class="pb"><div class="pbf" style="width:${pct}%"></div></div></div>
+    <div class="metric"><div class="metric-label">가장 빠른 마감</div><div class="metric-value" style="font-size:13px">${nxt}</div></div>`;
+}
+
+function renderDB(){
+  document.getElementById('db-body').innerHTML=tasks.map(t=>`
+    <tr><td style="font-weight:500">${t.name}</td>
+    <td style="color:#888">${t.assignee||'-'}</td>
+    <td><select class="status-sel badge s-${t.status}" onchange="changeTaskStatus(${t.id},this.value)">
+      <option value="todo" ${t.status==='todo'?'selected':''}>할 일</option>
+      <option value="inprogress" ${t.status==='inprogress'?'selected':''}>진행 중</option>
+      <option value="review" ${t.status==='review'?'selected':''}>검토 중</option>
+      <option value="done" ${t.status==='done'?'selected':''}>완료</option>
+    </select></td>
+    <td><span class="badge p-${t.priority}">${pLabel(t.priority)}</span></td>
+    <td style="color:#888">${t.date||'-'}</td>
+    <td><div style="display:flex;align-items:center;gap:6px"><div class="stock-bar" style="width:70px"><div class="stock-bar-fill" style="width:${progPct(t)}%;background:#4caf6e"></div></div><span style="font-size:11px;color:#aaa">${progPct(t)}%</span></div></td>
+    <td><button class="del-btn" onclick="deleteTask(${t.id})">✕</button></td></tr>`).join('');
+}
+
+function renderKanban(){
+  ['todo','inprogress','review','done'].forEach(s=>{
+    const f=tasks.filter(t=>t.status===s);
+    document.getElementById('kc-'+s).textContent=f.length;
+    document.getElementById('k-'+s).innerHTML=f.map(t=>`
+      <div class="k-card"><div style="margin-bottom:6px;font-weight:500">${t.name}</div>
+      <div style="display:flex;gap:5px;flex-wrap:wrap">
+        <span class="badge p-${t.priority}">${pLabel(t.priority)}</span>
+        ${t.date?`<span style="font-size:11px;color:#888">${t.date.slice(5).replace('-','/')}</span>`:''}
+        ${t.assignee?`<span style="font-size:11px;color:#aaa">${t.assignee}</span>`:''}
+      </div></div>`).join('');
+  });
+}
+
+function renderChecklist(){
+  document.getElementById('checklist-body').innerHTML=tasks.map(t=>`
+    <div class="check-row">
+      <div class="cb ${t.status==='done'?'done':''}" onclick="toggleDone(${t.id})"></div>
+      <span class="cn ${t.status==='done'?'done':''}">${t.name}</span>
+      <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+        <span class="badge s-${t.status}">${sLabel(t.status)}</span>
+        <span class="badge p-${t.priority}">${pLabel(t.priority)}</span>
+        ${t.date?`<span style="font-size:11px;color:#aaa">${t.date.slice(5).replace('-','/')}</span>`:''}
+        ${t.assignee?`<span style="font-size:11px;color:#aaa">${t.assignee}</span>`:''}
+      </div>
+    </div>`).join('');
+}
+
+function renderTaskCal(){
+  document.getElementById('tc-month').textContent=tcYear+'년 '+MONTHS[tcMonth];
+  document.getElementById('tc-daynames').innerHTML=DAYS.map(d=>`<div class="cdname">${d}</div>`).join('');
+  const grid=document.getElementById('tc-grid');grid.innerHTML='';
+  const firstDay=new Date(tcYear,tcMonth,1).getDay();
+  const dim=new Date(tcYear,tcMonth+1,0).getDate();
+  const today=new Date();
+  for(let i=0;i<firstDay;i++){const e=document.createElement('div');e.className='ccell empty';grid.appendChild(e);}
+  for(let d=1;d<=dim;d++){
+    const cell=document.createElement('div');cell.className='ccell';
+    if(today.getFullYear()===tcYear&&today.getMonth()===tcMonth&&today.getDate()===d)cell.classList.add('today');
+    const ds=tcYear+'-'+pad(tcMonth+1)+'-'+pad(d);
+    const dt=tasks.filter(t=>t.date===ds);
+    cell.innerHTML=`<div class="cnum">${d}</div>`+dt.map(t=>`<div class="cchip ${chipCls(t)}">${t.name}</div>`).join('');
+    cell.addEventListener('click',()=>{
+      const p=document.getElementById('tc-detail');
+      if(!dt.length){p.innerHTML=`<span style="color:#aaa">${tcMonth+1}월 ${d}일 — 마감 태스크 없음</span>`;return;}
+      p.innerHTML=`<div style="font-size:12px;font-weight:600;color:#888;margin-bottom:8px">${tcMonth+1}월 ${d}일 마감 (${dt.length}개)</div>`+
+        dt.map(t=>`<div class="cdr"><span style="flex:1;font-weight:500">${t.name}</span><span class="badge s-${t.status}">${sLabel(t.status)}</span><span class="badge p-${t.priority}">${pLabel(t.priority)}</span>${t.assignee?`<span style="font-size:11px;color:#aaa">${t.assignee}</span>`:''}</div>`).join('');
+    });
+    grid.appendChild(cell);
+  }
+}
+
+function renderInvMetrics(){
+  const total=inventory.length,out=inventory.filter(i=>i.qty===0).length,low=inventory.filter(i=>i.qty>0&&i.qty<=i.min).length;
+  document.getElementById('inv-metrics').innerHTML=`
+    <div class="metric"><div class="metric-label">전체 품목</div><div class="metric-value">${total}</div></div>
+    <div class="metric"><div class="metric-label">정상</div><div class="metric-value" style="color:#166534">${total-out-low}</div></div>
+    <div class="metric"><div class="metric-label">재고 부족</div><div class="metric-value" style="color:#92400e">${low}</div></div>
+    <div class="metric"><div class="metric-label">품절</div><div class="metric-value" style="color:#991b1b">${out}</div></div>`;
+}
+
+function renderInventory(){
+  renderInvMetrics();
+  document.getElementById('inv-body').innerHTML=inventory.map(item=>{
+    const s=stockSt(item);
+    const pct=item.min>0?Math.min(100,Math.round(item.qty/item.min*100)):100;
+    const barColor=s==='out'?'#ef4444':s==='low'?'#f59e0b':'#4caf6e';
+    return`<tr>
+      <td style="font-weight:500">${item.name}</td>
+      <td style="color:#888">${item.cat}</td>
+      <td style="font-weight:600">${item.qty} ${item.unit}</td>
+      <td style="color:#aaa">${item.min} ${item.unit}</td>
+      <td><span class="badge ${stockCls(s)}">${stockLb(s)}</span></td>
+      <td><div class="stock-bar-wrap"><div class="stock-bar"><div class="stock-bar-fill" style="width:${pct}%;background:${barColor}"></div></div><span style="font-size:11px;color:#aaa">${pct}%</span></div></td>
+      <td><div style="display:flex;gap:5px">
+        <button class="btn" style="height:28px;font-size:12px;padding:0 10px" onclick="adjustInv(${item.id},-1)">－</button>
+        <button class="btn" style="height:28px;font-size:12px;padding:0 10px" onclick="adjustInv(${item.id},1)">＋</button>
+      </div></td>
+      <td><button class="del-btn" onclick="deleteInv(${item.id})">✕</button></td></tr>`;
+  }).join('');
+}
+
+function renderIncomingCal(){
+  document.getElementById('ic-month').textContent=icYear+'년 '+MONTHS[icMonth];
+  document.getElementById('ic-daynames').innerHTML=DAYS.map(d=>`<div class="cdname">${d}</div>`).join('');
+  const grid=document.getElementById('ic-grid');grid.innerHTML='';
+  const firstDay=new Date(icYear,icMonth,1).getDay();
+  const dim=new Date(icYear,icMonth+1,0).getDate();
+  const today=new Date();
+  for(let i=0;i<firstDay;i++){const e=document.createElement('div');e.className='ccell empty';grid.appendChild(e);}
+  for(let d=1;d<=dim;d++){
+    const cell=document.createElement('div');cell.className='ccell';
+    if(today.getFullYear()===icYear&&today.getMonth()===icMonth&&today.getDate()===d)cell.classList.add('today');
+    const ds=icYear+'-'+pad(icMonth+1)+'-'+pad(d);
+    const di=incoming.filter(i=>i.date===ds);
+    cell.innerHTML=`<div class="cnum">${d}</div>`+di.map(i=>`<div class="cchip chip-incoming">${i.name}</div>`).join('');
+    cell.addEventListener('click',()=>{
+      const p=document.getElementById('ic-detail');
+      if(!di.length){p.innerHTML=`<span style="color:#aaa">${icMonth+1}월 ${d}일 — 입고 예정 없음</span>`;return;}
+      p.innerHTML=`<div style="font-size:12px;font-weight:600;color:#888;margin-bottom:8px">${icMonth+1}월 ${d}일 입고 예정 (${di.length}건)</div>`+
+        di.map(i=>`<div class="cdr"><span style="flex:1;font-weight:500">${i.name}</span><span style="font-size:12px;color:#888">${i.qty} · ${i.supplier}</span><span class="badge" style="${icStSty(i.status)}">${icStLb(i.status)}</span></div>`).join('');
+    });
+    grid.appendChild(cell);
+  }
+  document.getElementById('ic-list-body').innerHTML=incoming.map(i=>`
+    <tr><td style="font-weight:500">${i.name}</td><td>${i.qty}</td>
+    <td style="color:#888">${i.date}</td><td style="color:#888">${i.supplier||'-'}</td>
+    <td><span class="badge" style="${icStSty(i.status)}">${icStLb(i.status)}</span></td>
+    <td><button class="del-btn" onclick="deleteIncoming(${i.id})">✕</button></td></tr>`).join('');
+}
+
+function renderCompleted(){
+  document.getElementById('completed-body').innerHTML=
+    completedProjects.map(p=>`
+      <div class="done-card">
+        <div class="done-card-hdr"><span class="done-title">${p.name}</span><span class="badge s-done">완료</span></div>
+        <div class="done-meta"><span>팀: ${p.team}</span><span>기간: ${p.startDate} ~ ${p.endDate}</span><span>태스크: ${p.tasks.length}개</span></div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:${p.result?'10px':'0'}">${p.tasks.map(t=>`<span class="badge" style="background:#f5f5f5;color:#666">${t}</span>`).join('')}</div>
+        ${p.result?`<div style="font-size:12px;color:#888;border-top:1px solid #f0f0f0;padding-top:10px">결과: ${p.result}</div>`:''}
+        <div style="margin-top:10px;text-align:right"><button class="del-btn" style="font-size:12px;color:#ddd" onclick="deleteCompleted(${p.id})">삭제 ✕</button></div>
+      </div>`).join('');
+}
+
+function renderAll(){renderProjMetrics();renderDB();renderKanban();renderChecklist();renderTaskCal();renderInventory();renderIncomingCal();renderCompleted();}
+
+function addTask(){
+  const name=document.getElementById('f-name').value.trim();if(!name)return;
+  tasks.push({id:taskId++,name,assignee:document.getElementById('f-assignee').value.trim(),date:document.getElementById('f-date').value,priority:document.getElementById('f-pri').value,status:document.getElementById('f-status').value});
+  document.getElementById('f-name').value='';document.getElementById('f-assignee').value='';
+  renderAll();
+}
+function deleteTask(id){if(confirm('태스크를 삭제할까요?')){tasks=tasks.filter(t=>t.id!==id);renderAll();}}
+function changeTaskStatus(id,val){const t=tasks.find(t=>t.id===id);if(t){t.status=val;renderAll();}}
+function toggleDone(id){const t=tasks.find(t=>t.id===id);if(t){t.status=t.status==='done'?'todo':'done';renderAll();}}
+
+function addInventory(){
+  const name=document.getElementById('i-name').value.trim();if(!name)return;
+  inventory.push({id:invId++,name,cat:document.getElementById('i-cat').value.trim()||'기타',qty:parseInt(document.getElementById('i-qty').value)||0,min:parseInt(document.getElementById('i-min').value)||0,unit:document.getElementById('i-unit').value.trim()||'개'});
+  document.getElementById('i-name').value='';document.getElementById('i-cat').value='';document.getElementById('i-qty').value='';document.getElementById('i-min').value='';document.getElementById('i-unit').value='';
+  renderInventory();
+}
+function deleteInv(id){if(confirm('품목을 삭제할까요?')){inventory=inventory.filter(i=>i.id!==id);renderInventory();}}
+function adjustInv(id,delta){const i=inventory.find(i=>i.id===id);if(i){i.qty=Math.max(0,i.qty+delta);renderInventory();}}
+
+function addIncoming(){
+  const name=document.getElementById('ic-name').value.trim();if(!name)return;
+  incoming.push({id:icId++,name,qty:parseInt(document.getElementById('ic-qty').value)||0,date:document.getElementById('ic-date').value,supplier:document.getElementById('ic-supplier').value.trim(),status:document.getElementById('ic-status').value});
+  document.getElementById('ic-name').value='';document.getElementById('ic-qty').value='';document.getElementById('ic-supplier').value='';
+  renderIncomingCal();
+}
+function deleteIncoming(id){if(confirm('입고 항목을 삭제할까요?')){incoming=incoming.filter(i=>i.id!==id);renderIncomingCal();}}
+
+function addCompleted(){
+  const name=document.getElementById('cp-name').value.trim();if(!name)return;
+  completedProjects.unshift({id:cpId++,name,team:document.getElementById('cp-team').value.trim()||'-',startDate:document.getElementById('cp-start').value||'-',endDate:document.getElementById('cp-end').value||'-',tasks:[],result:document.getElementById('cp-result').value.trim()});
+  document.getElementById('cp-name').value='';document.getElementById('cp-team').value='';document.getElementById('cp-start').value='';document.getElementById('cp-end').value='';document.getElementById('cp-result').value='';
+  renderCompleted();
+}
+function deleteCompleted(id){if(confirm('프로젝트를 삭제할까요?')){completedProjects=completedProjects.filter(p=>p.id!==id);renderCompleted();}}
+
+function tcPrev(){tcMonth--;if(tcMonth<0){tcMonth=11;tcYear--;}renderTaskCal();}
+function tcNext(){tcMonth++;if(tcMonth>11){tcMonth=0;tcYear++;}renderTaskCal();}
+function icPrev(){icMonth--;if(icMonth<0){icMonth=11;icYear--;}renderIncomingCal();}
+function icNext(){icMonth++;if(icMonth>11){icMonth=0;icYear++;}renderIncomingCal();}
+
+function goPage(name,el){
+  document.querySelectorAll('.top-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('page-'+name).classList.add('active');
+}
+function switchSub(name,el){
+  document.querySelectorAll('.sub-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  ['db','kanban','checklist'].forEach(s=>{document.getElementById('sub-'+s).style.display=s===name?'block':'none';});
+}
+
+const now=new Date();
+const todayStr=now.getFullYear()+'-'+pad(now.getMonth()+1)+'-'+pad(now.getDate());
+document.getElementById('f-date').value=todayStr;
+document.getElementById('ic-date').value=todayStr;
+renderAll();
+</script>
+</body>
+</html>
