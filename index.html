@@ -267,6 +267,16 @@ h1{font-size:22px;font-weight:600;color:#1a1a1a}
   <!-- 설정 페이지 -->
   <div id="page-settings" class="page">
     <div class="settings-section">
+      <div class="settings-title">🏢 회사 정보</div>
+      <div class="settings-desc">@멘션 이메일 발송 시 사용할 회사명을 입력해주세요.</div>
+      <div class="settings-row">
+        <label>회사명</label>
+        <input class="settings-inp" id="company-name" placeholder="(주)유니원" style="max-width:240px">
+      </div>
+      <button class="btn btn-primary" style="margin-top:8px" onclick="saveCompany()">저장</button>
+    </div>
+
+    <div class="settings-section">
       <div class="settings-title">👥 팀원 이메일 관리</div>
       <div class="settings-desc">팀원 이름과 이메일을 등록하면 태스크 사이드패널에서 바로 이메일 알림을 보낼 수 있어요.</div>
       <div class="add-form" style="margin-bottom:12px">
@@ -292,6 +302,41 @@ h1{font-size:22px;font-weight:600;color:#1a1a1a}
         <button class="btn btn-primary" onclick="saveSlack()">저장</button>
         <button class="btn" onclick="testSlack()">테스트 전송</button>
         <button class="btn" style="color:#ef4444;border-color:#fca5a5" onclick="clearSlack()">연동 해제</button>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-title">⚡ Make Webhook 연동 (Notion 알림)</div>
+      <div class="settings-desc">Make Webhook URL을 입력하면 @멘션 시 Make를 통해 Notion DB에 자동으로 기록되고 알림이 발송돼요.</div>
+      <div class="settings-row">
+        <label>Webhook URL</label>
+        <input class="settings-inp" id="make-webhook-url" placeholder="https://hook.eu1.make.com/...">
+      </div>
+      <div class="settings-row">
+        <label>연동 상태</label>
+        <span id="make-status" class="status-badge status-off">비활성</span>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button class="btn btn-primary" onclick="saveMakeWebhook()">저장</button>
+        <button class="btn" onclick="testMakeWebhook()">테스트 전송</button>
+        <button class="btn" style="color:#ef4444;border-color:#fca5a5" onclick="clearMakeWebhook()">연동 해제</button>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-title">🔗 Make Webhook 연동</div>
+      <div class="settings-desc">Make Webhook URL을 입력하면 @멘션 시 Make를 통해 Notion에 자동으로 기록되고 알림이 발송돼요.<br>현재 연결된 URL이 자동으로 설정되어 있어요.</div>
+      <div class="settings-row">
+        <label>Webhook URL</label>
+        <input class="settings-inp" id="make-webhook-url" placeholder="https://hook.eu1.make.com/...">
+      </div>
+      <div class="settings-row">
+        <label>알림 상태</label>
+        <span id="make-status" class="status-badge status-on">활성</span>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button class="btn btn-primary" onclick="saveMakeWebhook()">저장</button>
+        <button class="btn" style="color:#ef4444;border-color:#fca5a5" onclick="clearMakeWebhook()">연동 해제</button>
       </div>
     </div>
 
@@ -502,7 +547,7 @@ let tcYear=2026,tcMonth=3,icYear=2026,icMonth=3;
 let currentTaskId=null,currentInvId=null,currentCpId=null;
 let teamMembers=[];
 let notifyLog=[];
-let settings={slackUrl:'',notionToken:'',notionDb:'',companyName:''};
+let settings={slackUrl:'',notionToken:'',notionDb:'',companyName:'',makeWebhookUrl:''};
 
 // 저장/로드
 function saveData(){
@@ -546,7 +591,54 @@ function renderLog(){
 }
 function clearLog(){notifyLog=[];saveData();renderLog();}
 
+
+// Make Webhook
+// placeholder
+  const url=document.getElementById('make-webhook-url').value.trim();
+  settings.makeWebhookUrl=url;
+  saveData();
+  updateSettingsStatus();
+  alert(url?'Make Webhook이 저장됐어요! 이제 @멘션 시 Notion에 자동 기록돼요 🎉':'Make Webhook URL이 삭제됐어요.');
+}
+function clearMakeWebhook(){
+  settings.makeWebhookUrl='';
+  document.getElementById('make-webhook-url').value='';
+  saveData();updateSettingsStatus();
+}
+async function testMakeWebhook(){
+  if(!settings.makeWebhookUrl){alert('먼저 Make Webhook URL을 입력하고 저장해주세요!');return;}
+  await sendToMake({
+    taskName:'테스트 태스크',
+    mentionName:'테스트',
+    content:'@테스트 연결 테스트입니다',
+    company:settings.companyName||'테스트',
+    date:new Date().toISOString().slice(0,10),
+    email:'test@test.com'
+  });
+  alert('테스트 데이터를 Make로 전송했어요! Make 시나리오에서 확인해보세요 😊');
+}
+
 // Slack 알림
+
+function saveMakeWebhook(){
+  settings.makeWebhook=document.getElementById('make-webhook-url').value.trim();
+  saveData();updateMakeStatus();
+  alert(settings.makeWebhook?'Make Webhook이 저장됐어요!':'Make Webhook이 삭제됐어요.');
+}
+function clearMakeWebhook(){
+  settings.makeWebhook='';
+  document.getElementById('make-webhook-url').value='';
+  saveData();updateMakeStatus();
+}
+function updateMakeStatus(){
+  const el=document.getElementById('make-status');
+  if(!el)return;
+  el.className='status-badge '+(settings.makeWebhook?'status-on':'status-off');
+  el.textContent=settings.makeWebhook?'활성':'비활성';
+  if(document.getElementById('make-webhook-url'))
+    document.getElementById('make-webhook-url').value=settings.makeWebhook||'';
+}
+
 function saveSlack(){
   const url=document.getElementById('slack-url').value.trim();
   settings.slackUrl=url;
@@ -607,6 +699,10 @@ function updateSettingsStatus(){
   if(slackEl){slackEl.className='status-badge '+(settings.slackUrl?'status-on':'status-off');slackEl.textContent=settings.slackUrl?'활성':'비활성';}
   if(notionEl){notionEl.className='status-badge '+((settings.notionToken&&settings.notionDb)?'status-on':'status-off');notionEl.textContent=(settings.notionToken&&settings.notionDb)?'활성':'비활성';}
   if(document.getElementById('slack-url'))document.getElementById('slack-url').value=settings.slackUrl||'';
+  updateMakeStatus();
+  const makeEl=document.getElementById('make-status');
+  if(makeEl){makeEl.className='status-badge '+(settings.makeWebhookUrl?'status-on':'status-off');makeEl.textContent=settings.makeWebhookUrl?'활성':'비활성';}
+  if(document.getElementById('make-webhook-url'))document.getElementById('make-webhook-url').value=settings.makeWebhookUrl||'';
   if(document.getElementById('company-name'))document.getElementById('company-name').value=settings.companyName||'';
   if(document.getElementById('notion-token'))document.getElementById('notion-token').value=settings.notionToken||'';
   if(document.getElementById('notion-db'))document.getElementById('notion-db').value=settings.notionDb||'';
@@ -634,6 +730,35 @@ function addTeamMember(){
 function delTeamMember(i){if(confirm('팀원을 삭제할까요?')){teamMembers.splice(i,1);renderTeam();saveData();}}
 
 
+function closeMentionPopup(){
+  const p=document.getElementById('mention-popup');if(p)p.remove();
+  const o=document.getElementById('mention-overlay');if(o)o.remove();
+}
+function copyMentionEmail(elId){
+  const el=document.getElementById(elId);if(!el)return;
+  const txt=el.textContent;
+  navigator.clipboard.writeText(txt).catch(()=>{
+    const ta=document.createElement('textarea');ta.value=txt;
+    document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);
+  });
+  const orig=el.textContent;
+  el.style.color='#4caf6e';el.textContent='복사됐어요 ✓';
+  setTimeout(()=>{el.style.color='#4f90e5';el.textContent=orig;},1500);
+  addLog('📋 이메일 복사: '+txt);
+}
+function openMailClient2(email,subject,body,name,taskName){
+  window.location.href='mailto:'+email+'?subject='+subject+'&body='+body;
+  addLog('✉ 메일 앱: '+name+' ('+email+') → '+taskName);
+}
+function openNaverMail2(email,subject){
+  window.open('https://mail.naver.com/compose?to='+email+'&subject='+subject,'_blank');
+  addLog('N 네이버 메일: '+email);
+}
+function openGmail2(email,subject,body,name,taskName){
+  window.open('https://mail.google.com/mail/?view=cm&to='+email+'&su='+subject+'&body='+body,'_blank');
+  addLog('G Gmail: '+name+' ('+email+') → '+taskName);
+}
+
 // 회사명 저장
 function saveCompany(){
   const name=document.getElementById('company-name').value.trim();
@@ -642,31 +767,142 @@ function saveCompany(){
   alert((name||'회사명')+'(으)로 저장됐어요!');
 }
 
-// @멘션 감지 → 업무 요청 이메일 자동 발송
+// @멘션 감지 → 업무 요청 팝업 표시
 function checkMentions(text, taskName){
   const mentions = text.match(/@(\S+)/g);
   if(!mentions) return;
   const company = settings.companyName || '업무 요청';
+  const results = [];
   mentions.forEach(mention=>{
     const name = mention.slice(1);
     const member = teamMembers.find(m=>m.name===name);
     if(member && member.email){
-      const subject = encodeURIComponent(company+'의 업무요청이 왔습니다.');
-      const body = encodeURIComponent(
-        name+'님, 안녕하세요.\n\n'+company+'에서 업무 요청드립니다.\n\n'+
-        '━━━━━━━━━━━━━━━━━━━━\n'+
-        '태스크: '+taskName+'\n'+
-        '내용: '+text+'\n'+
-        '━━━━━━━━━━━━━━━━━━━━\n\n'+
-        '확인 후 회신 부탁드립니다.\n\n감사합니다.\n'+company
-      );
-      window.open('mailto:'+member.email+'?subject='+subject+'&body='+body);
-      addLog('@멘션 업무요청 메일: '+name+' ('+member.email+') → '+taskName);
+      results.push({name, email:member.email});
     } else {
-      addLog('⚠ @'+name+' — 설정에 이메일 미등록');
-      alert('⚠ @'+name+'님의 이메일이 등록되어 있지 않아요.\n⚙️ 설정 → 팀원 이메일 관리에서 등록해주세요!');
+      results.push({name, email:null});
     }
   });
+  showMentionPopup(results, text, taskName, company);
+}
+
+// Make Webhook으로 @멘션 데이터 전송
+async function sendToMake(name, email, taskName, text, company){
+  const webhookUrl = settings.makeWebhook;
+  if(!webhookUrl) return;
+  try{
+    await fetch(webhookUrl, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        type: 'mention',
+        mentionName: name,
+        mentionEmail: email,
+        taskName: taskName,
+        content: text,
+        company: company,
+        date: new Date().toLocaleString('ko-KR')
+      })
+    });
+    addLog('🔗 Make → Notion: @'+name+' 멘션 전송 완료');
+  }catch(e){
+    addLog('❌ Make 전송 실패: '+e.message);
+  }
+}
+
+function showMentionPopup(results, text, taskName, company){
+  const old=document.getElementById('mention-popup');if(old)old.remove();
+  const oldOv=document.getElementById('mention-overlay');if(oldOv)oldOv.remove();
+
+  const rows = results.map((r,i)=>{
+    if(r.email){
+      const subject = company+'의 업무요청이 왔습니다.';
+      const body = r.name+'님, 안녕하세요.\n\n'+company+'에서 업무 요청드립니다.\n\n'+'━━━━━━━━━━━━━━━━━━━━\n'+'태스크: '+taskName+'\n'+'내용: '+text+'\n'+'━━━━━━━━━━━━━━━━━━━━\n\n'+'확인 후 회신 부탁드립니다.\n\n감사합니다.\n'+company;
+      const mailtoLink = 'mailto:'+r.email+'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
+      return `<div style="background:#f7f7f5;border-radius:8px;padding:12px 14px;margin-bottom:10px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <span style="font-size:13px;font-weight:600;color:#1a1a1a">@${r.name}</span>
+          <span style="font-size:11px;background:#dcfce7;color:#166534;padding:2px 8px;border-radius:20px;font-weight:600">이메일 등록됨</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+          <span style="font-size:11px;color:#aaa;min-width:50px">이메일</span>
+          <span id="email-txt-${i}" style="font-size:13px;color:#4f90e5;flex:1">${r.email}</span>
+          <button onclick="copyEmail('email-txt-${i}')" style="height:28px;font-size:11px;padding:0 10px;border-radius:6px;border:1px solid #e5e5e5;background:#fff;cursor:pointer;color:#555;white-space:nowrap">복사</button>
+        </div>
+        <div style="display:flex;gap:6px">
+          <button onclick="openMailClient('${mailtoLink.replace(/'/g,"\'")}','${r.name}','${r.email}','${taskName}')" style="flex:1;height:34px;border-radius:8px;border:1px solid #ddd;background:#fff;cursor:pointer;font-size:12px;color:#555">✉ 메일 앱으로 열기</button>
+          <button onclick="openNaverMail('${r.email}','${encodeURIComponent(subject)}','${encodeURIComponent(body)}')" style="flex:1;height:34px;border-radius:8px;border:none;background:#03c75a;color:#fff;cursor:pointer;font-size:12px;font-weight:600">N 네이버 메일</button>
+          <button onclick="openGmail('${r.email}','${encodeURIComponent(subject)}','${encodeURIComponent(body)}')" style="flex:1;height:34px;border-radius:8px;border:none;background:#ea4335;color:#fff;cursor:pointer;font-size:12px;font-weight:600">G Gmail</button>
+        </div>
+      </div>`;
+    } else {
+      return `<div style="background:#fff8f8;border:1px solid #fca5a5;border-radius:8px;padding:12px 14px;margin-bottom:10px">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <span style="font-size:13px;font-weight:600;color:#1a1a1a">@${r.name}</span>
+          <span style="font-size:11px;background:#fee2e2;color:#991b1b;padding:2px 8px;border-radius:20px;font-weight:600">이메일 미등록</span>
+        </div>
+        <div style="font-size:12px;color:#888;margin-top:6px">⚙️ 설정 → 팀원 이메일 관리에서 등록해주세요</div>
+      </div>`;
+    }
+  }).join('');
+
+  const popup = document.createElement('div');
+  popup.id = 'mention-popup';
+  popup.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#fff;border:1px solid #e5e5e5;border-radius:12px;padding:20px;z-index:2000;width:380px;max-height:80vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,0.12)';
+  popup.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+      <div style="font-size:15px;font-weight:600;color:#1a1a1a">@멘션 업무 요청</div>
+      <button onclick="document.getElementById('mention-popup').remove();document.getElementById('mention-overlay').remove();" style="background:none;border:none;font-size:20px;cursor:pointer;color:#aaa;line-height:1">×</button>
+    </div>
+    <div style="font-size:12px;color:#888;margin-bottom:12px;background:#f7f7f5;border-radius:6px;padding:8px 10px">
+      태스크: <strong style="color:#1a1a1a">${taskName}</strong>
+    </div>
+    ${rows}
+    <button onclick="document.getElementById('mention-popup').remove();document.getElementById('mention-overlay').remove();" style="width:100%;height:36px;border-radius:8px;border:1px solid #ddd;background:#fff;cursor:pointer;font-size:13px;color:#888;margin-top:4px">닫기</button>
+  `;
+
+  const overlay = document.createElement('div');
+  overlay.id = 'mention-overlay';
+  overlay.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.3);z-index:1999';
+  overlay.onclick = ()=>{popup.remove();overlay.remove();};
+
+  document.body.appendChild(overlay);
+  document.body.appendChild(popup);
+}
+
+function copyEmail(elId){
+  const el = document.getElementById(elId);
+  if(!el) return;
+  navigator.clipboard.writeText(el.textContent).then(()=>{
+    el.style.color = '#4caf6e';
+    setTimeout(()=>{el.style.color='#4f90e5';}, 1500);
+    addLog('📋 이메일 복사: '+el.textContent);
+  }).catch(()=>{
+    const txt = el.textContent;
+    const ta = document.createElement('textarea');
+    ta.value = txt;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    el.style.color = '#4caf6e';
+    setTimeout(()=>{el.style.color='#4f90e5';}, 1500);
+    addLog('📋 이메일 복사: '+txt);
+  });
+}
+
+function openMailClient(link, name, email, taskName){
+  window.location.href = link;
+  addLog('✉ 메일 앱: '+name+' ('+email+') → '+taskName);
+}
+
+function openNaverMail(email, subject, body){
+  window.open('https://mail.naver.com/compose?to='+email+'&subject='+subject, '_blank');
+  addLog('N 네이버 메일: '+email);
+}
+
+function openGmail(email, subject, body){
+  window.open('https://mail.google.com/mail/?view=cm&to='+email+'&su='+subject+'&body='+body, '_blank');
+  addLog('G Gmail: '+email);
 }
 
 // 재고 0 알림 이메일
