@@ -296,6 +296,43 @@ h1{font-size:22px;font-weight:600;color:#1a1a1a;margin-bottom:4px}
   </div>
 </div>
 
+
+<!-- 완료 프로젝트 사이드패널 -->
+<div class="side-panel" id="cp-panel">
+  <div class="side-hdr">
+    <span class="side-hdr-title" id="cpp-title">완료 프로젝트 상세</span>
+    <button class="side-close" onclick="closePanel()">×</button>
+  </div>
+  <div class="side-body">
+    <div class="side-sec">
+      <div class="side-sec-title">프로젝트 정보</div>
+      <div class="side-row"><span class="side-lbl">프로젝트명</span><input class="side-inp" id="cpp-name"></div>
+      <div class="side-row"><span class="side-lbl">팀</span><input class="side-inp" id="cpp-team"></div>
+      <div class="side-row"><span class="side-lbl">시작일</span><input type="date" class="side-inp" id="cpp-start"></div>
+      <div class="side-row"><span class="side-lbl">종료일</span><input type="date" class="side-inp" id="cpp-end"></div>
+      <div class="side-row"><span class="side-lbl">결과 요약</span><input class="side-inp" id="cpp-result"></div>
+    </div>
+    <div class="side-sec">
+      <div class="side-sec-title">메모 / 코멘트</div>
+      <div id="cpp-comments"></div>
+      <textarea class="memo-area" id="cpp-comment-input" placeholder="코멘트를 입력하세요..."></textarea>
+      <button class="btn" style="width:100%;margin-top:6px;font-size:12px" onclick="addCpComment()">+ 코멘트 추가</button>
+    </div>
+    <div class="side-sec">
+      <div class="side-sec-title">사진 첨부</div>
+      <label class="upload-area">+ 사진 추가<input type="file" accept="image/*" multiple style="display:none" onchange="addCpImages(event)"></label>
+      <div class="img-grid" id="cpp-images"></div>
+    </div>
+    <div class="side-sec">
+      <div class="side-sec-title">파일 첨부</div>
+      <label class="upload-area">+ 파일 추가<input type="file" multiple style="display:none" onchange="addCpFiles(event)"></label>
+      <div id="cpp-files"></div>
+    </div>
+    <button class="save-panel-btn" onclick="saveCpPanel()">저장</button>
+    <button class="btn" style="width:100%;margin-top:8px;height:40px;font-size:13px;font-weight:600;border-color:#f59e0b;color:#92400e;background:#fffbeb" onclick="cancelCompleted()">⟵ 완료 취소 (프로젝트 관리로 복귀)</button>
+  </div>
+</div>
+
 <!-- 재고 사이드패널 -->
 <div class="side-panel" id="inv-panel">
   <div class="side-hdr">
@@ -380,7 +417,99 @@ let completedProjects=[
 ];
 let cpId=4;
 let tcYear=2026,tcMonth=3,icYear=2026,icMonth=3;
-let currentTaskId=null,currentInvId=null;
+let currentTaskId=null,currentInvId=null,currentCpId=null;
+
+
+// 완료 프로젝트 사이드패널
+let currentCpId=null;
+function openCompletedPanel(id){
+  const p=completedProjects.find(p=>p.id===id);if(!p)return;
+  currentCpId=id;
+  document.getElementById('cpp-title').textContent=p.name;
+  document.getElementById('cpp-name').value=p.name;
+  document.getElementById('cpp-team').value=p.team||'';
+  document.getElementById('cpp-start').value=p.startDate||'';
+  document.getElementById('cpp-end').value=p.endDate||'';
+  document.getElementById('cpp-result').value=p.result||'';
+  document.getElementById('cpp-comment-input').value='';
+  renderCpComments(p);renderCpImages(p);renderCpFiles(p);
+  document.getElementById('cp-panel').classList.add('open');
+  document.getElementById('side-overlay').classList.add('open');
+}
+function saveCpPanel(){
+  const p=completedProjects.find(p=>p.id===currentCpId);if(!p)return;
+  p.name=document.getElementById('cpp-name').value.trim()||p.name;
+  p.team=document.getElementById('cpp-team').value.trim();
+  p.startDate=document.getElementById('cpp-start').value;
+  p.endDate=document.getElementById('cpp-end').value;
+  p.result=document.getElementById('cpp-result').value;
+  document.getElementById('cpp-title').textContent=p.name;
+  renderCompleted();saveData();
+  const btn=document.querySelector('#cp-panel .save-panel-btn');
+  btn.textContent='저장됐어요 ✓';btn.style.background='#4caf6e';
+  setTimeout(()=>{btn.textContent='저장';btn.style.background='#1a1a1a';},1500);
+}
+function cancelCompleted(){
+  const p=completedProjects.find(p=>p.id===currentCpId);if(!p)return;
+  if(!confirm('완료를 취소하고 프로젝트 관리로 복귀할까요?'))return;
+  // 원본 태스크 정보로 복귀
+  const origin=p.originTask||{};
+  tasks.unshift({
+    id:taskId++,
+    name:p.name,
+    assignee:p.team!=='전체'?p.team:(origin.assignee||''),
+    date:p.startDate||'',
+    priority:origin.priority||'mid',
+    status:'todo',
+    comments:p.comments||[],
+    images:p.images||[],
+    files:p.files||[]
+  });
+  completedProjects=completedProjects.filter(cp=>cp.id!==currentCpId);
+  closePanel();saveData();renderAll();
+  // 프로젝트 관리 탭으로 이동
+  document.querySelectorAll('.top-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(pg=>pg.classList.remove('active'));
+  document.querySelector('.top-tab').classList.add('active');
+  document.getElementById('page-project').classList.add('active');
+  alert('프로젝트 관리로 복귀됐어요!');
+}
+function addCpComment(){
+  const p=completedProjects.find(p=>p.id===currentCpId);if(!p)return;
+  const txt=document.getElementById('cpp-comment-input').value.trim();if(!txt)return;
+  if(!p.comments)p.comments=[];
+  p.comments.push({text:txt,time:new Date().toLocaleString('ko-KR')});
+  document.getElementById('cpp-comment-input').value='';
+  renderCpComments(p);saveData();
+}
+function renderCpComments(p){
+  const el=document.getElementById('cpp-comments');
+  if(!p.comments||!p.comments.length){el.innerHTML='<div style="font-size:12px;color:#aaa;margin-bottom:8px">아직 코멘트가 없어요</div>';return;}
+  el.innerHTML=p.comments.map((c,i)=>`<div class="comment-item"><div>${c.text}</div><div style="display:flex;justify-content:space-between"><span class="comment-time">${c.time}</span><button class="del-btn" onclick="delCpComment(${i})">✕</button></div></div>`).join('');
+}
+function delCpComment(i){const p=completedProjects.find(p=>p.id===currentCpId);if(!p)return;p.comments.splice(i,1);renderCpComments(p);saveData();}
+function addCpImages(e){
+  const p=completedProjects.find(p=>p.id===currentCpId);if(!p)return;
+  if(!p.images)p.images=[];
+  Array.from(e.target.files).forEach(f=>{const r=new FileReader();r.onload=ev=>{p.images.push({name:f.name,data:ev.target.result});renderCpImages(p);saveData();};r.readAsDataURL(f);});
+}
+function renderCpImages(p){
+  const el=document.getElementById('cpp-images');
+  if(!p.images||!p.images.length){el.innerHTML='';return;}
+  el.innerHTML=p.images.map((img,i)=>`<div style="position:relative"><img src="${img.data}" class="img-thumb" onclick="window.open('${img.data}')"><button onclick="delCpImg(${i})" style="position:absolute;top:-4px;right:-4px;width:18px;height:18px;border-radius:50%;background:#ef4444;border:none;color:#fff;font-size:10px;cursor:pointer">✕</button></div>`).join('');
+}
+function delCpImg(i){const p=completedProjects.find(p=>p.id===currentCpId);if(!p)return;p.images.splice(i,1);renderCpImages(p);saveData();}
+function addCpFiles(e){
+  const p=completedProjects.find(p=>p.id===currentCpId);if(!p)return;
+  if(!p.files)p.files=[];
+  Array.from(e.target.files).forEach(f=>{const r=new FileReader();r.onload=ev=>{p.files.push({name:f.name,data:ev.target.result,size:Math.round(f.size/1024)+'KB'});renderCpFiles(p);saveData();};r.readAsDataURL(f);});
+}
+function renderCpFiles(p){
+  const el=document.getElementById('cpp-files');
+  if(!p.files||!p.files.length){el.innerHTML='';return;}
+  el.innerHTML=p.files.map((f,i)=>`<div class="file-row"><span style="font-size:15px">📄</span><span class="file-name">${f.name}</span><span class="file-size">${f.size}</span><a href="${f.data}" download="${f.name}" style="color:#4caf6e;font-size:11px">다운</a><button class="del-btn" onclick="delCpFile(${i})">✕</button></div>`).join('');
+}
+function delCpFile(i){const p=completedProjects.find(p=>p.id===currentCpId);if(!p)return;p.files.splice(i,1);renderCpFiles(p);saveData();}
 
 function sLabel(s){return{todo:'할 일',inprogress:'진행 중',review:'검토 중',done:'완료'}[s]||s}
 function pLabel(p){return{high:'높음',mid:'중간',low:'낮음'}[p]||p}
@@ -450,13 +579,24 @@ function saveTaskPanel(){
 }
 function moveToCompleted(){
   const t=tasks.find(t=>t.id===currentTaskId);if(!t)return;
-  const name=prompt('완료 프로젝트 이름:',t.name)||t.name;
-  const result=prompt('결과 요약 (선택사항):','')||'완료';
   const endDate=new Date().toISOString().slice(0,10);
-  completedProjects.unshift({id:cpId++,name,team:t.assignee||'전체',startDate:t.date||endDate,endDate,tasks:[t.name],result});
+  const newCp={
+    id:cpId++,
+    name:t.name,
+    team:t.assignee||'전체',
+    startDate:t.date||endDate,
+    endDate:endDate,
+    tasks:[t.name],
+    result:'완료 프로젝트로 등록',
+    comments:t.comments||[],
+    images:t.images||[],
+    files:t.files||[],
+    originTask:{name:t.name,assignee:t.assignee,date:t.date,priority:t.priority,comments:t.comments||[],images:t.images||[],files:t.files||[]}
+  };
+  completedProjects.unshift(newCp);
   tasks=tasks.filter(tt=>tt.id!==currentTaskId);
   closePanel();saveData();renderAll();
-  alert('완료 프로젝트에 등록됐어요! 🎉');
+  setTimeout(()=>openCompletedPanel(newCp.id),300);
 }
 function addTaskComment(){
   const t=tasks.find(t=>t.id===currentTaskId);if(!t)return;
@@ -717,7 +857,7 @@ function renderIncomingCal(){
 function renderCompleted(){
   document.getElementById('completed-body').innerHTML=
     completedProjects.map(p=>`
-      <div class="done-card">
+      <div class="done-card" style="cursor:pointer" onclick="openCompletedPanel(${p.id})">
         <div class="done-card-hdr"><span class="done-title">${p.name}</span><span class="badge s-done">완료</span></div>
         <div class="done-meta"><span>팀: ${p.team}</span><span>기간: ${p.startDate} ~ ${p.endDate}</span><span>태스크: ${p.tasks.length}개</span></div>
         <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:${p.result?'10px':'0'}">${p.tasks.map(t=>`<span class="badge" style="background:#f5f5f5;color:#666">${t}</span>`).join('')}</div>
@@ -744,19 +884,26 @@ function changeTaskStatus(id,val){
 }
 function autoMoveToCompleted(t){
   const endDate=new Date().toISOString().slice(0,10);
-  completedProjects.unshift({
+  const newCp={
     id:cpId++,
     name:t.name,
     team:t.assignee||'전체',
     startDate:t.date||endDate,
     endDate:endDate,
     tasks:[t.name],
-    result:'완료 — 자동 이동'
-  });
+    result:'완료 — 자동 이동',
+    comments:t.comments||[],
+    images:t.images||[],
+    files:t.files||[],
+    // 복귀용 원본 태스크 정보 저장
+    originTask:{name:t.name,assignee:t.assignee,date:t.date,priority:t.priority,comments:t.comments||[],images:t.images||[],files:t.files||[]}
+  };
+  completedProjects.unshift(newCp);
   tasks=tasks.filter(tt=>tt.id!==t.id);
   saveData();renderAll();
-  // 사이드패널이 열려있으면 닫기
   closePanel();
+  // 완료 프로젝트 사이드패널 바로 열기
+  setTimeout(()=>openCompletedPanel(newCp.id),300);
 }
 function toggleDone(id){
   const t=tasks.find(t=>t.id===id);if(!t)return;
