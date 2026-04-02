@@ -502,7 +502,7 @@ let tcYear=2026,tcMonth=3,icYear=2026,icMonth=3;
 let currentTaskId=null,currentInvId=null,currentCpId=null;
 let teamMembers=[];
 let notifyLog=[];
-let settings={slackUrl:'',notionToken:'',notionDb:''};
+let settings={slackUrl:'',notionToken:'',notionDb:'',companyName:''};
 
 // 저장/로드
 function saveData(){
@@ -607,6 +607,7 @@ function updateSettingsStatus(){
   if(slackEl){slackEl.className='status-badge '+(settings.slackUrl?'status-on':'status-off');slackEl.textContent=settings.slackUrl?'활성':'비활성';}
   if(notionEl){notionEl.className='status-badge '+((settings.notionToken&&settings.notionDb)?'status-on':'status-off');notionEl.textContent=(settings.notionToken&&settings.notionDb)?'활성':'비활성';}
   if(document.getElementById('slack-url'))document.getElementById('slack-url').value=settings.slackUrl||'';
+  if(document.getElementById('company-name'))document.getElementById('company-name').value=settings.companyName||'';
   if(document.getElementById('notion-token'))document.getElementById('notion-token').value=settings.notionToken||'';
   if(document.getElementById('notion-db'))document.getElementById('notion-db').value=settings.notionDb||'';
 }
@@ -633,20 +634,37 @@ function addTeamMember(){
 function delTeamMember(i){if(confirm('팀원을 삭제할까요?')){teamMembers.splice(i,1);renderTeam();saveData();}}
 
 
-// @멘션 감지 이메일 발송
+// 회사명 저장
+function saveCompany(){
+  const name=document.getElementById('company-name').value.trim();
+  settings.companyName=name;
+  saveData();
+  alert((name||'회사명')+'(으)로 저장됐어요!');
+}
+
+// @멘션 감지 → 업무 요청 이메일 자동 발송
 function checkMentions(text, taskName){
-  const mentions = text.match(/@([^\s@]+)/g);
+  const mentions = text.match(/@(\S+)/g);
   if(!mentions) return;
+  const company = settings.companyName || '업무 요청';
   mentions.forEach(mention=>{
     const name = mention.slice(1);
     const member = teamMembers.find(m=>m.name===name);
     if(member && member.email){
-      const subject = encodeURIComponent('[멘션 알림] '+taskName+' 에서 @'+name+' 님을 멘션했어요');
-      const body = encodeURIComponent(name+'님,\n\n['+taskName+'] 태스크 코멘트에서 멘션되었어요.\n\n내용: '+text+'\n\n확인 부탁드립니다.');
+      const subject = encodeURIComponent(company+'의 업무요청이 왔습니다.');
+      const body = encodeURIComponent(
+        name+'님, 안녕하세요.\n\n'+company+'에서 업무 요청드립니다.\n\n'+
+        '━━━━━━━━━━━━━━━━━━━━\n'+
+        '태스크: '+taskName+'\n'+
+        '내용: '+text+'\n'+
+        '━━━━━━━━━━━━━━━━━━━━\n\n'+
+        '확인 후 회신 부탁드립니다.\n\n감사합니다.\n'+company
+      );
       window.open('mailto:'+member.email+'?subject='+subject+'&body='+body);
-      addLog('@멘션 메일: '+name+' → '+taskName);
+      addLog('@멘션 업무요청 메일: '+name+' ('+member.email+') → '+taskName);
     } else {
-      addLog('⚠ @'+name+' — 설정에 이메일 없음 (등록 필요)');
+      addLog('⚠ @'+name+' — 설정에 이메일 미등록');
+      alert('⚠ @'+name+'님의 이메일이 등록되어 있지 않아요.\n⚙️ 설정 → 팀원 이메일 관리에서 등록해주세요!');
     }
   });
 }
