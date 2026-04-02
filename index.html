@@ -144,6 +144,50 @@ h1{font-size:22px;font-weight:600;color:#1a1a1a;margin-bottom:4px}
 .comment-item{background:#f7f7f5;border-radius:8px;padding:10px 12px;font-size:12px;color:#555;line-height:1.5}
 .comment-time{font-size:10px;color:#aaa;margin-top:4px}
 .tbl td{cursor:pointer}
+
+.side-panel{position:fixed;top:0;right:-420px;width:420px;height:100vh;background:#fff;border-left:1px solid #e5e5e5;z-index:1000;transition:right 0.3s ease;overflow-y:auto;display:flex;flex-direction:column}
+.side-panel.open{right:0}
+.side-overlay{position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.3);z-index:999;display:none}
+.side-overlay.open{display:block}
+.side-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid #f0f0f0;position:sticky;top:0;background:#fff;z-index:1}
+.side-title{font-size:16px;font-weight:600;color:#1a1a1a}
+.side-close{background:none;border:none;cursor:pointer;font-size:20px;color:#888;padding:0 4px;line-height:1}
+.side-close:hover{color:#1a1a1a}
+.side-body{padding:20px;flex:1}
+.side-section{margin-bottom:20px}
+.side-section-title{font-size:11px;font-weight:600;color:#aaa;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:10px}
+.side-prop{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:0.5px solid #f5f5f5;font-size:13px}
+.side-prop:last-child{border-bottom:none}
+.side-prop-label{color:#888;min-width:70px;font-size:12px}
+.side-prop-val{flex:1;color:#1a1a1a}
+.side-prop select{font-size:12px;border:1px solid #e5e5e5;border-radius:6px;padding:3px 8px;background:#fff;color:#1a1a1a;cursor:pointer}
+.side-memo{width:100%;min-height:80px;font-size:13px;border:1px solid #e5e5e5;border-radius:8px;padding:10px;resize:vertical;font-family:inherit;color:#1a1a1a;outline:none}
+.side-memo:focus{border-color:#999}
+.side-save-btn{width:100%;height:36px;background:#1a1a1a;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;margin-top:8px}
+.side-save-btn:hover{background:#333}
+.upload-area{border:1.5px dashed #ddd;border-radius:8px;padding:16px;text-align:center;cursor:pointer;transition:border-color 0.15s;margin-bottom:8px}
+.upload-area:hover{border-color:#999;background:#fafafa}
+.upload-area-text{font-size:12px;color:#aaa}
+.upload-area-text b{color:#888;font-weight:500}
+.file-list{display:flex;flex-direction:column;gap:6px}
+.file-item{display:flex;align-items:center;gap:8px;padding:6px 10px;background:#f7f7f5;border-radius:6px;font-size:12px}
+.file-item-name{flex:1;color:#444;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.file-item-del{background:none;border:none;cursor:pointer;color:#ccc;font-size:13px;padding:0}
+.file-item-del:hover{color:#ef4444}
+.photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:6px}
+.photo-item{position:relative;aspect-ratio:1;border-radius:6px;overflow:hidden;background:#f0f0f0}
+.photo-item img{width:100%;height:100%;object-fit:cover}
+.photo-del{position:absolute;top:3px;right:3px;background:rgba(0,0,0,0.5);color:#fff;border:none;border-radius:50%;width:18px;height:18px;font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.comment-list{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
+.comment-item{background:#f7f7f5;border-radius:8px;padding:8px 12px}
+.comment-meta{font-size:11px;color:#aaa;margin-bottom:3px}
+.comment-text{font-size:13px;color:#1a1a1a}
+.comment-input-row{display:flex;gap:6px}
+.comment-input{flex:1;height:34px;font-size:13px;border:1px solid #e5e5e5;border-radius:8px;padding:0 10px;outline:none;font-family:inherit}
+.comment-input:focus{border-color:#999}
+.comment-btn{height:34px;padding:0 14px;background:#1a1a1a;color:#fff;border:none;border-radius:8px;font-size:12px;cursor:pointer;font-weight:500;white-space:nowrap}
+.task-row-clickable{cursor:pointer}
+.task-row-clickable:hover td{background:#f5f5f5 !important}
 </style>
 </head>
 <body>
@@ -308,6 +352,84 @@ h1{font-size:22px;font-weight:600;color:#1a1a1a;margin-bottom:4px}
   </div>
 </div>
 
+
+<div class="side-overlay" id="side-overlay" onclick="closeSidePanel()"></div>
+<div class="side-panel" id="side-panel">
+  <div class="side-header">
+    <span class="side-title" id="side-task-name">태스크 상세</span>
+    <button class="side-close" onclick="closeSidePanel()">✕</button>
+  </div>
+  <div class="side-body">
+    <div class="side-section">
+      <div class="side-section-title">기본 정보</div>
+      <div class="side-prop">
+        <span class="side-prop-label">담당자</span>
+        <span class="side-prop-val" id="sp-assignee">-</span>
+      </div>
+      <div class="side-prop">
+        <span class="side-prop-label">마감일</span>
+        <span class="side-prop-val" id="sp-date">-</span>
+      </div>
+      <div class="side-prop">
+        <span class="side-prop-label">상태</span>
+        <select id="sp-status" onchange="updateFromPanel('status',this.value)">
+          <option value="todo">할 일</option>
+          <option value="inprogress">진행 중</option>
+          <option value="review">검토 중</option>
+          <option value="done">완료</option>
+        </select>
+      </div>
+      <div class="side-prop">
+        <span class="side-prop-label">우선순위</span>
+        <select id="sp-priority" onchange="updateFromPanel('priority',this.value)">
+          <option value="high">높음</option>
+          <option value="mid">중간</option>
+          <option value="low">낮음</option>
+        </select>
+      </div>
+      <div class="side-prop">
+        <span class="side-prop-label">진행률</span>
+        <span class="side-prop-val" id="sp-progress">-</span>
+      </div>
+    </div>
+
+    <div class="side-section">
+      <div class="side-section-title">메모</div>
+      <textarea class="side-memo" id="sp-memo" placeholder="메모를 입력하세요..."></textarea>
+      <button class="side-save-btn" onclick="saveMemo()">메모 저장</button>
+    </div>
+
+    <div class="side-section">
+      <div class="side-section-title">사진 첨부</div>
+      <div class="upload-area" onclick="document.getElementById('photo-input').click()">
+        <div class="upload-area-text"><b>클릭</b>해서 사진 추가</div>
+        <div class="upload-area-text" style="margin-top:4px">JPG, PNG, GIF 지원</div>
+      </div>
+      <input type="file" id="photo-input" accept="image/*" multiple style="display:none" onchange="addPhotos(this)">
+      <div class="photo-grid" id="photo-grid"></div>
+    </div>
+
+    <div class="side-section">
+      <div class="side-section-title">파일 첨부</div>
+      <div class="upload-area" onclick="document.getElementById('file-input').click()">
+        <div class="upload-area-text"><b>클릭</b>해서 파일 추가</div>
+        <div class="upload-area-text" style="margin-top:4px">모든 파일 형식 지원</div>
+      </div>
+      <input type="file" id="file-input" multiple style="display:none" onchange="addFiles(this)">
+      <div class="file-list" id="file-list"></div>
+    </div>
+
+    <div class="side-section">
+      <div class="side-section-title">코멘트</div>
+      <div class="comment-list" id="comment-list"></div>
+      <div class="comment-input-row">
+        <input class="comment-input" id="comment-input" placeholder="코멘트 입력..." onkeydown="if(event.key==='Enter')addComment()">
+        <button class="comment-btn" onclick="addComment()">등록</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 </div>
 
 <script>
@@ -398,7 +520,7 @@ function renderKanban(){
     const f=tasks.filter(t=>t.status===s);
     document.getElementById('kc-'+s).textContent=f.length;
     document.getElementById('k-'+s).innerHTML=f.map(t=>`
-      <div class="k-card"><div style="margin-bottom:6px;font-weight:500">${t.name}</div>
+      <div class="k-card" onclick="openSidePanel(${t.id})" style="cursor:pointer"><div style="margin-bottom:6px;font-weight:500">${t.name}</div>
       <div style="display:flex;gap:5px;flex-wrap:wrap">
         <span class="badge p-${t.priority}">${pLabel(t.priority)}</span>
         ${t.date?`<span style="font-size:11px;color:#888">${t.date.slice(5).replace('-','/')}</span>`:''}
@@ -697,6 +819,7 @@ function saveData(){
   localStorage.setItem('pm_incoming', JSON.stringify(incoming));
   localStorage.setItem('pm_completed', JSON.stringify(completedProjects));
   localStorage.setItem('pm_ids', JSON.stringify({taskId,invId,icId,cpId}));
+  localStorage.setItem('pm_extras', JSON.stringify(taskExtras));
 }
 function loadData(){
   try{
@@ -705,9 +828,160 @@ function loadData(){
     const ic=localStorage.getItem('pm_incoming');if(ic)incoming=JSON.parse(ic);
     const cp=localStorage.getItem('pm_completed');if(cp)completedProjects=JSON.parse(cp);
     const ids=localStorage.getItem('pm_ids');if(ids){const o=JSON.parse(ids);taskId=o.taskId;invId=o.invId;icId=o.icId;cpId=o.cpId;}
+    const ex=localStorage.getItem('pm_extras');if(ex)taskExtras=JSON.parse(ex);
   }catch(e){console.log('load error',e);}
 }
 
+
+let currentTaskId=null;
+let taskExtras={};
+
+function openSidePanel(id){
+  const t=tasks.find(t=>t.id===id);
+  if(!t) return;
+  currentTaskId=id;
+  if(!taskExtras[id]) taskExtras[id]={memo:'',photos:[],files:[],comments:[]};
+  const ex=taskExtras[id];
+  document.getElementById('side-task-name').textContent=t.name;
+  document.getElementById('sp-assignee').textContent=t.assignee||'-';
+  document.getElementById('sp-date').textContent=t.date||'-';
+  document.getElementById('sp-status').value=t.status;
+  document.getElementById('sp-priority').value=t.priority;
+  document.getElementById('sp-progress').textContent=progPct(t)+'%';
+  document.getElementById('sp-memo').value=ex.memo||'';
+  renderPhotoGrid();
+  renderFileList();
+  renderComments();
+  document.getElementById('side-panel').classList.add('open');
+  document.getElementById('side-overlay').classList.add('open');
+}
+
+function closeSidePanel(){
+  document.getElementById('side-panel').classList.remove('open');
+  document.getElementById('side-overlay').classList.remove('open');
+  currentTaskId=null;
+}
+
+function updateFromPanel(field,val){
+  if(!currentTaskId) return;
+  const t=tasks.find(t=>t.id===currentTaskId);
+  if(t){
+    t[field]=val;
+    document.getElementById('sp-progress').textContent=progPct(t)+'%';
+    renderAll();
+  }
+}
+
+function saveMemo(){
+  if(!currentTaskId) return;
+  if(!taskExtras[currentTaskId]) taskExtras[currentTaskId]={memo:'',photos:[],files:[],comments:[]};
+  taskExtras[currentTaskId].memo=document.getElementById('sp-memo').value;
+  saveData();
+  const btn=document.querySelector('.side-save-btn');
+  btn.textContent='저장됨 ✓';btn.style.background='#4caf6e';
+  setTimeout(()=>{btn.textContent='메모 저장';btn.style.background='#1a1a1a';},1500);
+}
+
+function addPhotos(input){
+  if(!currentTaskId) return;
+  if(!taskExtras[currentTaskId]) taskExtras[currentTaskId]={memo:'',photos:[],files:[],comments:[]};
+  Array.from(input.files).forEach(file=>{
+    const reader=new FileReader();
+    reader.onload=e=>{
+      taskExtras[currentTaskId].photos.push({name:file.name,data:e.target.result});
+      renderPhotoGrid();
+      saveData();
+    };
+    reader.readAsDataURL(file);
+  });
+  input.value='';
+}
+
+function renderPhotoGrid(){
+  if(!currentTaskId) return;
+  const photos=taskExtras[currentTaskId]?.photos||[];
+  document.getElementById('photo-grid').innerHTML=photos.map((p,i)=>`
+    <div class="photo-item">
+      <img src="${p.data}" alt="${p.name}">
+      <button class="photo-del" onclick="removePhoto(${i})">✕</button>
+    </div>`).join('');
+}
+
+function removePhoto(idx){
+  if(!currentTaskId) return;
+  taskExtras[currentTaskId].photos.splice(idx,1);
+  renderPhotoGrid();
+  saveData();
+}
+
+function addFiles(input){
+  if(!currentTaskId) return;
+  if(!taskExtras[currentTaskId]) taskExtras[currentTaskId]={memo:'',photos:[],files:[],comments:[]};
+  Array.from(input.files).forEach(file=>{
+    const reader=new FileReader();
+    reader.onload=e=>{
+      taskExtras[currentTaskId].files.push({name:file.name,size:Math.round(file.size/1024)+'KB',data:e.target.result});
+      renderFileList();
+      saveData();
+    };
+    reader.readAsDataURL(file);
+  });
+  input.value='';
+}
+
+function renderFileList(){
+  if(!currentTaskId) return;
+  const files=taskExtras[currentTaskId]?.files||[];
+  document.getElementById('file-list').innerHTML=files.map((f,i)=>`
+    <div class="file-item">
+      <span style="font-size:16px">📄</span>
+      <span class="file-item-name">${f.name}</span>
+      <span style="font-size:11px;color:#aaa">${f.size}</span>
+      <button class="file-item-del" onclick="removeFile(${i})">✕</button>
+    </div>`).join('');
+}
+
+function removeFile(idx){
+  if(!currentTaskId) return;
+  taskExtras[currentTaskId].files.splice(idx,1);
+  renderFileList();
+  saveData();
+}
+
+function addComment(){
+  if(!currentTaskId) return;
+  const input=document.getElementById('comment-input');
+  const text=input.value.trim();
+  if(!text) return;
+  if(!taskExtras[currentTaskId]) taskExtras[currentTaskId]={memo:'',photos:[],files:[],comments:[]};
+  const now=new Date();
+  taskExtras[currentTaskId].comments.push({
+    text,
+    time:now.getFullYear()+'.'+(now.getMonth()+1)+'.'+now.getDate()+' '+now.getHours()+':'+String(now.getMinutes()).padStart(2,'0')
+  });
+  input.value='';
+  renderComments();
+  saveData();
+}
+
+function renderComments(){
+  if(!currentTaskId) return;
+  const comments=taskExtras[currentTaskId]?.comments||[];
+  const list=document.getElementById('comment-list');
+  if(!comments.length){list.innerHTML='<div style="font-size:12px;color:#aaa;text-align:center;padding:8px">아직 코멘트가 없어요</div>';return;}
+  list.innerHTML=comments.map((c,i)=>`
+    <div class="comment-item">
+      <div class="comment-meta">${c.time} <button onclick="removeComment(${i})" style="background:none;border:none;cursor:pointer;color:#ccc;font-size:11px;float:right">삭제</button></div>
+      <div class="comment-text">${c.text}</div>
+    </div>`).join('');
+}
+
+function removeComment(idx){
+  if(!currentTaskId) return;
+  taskExtras[currentTaskId].comments.splice(idx,1);
+  renderComments();
+  saveData();
+}
 function checkAutoComplete(){
   if(tasks.length===0) return;
   const allDone=tasks.every(t=>t.status==='done');
