@@ -109,6 +109,41 @@ h1{font-size:22px;font-weight:600;color:#1a1a1a;margin-bottom:4px}
   .cgrid{gap:2px}
   .ccell{min-height:60px}
 }
+
+.side-panel{position:fixed;top:0;right:-420px;width:420px;height:100vh;background:#fff;border-left:1px solid #e5e5e5;z-index:1000;transition:right 0.3s;overflow-y:auto;box-shadow:-4px 0 20px rgba(0,0,0,0.08)}
+.side-panel.open{right:0}
+.side-overlay{position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.2);z-index:999;display:none}
+.side-overlay.open{display:block}
+.side-header{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid #f0f0f0;position:sticky;top:0;background:#fff;z-index:1}
+.side-title{font-size:16px;font-weight:600;color:#1a1a1a}
+.side-close{background:none;border:none;font-size:20px;cursor:pointer;color:#aaa;padding:0;line-height:1}
+.side-close:hover{color:#333}
+.side-body{padding:20px}
+.side-section{margin-bottom:20px}
+.side-section-title{font-size:11px;font-weight:600;color:#aaa;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:10px}
+.side-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:0.5px solid #f5f5f5}
+.side-row:last-child{border-bottom:none}
+.side-row-label{font-size:12px;color:#888;min-width:60px}
+.side-row-val{font-size:13px;color:#1a1a1a;flex:1}
+.side-select{font-size:12px;border:1px solid #e5e5e5;border-radius:6px;padding:4px 8px;background:#fff;color:#1a1a1a;cursor:pointer}
+.side-input{font-size:12px;border:1px solid #e5e5e5;border-radius:6px;padding:4px 8px;background:#fff;color:#1a1a1a;width:100%}
+.memo-box{width:100%;min-height:80px;font-size:13px;border:1px solid #e5e5e5;border-radius:8px;padding:10px;resize:vertical;color:#1a1a1a;font-family:inherit}
+.memo-box:focus{outline:none;border-color:#999}
+.img-preview{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.img-thumb{width:72px;height:72px;object-fit:cover;border-radius:6px;border:1px solid #e5e5e5;cursor:pointer}
+.file-list{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.file-item{display:flex;align-items:center;gap:8px;padding:7px 10px;background:#f7f7f5;border-radius:6px;font-size:12px;color:#555}
+.file-item-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.file-del{background:none;border:none;cursor:pointer;color:#ccc;font-size:13px;padding:0}
+.file-del:hover{color:#ef4444}
+.upload-btn{display:inline-flex;align-items:center;gap:6px;font-size:12px;padding:7px 14px;border:1.5px dashed #ddd;border-radius:8px;cursor:pointer;color:#888;background:#fafafa;transition:all 0.15s;width:100%;justify-content:center}
+.upload-btn:hover{border-color:#999;color:#555;background:#f5f5f5}
+.save-btn{width:100%;height:38px;background:#1a1a1a;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;margin-top:8px}
+.save-btn:hover{background:#333}
+.comment-list{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
+.comment-item{background:#f7f7f5;border-radius:8px;padding:10px 12px;font-size:12px;color:#555;line-height:1.5}
+.comment-time{font-size:10px;color:#aaa;margin-top:4px}
+.tbl td{cursor:pointer}
 </style>
 </head>
 <body>
@@ -214,6 +249,65 @@ h1{font-size:22px;font-weight:600;color:#1a1a1a;margin-bottom:4px}
     </div>
     <div id="completed-body"></div>
   </div>
+
+<div class="side-overlay" id="side-overlay" onclick="closePanel()"></div>
+<div class="side-panel" id="side-panel">
+  <div class="side-header">
+    <span class="side-title" id="panel-title">태스크 상세</span>
+    <button class="side-close" onclick="closePanel()">×</button>
+  </div>
+  <div class="side-body">
+    <div class="side-section">
+      <div class="side-section-title">기본 정보</div>
+      <div class="side-row"><span class="side-row-label">태스크명</span><input class="side-input" id="p-name" style="font-weight:500"></div>
+      <div class="side-row"><span class="side-row-label">담당자</span><input class="side-input" id="p-assignee" placeholder="담당자"></div>
+      <div class="side-row"><span class="side-row-label">마감일</span><input type="date" class="side-input" id="p-date"></div>
+      <div class="side-row"><span class="side-row-label">상태</span>
+        <select class="side-select" id="p-status">
+          <option value="todo">할 일</option>
+          <option value="inprogress">진행 중</option>
+          <option value="review">검토 중</option>
+          <option value="done">완료</option>
+        </select>
+      </div>
+      <div class="side-row"><span class="side-row-label">우선순위</span>
+        <select class="side-select" id="p-priority">
+          <option value="high">높음</option>
+          <option value="mid">중간</option>
+          <option value="low">낮음</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="side-section">
+      <div class="side-section-title">메모 / 코멘트</div>
+      <div class="comment-list" id="p-comment-list"></div>
+      <textarea class="memo-box" id="p-comment-input" placeholder="코멘트를 입력하세요..."></textarea>
+      <button class="btn" style="width:100%;margin-top:6px;font-size:12px" onclick="addComment()">코멘트 추가</button>
+    </div>
+
+    <div class="side-section">
+      <div class="side-section-title">사진 첨부</div>
+      <label class="upload-btn">
+        <span>+</span> 사진 추가
+        <input type="file" accept="image/*" multiple style="display:none" onchange="addImages(event)">
+      </label>
+      <div class="img-preview" id="p-images"></div>
+    </div>
+
+    <div class="side-section">
+      <div class="side-section-title">파일 첨부</div>
+      <label class="upload-btn">
+        <span>+</span> 파일 추가
+        <input type="file" multiple style="display:none" onchange="addFiles(event)">
+      </label>
+      <div class="file-list" id="p-files"></div>
+    </div>
+
+    <button class="save-btn" onclick="savePanel()">저장</button>
+  </div>
+</div>
+
 </div>
 
 <script>
@@ -285,7 +379,7 @@ function renderProjMetrics(){
 
 function renderDB(){
   document.getElementById('db-body').innerHTML=tasks.map(t=>`
-    <tr><td style="font-weight:500">${t.name}</td>
+    <tr onclick="openPanel(${t.id})" style="cursor:pointer"><td style="font-weight:500">${t.name}</td>
     <td style="color:#888">${t.assignee||'-'}</td>
     <td><select class="status-sel badge s-${t.status}" onchange="changeTaskStatus(${t.id},this.value)">
       <option value="todo" ${t.status==='todo'?'selected':''}>할 일</option>
@@ -449,6 +543,153 @@ function renderCompleted(){
       </div>`).join('');
 }
 
+
+
+let currentPanelId = null;
+
+function openPanel(id){
+  const t = tasks.find(t=>t.id===id);
+  if(!t) return;
+  currentPanelId = id;
+  document.getElementById('panel-title').textContent = t.name;
+  document.getElementById('p-name').value = t.name;
+  document.getElementById('p-assignee').value = t.assignee||'';
+  document.getElementById('p-date').value = t.date||'';
+  document.getElementById('p-status').value = t.status;
+  document.getElementById('p-priority').value = t.priority;
+  document.getElementById('p-comment-input').value = '';
+  renderComments(t);
+  renderImages(t);
+  renderFiles(t);
+  document.getElementById('side-panel').classList.add('open');
+  document.getElementById('side-overlay').classList.add('open');
+}
+
+function closePanel(){
+  document.getElementById('side-panel').classList.remove('open');
+  document.getElementById('side-overlay').classList.remove('open');
+  currentPanelId = null;
+}
+
+function savePanel(){
+  const t = tasks.find(t=>t.id===currentPanelId);
+  if(!t) return;
+  t.name = document.getElementById('p-name').value.trim()||t.name;
+  t.assignee = document.getElementById('p-assignee').value.trim();
+  t.date = document.getElementById('p-date').value;
+  t.status = document.getElementById('p-status').value;
+  t.priority = document.getElementById('p-priority').value;
+  document.getElementById('panel-title').textContent = t.name;
+  renderAll();
+  const btn = document.querySelector('.save-btn');
+  btn.textContent = '저장됐어요 ✓';
+  btn.style.background = '#4caf6e';
+  setTimeout(()=>{btn.textContent='저장';btn.style.background='#1a1a1a';},1500);
+}
+
+function addComment(){
+  const t = tasks.find(t=>t.id===currentPanelId);
+  if(!t) return;
+  const txt = document.getElementById('p-comment-input').value.trim();
+  if(!txt) return;
+  if(!t.comments) t.comments=[];
+  t.comments.push({text:txt, time:new Date().toLocaleString('ko-KR')});
+  document.getElementById('p-comment-input').value='';
+  renderComments(t);
+  saveData();
+}
+
+function renderComments(t){
+  const el = document.getElementById('p-comment-list');
+  if(!t.comments||t.comments.length===0){el.innerHTML='<div style="font-size:12px;color:#aaa">아직 코멘트가 없어요</div>';return;}
+  el.innerHTML = t.comments.map((c,i)=>`
+    <div class="comment-item">
+      <div>${c.text}</div>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span class="comment-time">${c.time}</span>
+        <button class="file-del" onclick="deleteComment(${i})">✕</button>
+      </div>
+    </div>`).join('');
+}
+
+function deleteComment(idx){
+  const t = tasks.find(t=>t.id===currentPanelId);
+  if(!t||!t.comments) return;
+  t.comments.splice(idx,1);
+  renderComments(t);
+  saveData();
+}
+
+function addImages(e){
+  const t = tasks.find(t=>t.id===currentPanelId);
+  if(!t) return;
+  if(!t.images) t.images=[];
+  const files = Array.from(e.target.files);
+  files.forEach(file=>{
+    const reader = new FileReader();
+    reader.onload = ev=>{
+      t.images.push({name:file.name, data:ev.target.result});
+      renderImages(t);
+      saveData();
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function renderImages(t){
+  const el = document.getElementById('p-images');
+  if(!t.images||t.images.length===0){el.innerHTML='';return;}
+  el.innerHTML = t.images.map((img,i)=>`
+    <div style="position:relative">
+      <img src="${img.data}" class="img-thumb" onclick="window.open('${img.data}')">
+      <button onclick="deleteImage(${i})" style="position:absolute;top:-4px;right:-4px;width:16px;height:16px;border-radius:50%;background:#ef4444;border:none;color:#fff;font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0">✕</button>
+    </div>`).join('');
+}
+
+function deleteImage(idx){
+  const t = tasks.find(t=>t.id===currentPanelId);
+  if(!t||!t.images) return;
+  t.images.splice(idx,1);
+  renderImages(t);
+  saveData();
+}
+
+function addFiles(e){
+  const t = tasks.find(t=>t.id===currentPanelId);
+  if(!t) return;
+  if(!t.files) t.files=[];
+  const files = Array.from(e.target.files);
+  files.forEach(file=>{
+    const reader = new FileReader();
+    reader.onload = ev=>{
+      t.files.push({name:file.name, data:ev.target.result, size:Math.round(file.size/1024)+'KB'});
+      renderFiles(t);
+      saveData();
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function renderFiles(t){
+  const el = document.getElementById('p-files');
+  if(!t.files||t.files.length===0){el.innerHTML='';return;}
+  el.innerHTML = t.files.map((f,i)=>`
+    <div class="file-item">
+      <span style="font-size:16px">📄</span>
+      <span class="file-item-name">${f.name}</span>
+      <span style="font-size:10px;color:#aaa">${f.size}</span>
+      <a href="${f.data}" download="${f.name}" style="color:#4caf6e;font-size:11px;text-decoration:none">다운</a>
+      <button class="file-del" onclick="deleteFile(${i})">✕</button>
+    </div>`).join('');
+}
+
+function deleteFile(idx){
+  const t = tasks.find(t=>t.id===currentPanelId);
+  if(!t||!t.files) return;
+  t.files.splice(idx,1);
+  renderFiles(t);
+  saveData();
+}
 
 function saveData(){
   localStorage.setItem('pm_tasks', JSON.stringify(tasks));
