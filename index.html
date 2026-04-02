@@ -11,7 +11,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans
 h1{font-size:22px;font-weight:600;color:#1a1a1a;margin-bottom:4px}
 .subtitle{font-size:13px;color:#888;margin-bottom:20px}
 .top-nav{display:flex;gap:4px;margin-bottom:20px;border-bottom:1px solid #e5e5e5;flex-wrap:wrap}
-.top-tab{font-size:13px;padding:9px 18px;cursor:pointer;color:#888;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;transition:color 0.15s}
+.top-tab{font-size:13px;padding:9px 18px;cursor:pointer;color:#888;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap}
 .top-tab:hover{color:#444}
 .top-tab.active{color:#1a1a1a;font-weight:600;border-bottom:2px solid #1a1a1a}
 .page{display:none}.page.active{display:block}
@@ -24,12 +24,14 @@ h1{font-size:22px;font-weight:600;color:#1a1a1a;margin-bottom:4px}
 .add-form{background:#fff;border-radius:10px;padding:14px 16px;margin-bottom:16px;display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;border:1px solid #ebebeb}
 .fg{display:flex;flex-direction:column;gap:3px}
 .fg label{font-size:11px;color:#888;font-weight:500}
-.fg input,.fg select{font-size:13px;padding:6px 10px;border-radius:8px;border:1px solid #ddd;background:#fff;color:#1a1a1a;height:34px;outline:none;transition:border-color 0.15s}
+.fg input,.fg select{font-size:13px;padding:6px 10px;border-radius:8px;border:1px solid #ddd;background:#fff;color:#1a1a1a;height:34px;outline:none}
 .fg input:focus,.fg select:focus{border-color:#999}
-.btn{height:34px;font-size:13px;padding:0 16px;white-space:nowrap;border-radius:8px;border:1px solid #ddd;background:#fff;color:#1a1a1a;cursor:pointer;font-weight:500;transition:background 0.15s}
+.btn{height:34px;font-size:13px;padding:0 16px;white-space:nowrap;border-radius:8px;border:1px solid #ddd;background:#fff;color:#1a1a1a;cursor:pointer;font-weight:500}
 .btn:hover{background:#f5f5f5}
 .btn-primary{background:#1a1a1a;color:#fff;border-color:#1a1a1a}
 .btn-primary:hover{background:#333}
+.btn-green{background:#4caf6e;color:#fff;border-color:#4caf6e}
+.btn-green:hover{background:#3d9e5f}
 .badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap}
 .s-todo{background:#ebebeb;color:#555}
 .s-inprogress{background:#dbeafe;color:#1e40af}
@@ -44,40 +46,40 @@ h1{font-size:22px;font-weight:600;color:#1a1a1a;margin-bottom:4px}
 .tbl{width:100%;border-collapse:collapse;font-size:13px}
 .tbl th{text-align:left;padding:9px 12px;border-bottom:2px solid #f0f0f0;color:#888;font-weight:600;font-size:11px;white-space:nowrap;text-transform:uppercase;letter-spacing:0.04em}
 .tbl td{padding:9px 12px;border-bottom:1px solid #f5f5f5;vertical-align:middle}
-.tbl tr:hover td{background:#fafafa}
+.tbl tbody tr{cursor:pointer}
+.tbl tbody tr:hover td{background:#f5f5f3}
 .tbl-wrap{overflow-x:auto;border:1px solid #ebebeb;border-radius:10px;background:#fff}
-.del-btn{background:none;border:none;cursor:pointer;color:#ccc;font-size:14px;padding:0 4px;transition:color 0.15s}
+.del-btn{background:none;border:none;cursor:pointer;color:#ccc;font-size:14px;padding:0 4px}
 .del-btn:hover{color:#ef4444}
 .sub-tab-row{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
-.sub-tab{font-size:12px;padding:5px 14px;cursor:pointer;color:#888;border-radius:20px;border:1px solid #e5e5e5;background:#fff;transition:all 0.15s;font-weight:500}
+.sub-tab{font-size:12px;padding:5px 14px;cursor:pointer;color:#888;border-radius:20px;border:1px solid #e5e5e5;background:#fff;font-weight:500}
 .sub-tab:hover{border-color:#999;color:#444}
 .sub-tab.active{background:#1a1a1a;color:#fff;border-color:#1a1a1a}
 .kanban{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
 .k-col{background:#f5f5f3;border-radius:10px;padding:12px}
 .k-col-hdr{font-size:12px;font-weight:600;color:#666;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
 .k-cnt{background:#fff;border:1px solid #e5e5e5;border-radius:20px;font-size:11px;padding:1px 8px;color:#888}
-.k-card{background:#fff;border:1px solid #ebebeb;border-radius:8px;padding:10px 12px;margin-bottom:8px;font-size:13px;transition:border-color 0.15s}
-.k-card:hover{border-color:#bbb}
+.k-card{background:#fff;border:1px solid #ebebeb;border-radius:8px;padding:10px 12px;margin-bottom:8px;font-size:13px;cursor:pointer}
+.k-card:hover{border-color:#bbb;background:#fafafa}
 .k-card:last-child{margin-bottom:0}
-.check-row{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:8px;border:1px solid #ebebeb;background:#fff;margin-bottom:7px;transition:border-color 0.15s}
-.check-row:hover{border-color:#bbb}
-.cb{width:18px;height:18px;border:2px solid #ddd;border-radius:4px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.15s}
+.check-row{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:8px;border:1px solid #ebebeb;background:#fff;margin-bottom:7px;cursor:pointer}
+.check-row:hover{border-color:#bbb;background:#fafafa}
+.cb{width:18px;height:18px;border:2px solid #ddd;border-radius:4px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center}
 .cb.done{background:#4caf6e;border-color:#4caf6e}
 .cb.done::after{content:'';display:block;width:10px;height:6px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg) translate(1px,-1px)}
 .cn{flex:1;font-size:13px}.cn.done{color:#bbb;text-decoration:line-through}
 .cal-section{border-top:1px solid #ebebeb;margin-top:28px;padding-top:24px}
-.cal-section-title{font-size:15px;font-weight:600;color:#1a1a1a;margin-bottom:6px}
-.cal-section-sub{font-size:12px;color:#888;margin-bottom:16px}
+.cal-section-title{font-size:15px;font-weight:600;color:#1a1a1a;margin-bottom:16px}
 .legend{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:14px}
 .leg-item{display:flex;align-items:center;gap:5px;font-size:11px;color:#888}
 .leg-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0}
 .cal-nav{display:flex;align-items:center;gap:10px;margin-bottom:14px}
-.cal-nb{background:#fff;border:1px solid #e5e5e5;border-radius:8px;width:32px;height:32px;cursor:pointer;color:#666;font-size:16px;display:flex;align-items:center;justify-content:center;transition:background 0.15s}
+.cal-nb{background:#fff;border:1px solid #e5e5e5;border-radius:8px;width:32px;height:32px;cursor:pointer;color:#666;font-size:16px;display:flex;align-items:center;justify-content:center}
 .cal-nb:hover{background:#f5f5f5}
 .cal-mo{font-size:16px;font-weight:600;min-width:110px;text-align:center;color:#1a1a1a}
 .cgrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
 .cdname{text-align:center;font-size:11px;color:#aaa;padding:5px 0;font-weight:600}
-.ccell{min-height:80px;background:#fff;border:1px solid #ebebeb;border-radius:8px;padding:6px;cursor:pointer;transition:border-color 0.15s}
+.ccell{min-height:80px;background:#fff;border:1px solid #ebebeb;border-radius:8px;padding:6px;cursor:pointer}
 .ccell:hover{border-color:#bbb}
 .ccell.empty{background:transparent;border-color:transparent;cursor:default}
 .ccell.today{border:2px solid #4f90e5}
@@ -101,99 +103,54 @@ h1{font-size:22px;font-weight:600;color:#1a1a1a;margin-bottom:4px}
 .stock-bar{height:8px;background:#f0f0f0;border-radius:4px;overflow:hidden;width:80px}
 .stock-bar-fill{height:100%;border-radius:4px}
 .status-sel{font-size:11px;border:none;background:transparent;cursor:pointer;color:inherit;padding:0;font-weight:600}
-.section-hdr{font-size:12px;font-weight:600;color:#888;margin-bottom:10px;margin-top:4px;text-transform:uppercase;letter-spacing:0.04em}
 .tip{background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:10px 14px;font-size:12px;color:#92400e;margin-top:14px}
+/* 사이드패널 */
+.side-overlay{position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.25);z-index:999;display:none}
+.side-overlay.open{display:block}
+.side-panel{position:fixed;top:0;right:-460px;width:460px;height:100vh;background:#fff;border-left:1px solid #e5e5e5;z-index:1000;transition:right 0.3s ease;overflow-y:auto}
+.side-panel.open{right:0}
+.side-hdr{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid #f0f0f0;position:sticky;top:0;background:#fff;z-index:1}
+.side-hdr-title{font-size:15px;font-weight:600;color:#1a1a1a;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-right:10px}
+.side-close{background:none;border:none;font-size:22px;cursor:pointer;color:#aaa;line-height:1;padding:0}
+.side-close:hover{color:#333}
+.side-body{padding:20px}
+.side-sec{margin-bottom:22px}
+.side-sec-title{font-size:11px;font-weight:600;color:#aaa;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:10px}
+.side-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:0.5px solid #f5f5f5}
+.side-row:last-child{border-bottom:none}
+.side-lbl{font-size:12px;color:#888;min-width:64px;flex-shrink:0}
+.side-sel{font-size:12px;border:1px solid #e5e5e5;border-radius:6px;padding:4px 8px;background:#fff;color:#1a1a1a;cursor:pointer;outline:none}
+.side-inp{font-size:12px;border:1px solid #e5e5e5;border-radius:6px;padding:5px 9px;background:#fff;color:#1a1a1a;flex:1;outline:none}
+.side-inp:focus,.side-sel:focus{border-color:#999}
+.memo-area{width:100%;min-height:80px;font-size:13px;border:1px solid #e5e5e5;border-radius:8px;padding:10px;resize:vertical;color:#1a1a1a;font-family:inherit;outline:none}
+.memo-area:focus{border-color:#999}
+.comment-item{background:#f7f7f5;border-radius:8px;padding:10px 12px;margin-bottom:8px;font-size:12px;color:#555;line-height:1.6}
+.comment-time{font-size:10px;color:#aaa;margin-top:4px}
+.img-grid{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.img-thumb{width:76px;height:76px;object-fit:cover;border-radius:8px;border:1px solid #e5e5e5;cursor:pointer}
+.upload-area{display:flex;align-items:center;justify-content:center;gap:6px;font-size:12px;padding:10px;border:1.5px dashed #ddd;border-radius:8px;cursor:pointer;color:#888;background:#fafafa;width:100%;margin-bottom:8px}
+.upload-area:hover{border-color:#999;color:#555}
+.file-row{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f7f7f5;border-radius:6px;font-size:12px;margin-bottom:6px}
+.file-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#555}
+.file-size{font-size:10px;color:#aaa}
+.save-panel-btn{width:100%;height:40px;background:#1a1a1a;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;margin-top:4px}
+.save-panel-btn:hover{background:#333}
+.complete-btn{width:100%;height:40px;background:#4caf6e;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;margin-top:8px}
+.complete-btn:hover{background:#3d9e5f}
 @media(max-width:600px){
   .metrics{grid-template-columns:repeat(2,1fr)}
   .kanban{grid-template-columns:repeat(2,1fr)}
-  .cgrid{gap:2px}
-  .ccell{min-height:60px}
+  .side-panel{width:100vw;right:-100vw}
 }
-
-.side-panel{position:fixed;top:0;right:-420px;width:420px;height:100vh;background:#fff;border-left:1px solid #e5e5e5;z-index:1000;transition:right 0.3s;overflow-y:auto;box-shadow:-4px 0 20px rgba(0,0,0,0.08)}
-.side-panel.open{right:0}
-.side-overlay{position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.2);z-index:999;display:none}
-.side-overlay.open{display:block}
-.side-header{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid #f0f0f0;position:sticky;top:0;background:#fff;z-index:1}
-.side-title{font-size:16px;font-weight:600;color:#1a1a1a}
-.side-close{background:none;border:none;font-size:20px;cursor:pointer;color:#aaa;padding:0;line-height:1}
-.side-close:hover{color:#333}
-.side-body{padding:20px}
-.side-section{margin-bottom:20px}
-.side-section-title{font-size:11px;font-weight:600;color:#aaa;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:10px}
-.side-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:0.5px solid #f5f5f5}
-.side-row:last-child{border-bottom:none}
-.side-row-label{font-size:12px;color:#888;min-width:60px}
-.side-row-val{font-size:13px;color:#1a1a1a;flex:1}
-.side-select{font-size:12px;border:1px solid #e5e5e5;border-radius:6px;padding:4px 8px;background:#fff;color:#1a1a1a;cursor:pointer}
-.side-input{font-size:12px;border:1px solid #e5e5e5;border-radius:6px;padding:4px 8px;background:#fff;color:#1a1a1a;width:100%}
-.memo-box{width:100%;min-height:80px;font-size:13px;border:1px solid #e5e5e5;border-radius:8px;padding:10px;resize:vertical;color:#1a1a1a;font-family:inherit}
-.memo-box:focus{outline:none;border-color:#999}
-.img-preview{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
-.img-thumb{width:72px;height:72px;object-fit:cover;border-radius:6px;border:1px solid #e5e5e5;cursor:pointer}
-.file-list{display:flex;flex-direction:column;gap:6px;margin-top:8px}
-.file-item{display:flex;align-items:center;gap:8px;padding:7px 10px;background:#f7f7f5;border-radius:6px;font-size:12px;color:#555}
-.file-item-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.file-del{background:none;border:none;cursor:pointer;color:#ccc;font-size:13px;padding:0}
-.file-del:hover{color:#ef4444}
-.upload-btn{display:inline-flex;align-items:center;gap:6px;font-size:12px;padding:7px 14px;border:1.5px dashed #ddd;border-radius:8px;cursor:pointer;color:#888;background:#fafafa;transition:all 0.15s;width:100%;justify-content:center}
-.upload-btn:hover{border-color:#999;color:#555;background:#f5f5f5}
-.save-btn{width:100%;height:38px;background:#1a1a1a;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;margin-top:8px}
-.save-btn:hover{background:#333}
-.comment-list{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
-.comment-item{background:#f7f7f5;border-radius:8px;padding:10px 12px;font-size:12px;color:#555;line-height:1.5}
-.comment-time{font-size:10px;color:#aaa;margin-top:4px}
-.tbl td{cursor:pointer}
-
-.side-panel{position:fixed;top:0;right:-420px;width:420px;height:100vh;background:#fff;border-left:1px solid #e5e5e5;z-index:1000;transition:right 0.3s ease;overflow-y:auto;display:flex;flex-direction:column}
-.side-panel.open{right:0}
-.side-overlay{position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.3);z-index:999;display:none}
-.side-overlay.open{display:block}
-.side-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid #f0f0f0;position:sticky;top:0;background:#fff;z-index:1}
-.side-title{font-size:16px;font-weight:600;color:#1a1a1a}
-.side-close{background:none;border:none;cursor:pointer;font-size:20px;color:#888;padding:0 4px;line-height:1}
-.side-close:hover{color:#1a1a1a}
-.side-body{padding:20px;flex:1}
-.side-section{margin-bottom:20px}
-.side-section-title{font-size:11px;font-weight:600;color:#aaa;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:10px}
-.side-prop{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:0.5px solid #f5f5f5;font-size:13px}
-.side-prop:last-child{border-bottom:none}
-.side-prop-label{color:#888;min-width:70px;font-size:12px}
-.side-prop-val{flex:1;color:#1a1a1a}
-.side-prop select{font-size:12px;border:1px solid #e5e5e5;border-radius:6px;padding:3px 8px;background:#fff;color:#1a1a1a;cursor:pointer}
-.side-memo{width:100%;min-height:80px;font-size:13px;border:1px solid #e5e5e5;border-radius:8px;padding:10px;resize:vertical;font-family:inherit;color:#1a1a1a;outline:none}
-.side-memo:focus{border-color:#999}
-.side-save-btn{width:100%;height:36px;background:#1a1a1a;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;margin-top:8px}
-.side-save-btn:hover{background:#333}
-.upload-area{border:1.5px dashed #ddd;border-radius:8px;padding:16px;text-align:center;cursor:pointer;transition:border-color 0.15s;margin-bottom:8px}
-.upload-area:hover{border-color:#999;background:#fafafa}
-.upload-area-text{font-size:12px;color:#aaa}
-.upload-area-text b{color:#888;font-weight:500}
-.file-list{display:flex;flex-direction:column;gap:6px}
-.file-item{display:flex;align-items:center;gap:8px;padding:6px 10px;background:#f7f7f5;border-radius:6px;font-size:12px}
-.file-item-name{flex:1;color:#444;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.file-item-del{background:none;border:none;cursor:pointer;color:#ccc;font-size:13px;padding:0}
-.file-item-del:hover{color:#ef4444}
-.photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:6px}
-.photo-item{position:relative;aspect-ratio:1;border-radius:6px;overflow:hidden;background:#f0f0f0}
-.photo-item img{width:100%;height:100%;object-fit:cover}
-.photo-del{position:absolute;top:3px;right:3px;background:rgba(0,0,0,0.5);color:#fff;border:none;border-radius:50%;width:18px;height:18px;font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center}
-.comment-list{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
-.comment-item{background:#f7f7f5;border-radius:8px;padding:8px 12px}
-.comment-meta{font-size:11px;color:#aaa;margin-bottom:3px}
-.comment-text{font-size:13px;color:#1a1a1a}
-.comment-input-row{display:flex;gap:6px}
-.comment-input{flex:1;height:34px;font-size:13px;border:1px solid #e5e5e5;border-radius:8px;padding:0 10px;outline:none;font-family:inherit}
-.comment-input:focus{border-color:#999}
-.comment-btn{height:34px;padding:0 14px;background:#1a1a1a;color:#fff;border:none;border-radius:8px;font-size:12px;cursor:pointer;font-weight:500;white-space:nowrap}
-.task-row-clickable{cursor:pointer}
-.task-row-clickable:hover td{background:#f5f5f5 !important}
 </style>
 </head>
 <body>
 <div class="app">
-  <h1>프로젝트 관리 앱</h1>
-  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:4px"><div class="subtitle">태스크 · 재고 · 입고 캘린더 · 완료 프로젝트</div><div style="display:flex;align-items:center;gap:8px"><span id="save-status" style="font-size:11px;color:#4caf6e"></span><button class="btn" style="font-size:11px;height:28px;padding:0 10px;color:#ef4444;border-color:#fca5a5" onclick="if(confirm('모든 데이터를 초기화할까요?')){localStorage.clear();location.reload();}">데이터 초기화</button></div></div>
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:4px">
+    <h1>프로젝트 관리 앱</h1>
+    <button class="btn" style="font-size:11px;height:28px;padding:0 10px;color:#ef4444;border-color:#fca5a5" onclick="if(confirm('모든 데이터를 초기화할까요?')){localStorage.clear();location.reload();}">데이터 초기화</button>
+  </div>
+  <div class="subtitle">태스크 · 재고 · 입고 캘린더 · 완료 프로젝트</div>
 
   <div class="top-nav">
     <div class="top-tab active" onclick="goPage('project',this)">프로젝트 관리</div>
@@ -221,23 +178,16 @@ h1{font-size:22px;font-weight:600;color:#1a1a1a;margin-bottom:4px}
     <div id="sub-db"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>태스크명</th><th>담당자</th><th>상태</th><th>우선순위</th><th>마감일</th><th>진행률</th><th></th></tr></thead><tbody id="db-body"></tbody></table></div></div>
     <div id="sub-kanban" style="display:none"><div class="kanban"><div class="k-col"><div class="k-col-hdr">할 일<span class="k-cnt" id="kc-todo">0</span></div><div id="k-todo"></div></div><div class="k-col"><div class="k-col-hdr">진행 중<span class="k-cnt" id="kc-inprogress">0</span></div><div id="k-inprogress"></div></div><div class="k-col"><div class="k-col-hdr">검토 중<span class="k-cnt" id="kc-review">0</span></div><div id="k-review"></div></div><div class="k-col"><div class="k-col-hdr">완료<span class="k-cnt" id="kc-done">0</span></div><div id="k-done"></div></div></div></div>
     <div id="sub-checklist" style="display:none"><div id="checklist-body"></div></div>
-
     <div class="cal-section">
       <div class="cal-section-title">마감일 캘린더</div>
-      <div class="cal-section-sub">태스크를 추가하면 아래 캘린더에 자동으로 반영돼요</div>
       <div class="legend">
         <div class="leg-item"><div class="leg-dot" style="background:#fca5a5"></div>높은 우선순위</div>
         <div class="leg-item"><div class="leg-dot" style="background:#fcd34d"></div>중간 우선순위</div>
-        <div class="leg-item"><div class="leg-dot" style="background:#86efac"></div>낮음 / 완료</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#86efac"></div>낮음/완료</div>
         <div class="leg-item"><div class="leg-dot" style="background:#93c5fd"></div>검토 중</div>
       </div>
-      <div class="cal-nav">
-        <button class="cal-nb" onclick="tcPrev()">&#8249;</button>
-        <span class="cal-mo" id="tc-month"></span>
-        <button class="cal-nb" onclick="tcNext()">&#8250;</button>
-      </div>
-      <div class="cgrid" id="tc-daynames"></div>
-      <div style="height:5px"></div>
+      <div class="cal-nav"><button class="cal-nb" onclick="tcPrev()">&#8249;</button><span class="cal-mo" id="tc-month"></span><button class="cal-nb" onclick="tcNext()">&#8250;</button></div>
+      <div class="cgrid" id="tc-daynames"></div><div style="height:5px"></div>
       <div class="cgrid" id="tc-grid"></div>
       <div class="cdetail" id="tc-detail">날짜를 클릭하면 해당 마감 태스크를 확인할 수 있어요.</div>
     </div>
@@ -255,11 +205,10 @@ h1{font-size:22px;font-weight:600;color:#1a1a1a;margin-bottom:4px}
       <button class="btn btn-primary" onclick="addInventory()">+ 품목 추가</button>
     </div>
     <div class="tbl-wrap"><table class="tbl"><thead><tr><th>품목명</th><th>카테고리</th><th>현재 재고</th><th>최소 재고</th><th>상태</th><th>재고량</th><th>수량 조정</th><th></th></tr></thead><tbody id="inv-body"></tbody></table></div>
-    <div class="tip">최소 재고 이하로 떨어지면 자동으로 "부족" / 0이 되면 "품절"로 표시돼요.</div>
-  <div style="margin-top:20px">
-    <div style="font-size:13px;font-weight:600;color:#1a1a1a;margin-bottom:14px">재고 현황 그래프</div>
-    <div id="inv-chart" style="display:flex;flex-direction:column;gap:10px"></div>
-  </div>
+    <div style="margin-top:20px">
+      <div style="font-size:14px;font-weight:600;margin-bottom:14px">재고 현황 그래프</div>
+      <div id="inv-chart"></div>
+    </div>
   </div>
 
   <!-- 입고 캘린더 -->
@@ -277,7 +226,7 @@ h1{font-size:22px;font-weight:600;color:#1a1a1a;margin-bottom:4px}
     <div class="cgrid" id="ic-grid"></div>
     <div class="cdetail" id="ic-detail">날짜를 클릭하면 입고 예정 품목을 확인할 수 있어요.</div>
     <div style="height:20px"></div>
-    <div class="section-hdr">입고 전체 목록</div>
+    <div style="font-size:12px;font-weight:600;color:#888;margin-bottom:10px;text-transform:uppercase;letter-spacing:0.04em">입고 전체 목록</div>
     <div class="tbl-wrap"><table class="tbl"><thead><tr><th>품목명</th><th>수량</th><th>입고 예정일</th><th>공급업체</th><th>상태</th><th></th></tr></thead><tbody id="ic-list-body"></tbody></table></div>
   </div>
 
@@ -293,143 +242,99 @@ h1{font-size:22px;font-weight:600;color:#1a1a1a;margin-bottom:4px}
     </div>
     <div id="completed-body"></div>
   </div>
+</div>
 
+<!-- 사이드 오버레이 -->
 <div class="side-overlay" id="side-overlay" onclick="closePanel()"></div>
-<div class="side-panel" id="side-panel">
-  <div class="side-header">
-    <span class="side-title" id="panel-title">태스크 상세</span>
+
+<!-- 태스크 사이드패널 -->
+<div class="side-panel" id="task-panel">
+  <div class="side-hdr">
+    <span class="side-hdr-title" id="tp-title">태스크 상세</span>
     <button class="side-close" onclick="closePanel()">×</button>
   </div>
   <div class="side-body">
-    <div class="side-section">
-      <div class="side-section-title">기본 정보</div>
-      <div class="side-row"><span class="side-row-label">태스크명</span><input class="side-input" id="p-name" style="font-weight:500"></div>
-      <div class="side-row"><span class="side-row-label">담당자</span><input class="side-input" id="p-assignee" placeholder="담당자"></div>
-      <div class="side-row"><span class="side-row-label">마감일</span><input type="date" class="side-input" id="p-date"></div>
-      <div class="side-row"><span class="side-row-label">상태</span>
-        <select class="side-select" id="p-status">
+    <div class="side-sec">
+      <div class="side-sec-title">기본 정보</div>
+      <div class="side-row"><span class="side-lbl">태스크명</span><input class="side-inp" id="tp-name"></div>
+      <div class="side-row"><span class="side-lbl">담당자</span><input class="side-inp" id="tp-assignee" placeholder="담당자"></div>
+      <div class="side-row"><span class="side-lbl">마감일</span><input type="date" class="side-inp" id="tp-date"></div>
+      <div class="side-row"><span class="side-lbl">상태</span>
+        <select class="side-sel" id="tp-status">
           <option value="todo">할 일</option>
           <option value="inprogress">진행 중</option>
           <option value="review">검토 중</option>
           <option value="done">완료</option>
         </select>
       </div>
-      <div class="side-row"><span class="side-row-label">우선순위</span>
-        <select class="side-select" id="p-priority">
+      <div class="side-row"><span class="side-lbl">우선순위</span>
+        <select class="side-sel" id="tp-priority">
           <option value="high">높음</option>
           <option value="mid">중간</option>
           <option value="low">낮음</option>
         </select>
       </div>
     </div>
-
-    <div class="side-section">
-      <div class="side-section-title">메모 / 코멘트</div>
-      <div class="comment-list" id="p-comment-list"></div>
-      <textarea class="memo-box" id="p-comment-input" placeholder="코멘트를 입력하세요..."></textarea>
-      <button class="btn" style="width:100%;margin-top:6px;font-size:12px" onclick="addComment()">코멘트 추가</button>
+    <div class="side-sec">
+      <div class="side-sec-title">메모 / 코멘트</div>
+      <div id="tp-comments"></div>
+      <textarea class="memo-area" id="tp-comment-input" placeholder="코멘트를 입력하세요..."></textarea>
+      <button class="btn" style="width:100%;margin-top:6px;font-size:12px" onclick="addTaskComment()">+ 코멘트 추가</button>
     </div>
-
-    <div class="side-section">
-      <div class="side-section-title">사진 첨부</div>
-      <label class="upload-btn">
-        <span>+</span> 사진 추가
-        <input type="file" accept="image/*" multiple style="display:none" onchange="addImages(event)">
-      </label>
-      <div class="img-preview" id="p-images"></div>
+    <div class="side-sec">
+      <div class="side-sec-title">사진 첨부</div>
+      <label class="upload-area">+ 사진 추가<input type="file" accept="image/*" multiple style="display:none" onchange="addTaskImages(event)"></label>
+      <div class="img-grid" id="tp-images"></div>
     </div>
-
-    <div class="side-section">
-      <div class="side-section-title">파일 첨부</div>
-      <label class="upload-btn">
-        <span>+</span> 파일 추가
-        <input type="file" multiple style="display:none" onchange="addFiles(event)">
-      </label>
-      <div class="file-list" id="p-files"></div>
+    <div class="side-sec">
+      <div class="side-sec-title">파일 첨부</div>
+      <label class="upload-area">+ 파일 추가<input type="file" multiple style="display:none" onchange="addTaskFiles(event)"></label>
+      <div id="tp-files"></div>
     </div>
-
-    <button class="save-btn" onclick="savePanel()">저장</button>
+    <button class="save-panel-btn" onclick="saveTaskPanel()">저장</button>
+    <button class="complete-btn" onclick="moveToCompleted()">완료 프로젝트로 등록 →</button>
   </div>
 </div>
 
-
-<div class="side-overlay" id="side-overlay" onclick="closeSidePanel()"></div>
-<div class="side-panel" id="side-panel">
-  <div class="side-header">
-    <span class="side-title" id="side-task-name">태스크 상세</span>
-    <button class="side-close" onclick="closeSidePanel()">✕</button>
+<!-- 재고 사이드패널 -->
+<div class="side-panel" id="inv-panel">
+  <div class="side-hdr">
+    <span class="side-hdr-title" id="ip-title">재고 상세</span>
+    <button class="side-close" onclick="closePanel()">×</button>
   </div>
   <div class="side-body">
-    <div class="side-section">
-      <div class="side-section-title">기본 정보</div>
-      <div class="side-prop">
-        <span class="side-prop-label">담당자</span>
-        <span class="side-prop-val" id="sp-assignee">-</span>
-      </div>
-      <div class="side-prop">
-        <span class="side-prop-label">마감일</span>
-        <span class="side-prop-val" id="sp-date">-</span>
-      </div>
-      <div class="side-prop">
-        <span class="side-prop-label">상태</span>
-        <select id="sp-status" onchange="updateFromPanel('status',this.value)">
-          <option value="todo">할 일</option>
-          <option value="inprogress">진행 중</option>
-          <option value="review">검토 중</option>
-          <option value="done">완료</option>
-        </select>
-      </div>
-      <div class="side-prop">
-        <span class="side-prop-label">우선순위</span>
-        <select id="sp-priority" onchange="updateFromPanel('priority',this.value)">
-          <option value="high">높음</option>
-          <option value="mid">중간</option>
-          <option value="low">낮음</option>
-        </select>
-      </div>
-      <div class="side-prop">
-        <span class="side-prop-label">진행률</span>
-        <span class="side-prop-val" id="sp-progress">-</span>
+    <div class="side-sec">
+      <div class="side-sec-title">기본 정보</div>
+      <div class="side-row"><span class="side-lbl">품목명</span><input class="side-inp" id="ip-name"></div>
+      <div class="side-row"><span class="side-lbl">카테고리</span><input class="side-inp" id="ip-cat"></div>
+      <div class="side-row"><span class="side-lbl">현재 재고</span><input type="number" class="side-inp" id="ip-qty" min="0"></div>
+      <div class="side-row"><span class="side-lbl">최소 재고</span><input type="number" class="side-inp" id="ip-min" min="0"></div>
+      <div class="side-row"><span class="side-lbl">단위</span><input class="side-inp" id="ip-unit"></div>
+    </div>
+    <div class="side-sec">
+      <div class="side-sec-title">수량 빠른 조정</div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button class="btn" style="flex:1;font-size:18px" onclick="quickAdjust(-1)">－</button>
+        <span id="ip-qty-display" style="font-size:22px;font-weight:600;min-width:60px;text-align:center"></span>
+        <button class="btn" style="flex:1;font-size:18px" onclick="quickAdjust(1)">＋</button>
       </div>
     </div>
-
-    <div class="side-section">
-      <div class="side-section-title">메모</div>
-      <textarea class="side-memo" id="sp-memo" placeholder="메모를 입력하세요..."></textarea>
-      <button class="side-save-btn" onclick="saveMemo()">메모 저장</button>
+    <div class="side-sec">
+      <div class="side-sec-title">메모</div>
+      <textarea class="memo-area" id="ip-memo" placeholder="메모를 입력하세요..."></textarea>
     </div>
-
-    <div class="side-section">
-      <div class="side-section-title">사진 첨부</div>
-      <div class="upload-area" onclick="document.getElementById('photo-input').click()">
-        <div class="upload-area-text"><b>클릭</b>해서 사진 추가</div>
-        <div class="upload-area-text" style="margin-top:4px">JPG, PNG, GIF 지원</div>
-      </div>
-      <input type="file" id="photo-input" accept="image/*" multiple style="display:none" onchange="addPhotos(this)">
-      <div class="photo-grid" id="photo-grid"></div>
+    <div class="side-sec">
+      <div class="side-sec-title">사진 첨부</div>
+      <label class="upload-area">+ 사진 추가<input type="file" accept="image/*" multiple style="display:none" onchange="addInvImages(event)"></label>
+      <div class="img-grid" id="ip-images"></div>
     </div>
-
-    <div class="side-section">
-      <div class="side-section-title">파일 첨부</div>
-      <div class="upload-area" onclick="document.getElementById('file-input').click()">
-        <div class="upload-area-text"><b>클릭</b>해서 파일 추가</div>
-        <div class="upload-area-text" style="margin-top:4px">모든 파일 형식 지원</div>
-      </div>
-      <input type="file" id="file-input" multiple style="display:none" onchange="addFiles(this)">
-      <div class="file-list" id="file-list"></div>
+    <div class="side-sec">
+      <div class="side-sec-title">파일 첨부</div>
+      <label class="upload-area">+ 파일 추가<input type="file" multiple style="display:none" onchange="addInvFiles(event)"></label>
+      <div id="ip-files"></div>
     </div>
-
-    <div class="side-section">
-      <div class="side-section-title">코멘트</div>
-      <div class="comment-list" id="comment-list"></div>
-      <div class="comment-input-row">
-        <input class="comment-input" id="comment-input" placeholder="코멘트 입력..." onkeydown="if(event.key==='Enter')addComment()">
-        <button class="comment-btn" onclick="addComment()">등록</button>
-      </div>
-    </div>
+    <button class="save-panel-btn" onclick="saveInvPanel()">저장</button>
   </div>
-</div>
-
 </div>
 
 <script>
@@ -438,26 +343,26 @@ const DAYS=['일','월','화','수','목','금','토'];
 const MONTHS=['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
 
 let tasks=[
-  {id:1,name:'요구사항 정의',assignee:'홍길동',date:'2026-03-28',priority:'high',status:'done'},
-  {id:2,name:'팀 킥오프',assignee:'전체',date:'2026-03-30',priority:'mid',status:'done'},
-  {id:3,name:'개발 환경 세팅',assignee:'이개발',date:'2026-04-01',priority:'mid',status:'done'},
-  {id:4,name:'브랜드 가이드',assignee:'김디자인',date:'2026-04-05',priority:'mid',status:'review'},
-  {id:5,name:'사용자 인터뷰',assignee:'박마케팅',date:'2026-04-07',priority:'mid',status:'review'},
-  {id:6,name:'UI 와이어프레임',assignee:'김디자인',date:'2026-04-08',priority:'mid',status:'todo'},
-  {id:7,name:'랜딩페이지 개발',assignee:'이개발',date:'2026-04-10',priority:'high',status:'inprogress'},
-  {id:8,name:'API 연동',assignee:'이개발',date:'2026-04-12',priority:'high',status:'inprogress'},
-  {id:9,name:'콘텐츠 기획',assignee:'박마케팅',date:'2026-04-14',priority:'low',status:'todo'},
-  {id:10,name:'QA 체크리스트',assignee:'전체',date:'2026-04-15',priority:'low',status:'todo'},
-  {id:11,name:'최종 런칭',assignee:'홍길동',date:'2026-04-15',priority:'high',status:'todo'},
+  {id:1,name:'요구사항 정의',assignee:'홍길동',date:'2026-03-28',priority:'high',status:'done',comments:[],images:[],files:[]},
+  {id:2,name:'팀 킥오프',assignee:'전체',date:'2026-03-30',priority:'mid',status:'done',comments:[],images:[],files:[]},
+  {id:3,name:'개발 환경 세팅',assignee:'이개발',date:'2026-04-01',priority:'mid',status:'done',comments:[],images:[],files:[]},
+  {id:4,name:'브랜드 가이드',assignee:'김디자인',date:'2026-04-05',priority:'mid',status:'review',comments:[],images:[],files:[]},
+  {id:5,name:'사용자 인터뷰',assignee:'박마케팅',date:'2026-04-07',priority:'mid',status:'review',comments:[],images:[],files:[]},
+  {id:6,name:'UI 와이어프레임',assignee:'김디자인',date:'2026-04-08',priority:'mid',status:'todo',comments:[],images:[],files:[]},
+  {id:7,name:'랜딩페이지 개발',assignee:'이개발',date:'2026-04-10',priority:'high',status:'inprogress',comments:[],images:[],files:[]},
+  {id:8,name:'API 연동',assignee:'이개발',date:'2026-04-12',priority:'high',status:'inprogress',comments:[],images:[],files:[]},
+  {id:9,name:'콘텐츠 기획',assignee:'박마케팅',date:'2026-04-14',priority:'low',status:'todo',comments:[],images:[],files:[]},
+  {id:10,name:'QA 체크리스트',assignee:'전체',date:'2026-04-15',priority:'low',status:'todo',comments:[],images:[],files:[]},
+  {id:11,name:'최종 런칭',assignee:'홍길동',date:'2026-04-15',priority:'high',status:'todo',comments:[],images:[],files:[]},
 ];
 let taskId=12;
 let inventory=[
-  {id:1,name:'A4 용지',cat:'소모품',qty:150,min:50,unit:'박스'},
-  {id:2,name:'볼펜',cat:'소모품',qty:30,min:20,unit:'개'},
-  {id:3,name:'노트북 거치대',cat:'장비',qty:5,min:3,unit:'개'},
-  {id:4,name:'USB 허브',cat:'장비',qty:2,min:5,unit:'개'},
-  {id:5,name:'명함',cat:'인쇄물',qty:0,min:100,unit:'장'},
-  {id:6,name:'포스트잇',cat:'소모품',qty:80,min:30,unit:'개'},
+  {id:1,name:'A4 용지',cat:'소모품',qty:150,min:50,unit:'박스',memo:'',images:[],files:[]},
+  {id:2,name:'볼펜',cat:'소모품',qty:30,min:20,unit:'개',memo:'',images:[],files:[]},
+  {id:3,name:'노트북 거치대',cat:'장비',qty:5,min:3,unit:'개',memo:'',images:[],files:[]},
+  {id:4,name:'USB 허브',cat:'장비',qty:2,min:5,unit:'개',memo:'',images:[],files:[]},
+  {id:5,name:'명함',cat:'인쇄물',qty:0,min:100,unit:'장',memo:'',images:[],files:[]},
+  {id:6,name:'포스트잇',cat:'소모품',qty:80,min:30,unit:'개',memo:'',images:[],files:[]},
 ];
 let invId=7;
 let incoming=[
@@ -475,6 +380,7 @@ let completedProjects=[
 ];
 let cpId=4;
 let tcYear=2026,tcMonth=3,icYear=2026,icMonth=3;
+let currentTaskId=null,currentInvId=null;
 
 function sLabel(s){return{todo:'할 일',inprogress:'진행 중',review:'검토 중',done:'완료'}[s]||s}
 function pLabel(p){return{high:'높음',mid:'중간',low:'낮음'}[p]||p}
@@ -486,6 +392,169 @@ function icStLb(s){return{scheduled:'예정',confirmed:'확정',arrived:'입고 
 function icStSty(s){if(s==='arrived')return'background:#dcfce7;color:#166534';if(s==='confirmed')return'background:#dbeafe;color:#1e40af';return'background:#ebebeb;color:#555'}
 function chipCls(t){if(t.status==='done')return'chip-done';if(t.status==='review')return'chip-review';return t.priority==='high'?'chip-high':t.priority==='mid'?'chip-mid':'chip-low'}
 
+// 저장/로드
+function saveData(){
+  try{
+    localStorage.setItem('pm_tasks',JSON.stringify(tasks));
+    localStorage.setItem('pm_inventory',JSON.stringify(inventory));
+    localStorage.setItem('pm_incoming',JSON.stringify(incoming));
+    localStorage.setItem('pm_completed',JSON.stringify(completedProjects));
+    localStorage.setItem('pm_ids',JSON.stringify({taskId,invId,icId,cpId}));
+  }catch(e){}
+}
+function loadData(){
+  try{
+    const t=localStorage.getItem('pm_tasks');if(t)tasks=JSON.parse(t);
+    const i=localStorage.getItem('pm_inventory');if(i)inventory=JSON.parse(i);
+    const ic=localStorage.getItem('pm_incoming');if(ic)incoming=JSON.parse(ic);
+    const cp=localStorage.getItem('pm_completed');if(cp)completedProjects=JSON.parse(cp);
+    const ids=localStorage.getItem('pm_ids');if(ids){const o=JSON.parse(ids);taskId=o.taskId;invId=o.invId;icId=o.icId;cpId=o.cpId;}
+  }catch(e){}
+}
+
+// 태스크 사이드패널
+function openTaskPanel(id){
+  const t=tasks.find(t=>t.id===id);if(!t)return;
+  currentTaskId=id;
+  document.getElementById('tp-title').textContent=t.name;
+  document.getElementById('tp-name').value=t.name;
+  document.getElementById('tp-assignee').value=t.assignee||'';
+  document.getElementById('tp-date').value=t.date||'';
+  document.getElementById('tp-status').value=t.status;
+  document.getElementById('tp-priority').value=t.priority;
+  document.getElementById('tp-comment-input').value='';
+  renderTaskComments(t);renderTaskImages(t);renderTaskFiles(t);
+  document.getElementById('task-panel').classList.add('open');
+  document.getElementById('side-overlay').classList.add('open');
+}
+function saveTaskPanel(){
+  const t=tasks.find(t=>t.id===currentTaskId);if(!t)return;
+  t.name=document.getElementById('tp-name').value.trim()||t.name;
+  t.assignee=document.getElementById('tp-assignee').value.trim();
+  t.date=document.getElementById('tp-date').value;
+  t.status=document.getElementById('tp-status').value;
+  t.priority=document.getElementById('tp-priority').value;
+  document.getElementById('tp-title').textContent=t.name;
+  renderAll();
+  const btn=document.querySelector('#task-panel .save-panel-btn');
+  btn.textContent='저장됐어요 ✓';btn.style.background='#4caf6e';
+  setTimeout(()=>{btn.textContent='저장';btn.style.background='#1a1a1a';},1500);
+}
+function moveToCompleted(){
+  const t=tasks.find(t=>t.id===currentTaskId);if(!t)return;
+  const name=prompt('완료 프로젝트 이름:',t.name)||t.name;
+  const result=prompt('결과 요약 (선택사항):','')||'완료';
+  const endDate=new Date().toISOString().slice(0,10);
+  completedProjects.unshift({id:cpId++,name,team:t.assignee||'전체',startDate:t.date||endDate,endDate,tasks:[t.name],result});
+  tasks=tasks.filter(tt=>tt.id!==currentTaskId);
+  closePanel();saveData();renderAll();
+  alert('완료 프로젝트에 등록됐어요! 🎉');
+}
+function addTaskComment(){
+  const t=tasks.find(t=>t.id===currentTaskId);if(!t)return;
+  const txt=document.getElementById('tp-comment-input').value.trim();if(!txt)return;
+  if(!t.comments)t.comments=[];
+  t.comments.push({text:txt,time:new Date().toLocaleString('ko-KR')});
+  document.getElementById('tp-comment-input').value='';
+  renderTaskComments(t);saveData();
+}
+function renderTaskComments(t){
+  const el=document.getElementById('tp-comments');
+  if(!t.comments||!t.comments.length){el.innerHTML='<div style="font-size:12px;color:#aaa;margin-bottom:8px">아직 코멘트가 없어요</div>';return;}
+  el.innerHTML=t.comments.map((c,i)=>`<div class="comment-item"><div>${c.text}</div><div style="display:flex;justify-content:space-between"><span class="comment-time">${c.time}</span><button class="del-btn" onclick="delTaskComment(${i})">✕</button></div></div>`).join('');
+}
+function delTaskComment(i){const t=tasks.find(t=>t.id===currentTaskId);if(!t)return;t.comments.splice(i,1);renderTaskComments(t);saveData();}
+function addTaskImages(e){
+  const t=tasks.find(t=>t.id===currentTaskId);if(!t)return;
+  if(!t.images)t.images=[];
+  Array.from(e.target.files).forEach(f=>{const r=new FileReader();r.onload=ev=>{t.images.push({name:f.name,data:ev.target.result});renderTaskImages(t);saveData();};r.readAsDataURL(f);});
+}
+function renderTaskImages(t){
+  const el=document.getElementById('tp-images');
+  if(!t.images||!t.images.length){el.innerHTML='';return;}
+  el.innerHTML=t.images.map((img,i)=>`<div style="position:relative"><img src="${img.data}" class="img-thumb" onclick="window.open('${img.data}')"><button onclick="delTaskImg(${i})" style="position:absolute;top:-4px;right:-4px;width:18px;height:18px;border-radius:50%;background:#ef4444;border:none;color:#fff;font-size:10px;cursor:pointer">✕</button></div>`).join('');
+}
+function delTaskImg(i){const t=tasks.find(t=>t.id===currentTaskId);if(!t)return;t.images.splice(i,1);renderTaskImages(t);saveData();}
+function addTaskFiles(e){
+  const t=tasks.find(t=>t.id===currentTaskId);if(!t)return;
+  if(!t.files)t.files=[];
+  Array.from(e.target.files).forEach(f=>{const r=new FileReader();r.onload=ev=>{t.files.push({name:f.name,data:ev.target.result,size:Math.round(f.size/1024)+'KB'});renderTaskFiles(t);saveData();};r.readAsDataURL(f);});
+}
+function renderTaskFiles(t){
+  const el=document.getElementById('tp-files');
+  if(!t.files||!t.files.length){el.innerHTML='';return;}
+  el.innerHTML=t.files.map((f,i)=>`<div class="file-row"><span style="font-size:15px">📄</span><span class="file-name">${f.name}</span><span class="file-size">${f.size}</span><a href="${f.data}" download="${f.name}" style="color:#4caf6e;font-size:11px">다운</a><button class="del-btn" onclick="delTaskFile(${i})">✕</button></div>`).join('');
+}
+function delTaskFile(i){const t=tasks.find(t=>t.id===currentTaskId);if(!t)return;t.files.splice(i,1);renderTaskFiles(t);saveData();}
+
+// 재고 사이드패널
+function openInvPanel(id){
+  const item=inventory.find(i=>i.id===id);if(!item)return;
+  currentInvId=id;
+  document.getElementById('ip-title').textContent=item.name;
+  document.getElementById('ip-name').value=item.name;
+  document.getElementById('ip-cat').value=item.cat;
+  document.getElementById('ip-qty').value=item.qty;
+  document.getElementById('ip-min').value=item.min;
+  document.getElementById('ip-unit').value=item.unit;
+  document.getElementById('ip-memo').value=item.memo||'';
+  document.getElementById('ip-qty-display').textContent=item.qty+' '+item.unit;
+  renderInvImages(item);renderInvFiles(item);
+  document.getElementById('inv-panel').classList.add('open');
+  document.getElementById('side-overlay').classList.add('open');
+}
+function quickAdjust(delta){
+  const item=inventory.find(i=>i.id===currentInvId);if(!item)return;
+  item.qty=Math.max(0,item.qty+delta);
+  document.getElementById('ip-qty').value=item.qty;
+  document.getElementById('ip-qty-display').textContent=item.qty+' '+item.unit;
+  renderInventory();saveData();
+}
+function saveInvPanel(){
+  const item=inventory.find(i=>i.id===currentInvId);if(!item)return;
+  item.name=document.getElementById('ip-name').value.trim()||item.name;
+  item.cat=document.getElementById('ip-cat').value.trim();
+  item.qty=parseInt(document.getElementById('ip-qty').value)||0;
+  item.min=parseInt(document.getElementById('ip-min').value)||0;
+  item.unit=document.getElementById('ip-unit').value.trim()||item.unit;
+  item.memo=document.getElementById('ip-memo').value;
+  document.getElementById('ip-title').textContent=item.name;
+  document.getElementById('ip-qty-display').textContent=item.qty+' '+item.unit;
+  renderInventory();saveData();
+  const btn=document.querySelector('#inv-panel .save-panel-btn');
+  btn.textContent='저장됐어요 ✓';btn.style.background='#4caf6e';
+  setTimeout(()=>{btn.textContent='저장';btn.style.background='#1a1a1a';},1500);
+}
+function addInvImages(e){
+  const item=inventory.find(i=>i.id===currentInvId);if(!item)return;
+  if(!item.images)item.images=[];
+  Array.from(e.target.files).forEach(f=>{const r=new FileReader();r.onload=ev=>{item.images.push({name:f.name,data:ev.target.result});renderInvImages(item);saveData();};r.readAsDataURL(f);});
+}
+function renderInvImages(item){
+  const el=document.getElementById('ip-images');
+  if(!item.images||!item.images.length){el.innerHTML='';return;}
+  el.innerHTML=item.images.map((img,i)=>`<div style="position:relative"><img src="${img.data}" class="img-thumb" onclick="window.open('${img.data}')"><button onclick="delInvImg(${i})" style="position:absolute;top:-4px;right:-4px;width:18px;height:18px;border-radius:50%;background:#ef4444;border:none;color:#fff;font-size:10px;cursor:pointer">✕</button></div>`).join('');
+}
+function delInvImg(i){const item=inventory.find(i=>i.id===currentInvId);if(!item)return;item.images.splice(i,1);renderInvImages(item);saveData();}
+function addInvFiles(e){
+  const item=inventory.find(i=>i.id===currentInvId);if(!item)return;
+  if(!item.files)item.files=[];
+  Array.from(e.target.files).forEach(f=>{const r=new FileReader();r.onload=ev=>{item.files.push({name:f.name,data:ev.target.result,size:Math.round(f.size/1024)+'KB'});renderInvFiles(item);saveData();};r.readAsDataURL(f);});
+}
+function renderInvFiles(item){
+  const el=document.getElementById('ip-files');
+  if(!item.files||!item.files.length){el.innerHTML='';return;}
+  el.innerHTML=item.files.map((f,i)=>`<div class="file-row"><span style="font-size:15px">📄</span><span class="file-name">${f.name}</span><span class="file-size">${f.size}</span><a href="${f.data}" download="${f.name}" style="color:#4caf6e;font-size:11px">다운</a><button class="del-btn" onclick="delInvFile(${i})">✕</button></div>`).join('');
+}
+function delInvFile(i){const item=inventory.find(i=>i.id===currentInvId);if(!item)return;item.files.splice(i,1);renderInvFiles(item);saveData();}
+
+function closePanel(){
+  document.querySelectorAll('.side-panel').forEach(p=>p.classList.remove('open'));
+  document.getElementById('side-overlay').classList.remove('open');
+  currentTaskId=null;currentInvId=null;
+}
+
+// 렌더링
 function renderProjMetrics(){
   const total=tasks.length,done=tasks.filter(t=>t.status==='done').length;
   const pct=total?Math.round(done/total*100):0;
@@ -498,51 +567,45 @@ function renderProjMetrics(){
     <div class="metric"><div class="metric-label">진행률</div><div class="metric-value">${pct}%</div><div class="pb"><div class="pbf" style="width:${pct}%"></div></div></div>
     <div class="metric"><div class="metric-label">가장 빠른 마감</div><div class="metric-value" style="font-size:13px">${nxt}</div></div>`;
 }
-
 function renderDB(){
   document.getElementById('db-body').innerHTML=tasks.map(t=>`
-    <tr onclick="openPanel(${t.id})" style="cursor:pointer"><td style="font-weight:500">${t.name}</td>
-    <td style="color:#888">${t.assignee||'-'}</td>
-    <td><select class="status-sel badge s-${t.status}" onchange="changeTaskStatus(${t.id},this.value)">
-      <option value="todo" ${t.status==='todo'?'selected':''}>할 일</option>
-      <option value="inprogress" ${t.status==='inprogress'?'selected':''}>진행 중</option>
-      <option value="review" ${t.status==='review'?'selected':''}>검토 중</option>
-      <option value="done" ${t.status==='done'?'selected':''}>완료</option>
-    </select></td>
-    <td><span class="badge p-${t.priority}">${pLabel(t.priority)}</span></td>
-    <td style="color:#888">${t.date||'-'}</td>
-    <td><div style="display:flex;align-items:center;gap:6px"><div class="stock-bar" style="width:70px"><div class="stock-bar-fill" style="width:${progPct(t)}%;background:#4caf6e"></div></div><span style="font-size:11px;color:#aaa">${progPct(t)}%</span></div></td>
-    <td><button class="del-btn" onclick="deleteTask(${t.id})">✕</button></td></tr>`).join('');
+    <tr onclick="openTaskPanel(${t.id})">
+      <td style="font-weight:500">${t.name}${(t.comments&&t.comments.length)?`<span style="font-size:10px;color:#4caf6e;margin-left:6px">💬${t.comments.length}</span>`:''}${(t.images&&t.images.length)?`<span style="font-size:10px;color:#4f90e5;margin-left:4px">🖼${t.images.length}</span>`:''}${(t.files&&t.files.length)?`<span style="font-size:10px;color:#f59e0b;margin-left:4px">📎${t.files.length}</span>`:''}</td>
+      <td style="color:#888">${t.assignee||'-'}</td>
+      <td><span class="badge s-${t.status}">${sLabel(t.status)}</span></td>
+      <td><span class="badge p-${t.priority}">${pLabel(t.priority)}</span></td>
+      <td style="color:#888">${t.date||'-'}</td>
+      <td><div style="display:flex;align-items:center;gap:6px"><div class="stock-bar" style="width:70px"><div class="stock-bar-fill" style="width:${progPct(t)}%;background:#4caf6e"></div></div><span style="font-size:11px;color:#aaa">${progPct(t)}%</span></div></td>
+      <td onclick="event.stopPropagation()"><button class="del-btn" onclick="deleteTask(${t.id})">✕</button></td>
+    </tr>`).join('');
 }
-
 function renderKanban(){
   ['todo','inprogress','review','done'].forEach(s=>{
     const f=tasks.filter(t=>t.status===s);
     document.getElementById('kc-'+s).textContent=f.length;
     document.getElementById('k-'+s).innerHTML=f.map(t=>`
-      <div class="k-card" onclick="openSidePanel(${t.id})" style="cursor:pointer"><div style="margin-bottom:6px;font-weight:500">${t.name}</div>
-      <div style="display:flex;gap:5px;flex-wrap:wrap">
-        <span class="badge p-${t.priority}">${pLabel(t.priority)}</span>
-        ${t.date?`<span style="font-size:11px;color:#888">${t.date.slice(5).replace('-','/')}</span>`:''}
-        ${t.assignee?`<span style="font-size:11px;color:#aaa">${t.assignee}</span>`:''}
-      </div></div>`).join('');
+      <div class="k-card" onclick="openTaskPanel(${t.id})">
+        <div style="margin-bottom:6px;font-weight:500">${t.name}</div>
+        <div style="display:flex;gap:5px;flex-wrap:wrap">
+          <span class="badge p-${t.priority}">${pLabel(t.priority)}</span>
+          ${t.date?`<span style="font-size:11px;color:#888">${t.date.slice(5).replace('-','/')}</span>`:''}
+          ${t.assignee?`<span style="font-size:11px;color:#aaa">${t.assignee}</span>`:''}
+        </div>
+      </div>`).join('');
   });
 }
-
 function renderChecklist(){
   document.getElementById('checklist-body').innerHTML=tasks.map(t=>`
-    <div class="check-row">
-      <div class="cb ${t.status==='done'?'done':''}" onclick="toggleDone(${t.id})"></div>
+    <div class="check-row" onclick="openTaskPanel(${t.id})">
+      <div class="cb ${t.status==='done'?'done':''}" onclick="event.stopPropagation();toggleDone(${t.id})"></div>
       <span class="cn ${t.status==='done'?'done':''}">${t.name}</span>
       <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
         <span class="badge s-${t.status}">${sLabel(t.status)}</span>
         <span class="badge p-${t.priority}">${pLabel(t.priority)}</span>
         ${t.date?`<span style="font-size:11px;color:#aaa">${t.date.slice(5).replace('-','/')}</span>`:''}
-        ${t.assignee?`<span style="font-size:11px;color:#aaa">${t.assignee}</span>`:''}
       </div>
     </div>`).join('');
 }
-
 function renderTaskCal(){
   document.getElementById('tc-month').textContent=tcYear+'년 '+MONTHS[tcMonth];
   document.getElementById('tc-daynames').innerHTML=DAYS.map(d=>`<div class="cdname">${d}</div>`).join('');
@@ -561,12 +624,11 @@ function renderTaskCal(){
       const p=document.getElementById('tc-detail');
       if(!dt.length){p.innerHTML=`<span style="color:#aaa">${tcMonth+1}월 ${d}일 — 마감 태스크 없음</span>`;return;}
       p.innerHTML=`<div style="font-size:12px;font-weight:600;color:#888;margin-bottom:8px">${tcMonth+1}월 ${d}일 마감 (${dt.length}개)</div>`+
-        dt.map(t=>`<div class="cdr"><span style="flex:1;font-weight:500">${t.name}</span><span class="badge s-${t.status}">${sLabel(t.status)}</span><span class="badge p-${t.priority}">${pLabel(t.priority)}</span>${t.assignee?`<span style="font-size:11px;color:#aaa">${t.assignee}</span>`:''}</div>`).join('');
+        dt.map(t=>`<div class="cdr" style="cursor:pointer" onclick="openTaskPanel(${t.id})"><span style="flex:1;font-weight:500">${t.name}</span><span class="badge s-${t.status}">${sLabel(t.status)}</span><span class="badge p-${t.priority}">${pLabel(t.priority)}</span></div>`).join('');
     });
     grid.appendChild(cell);
   }
 }
-
 function renderInvMetrics(){
   const total=inventory.length,out=inventory.filter(i=>i.qty===0).length,low=inventory.filter(i=>i.qty>0&&i.qty<=i.min).length;
   document.getElementById('inv-metrics').innerHTML=`
@@ -575,55 +637,47 @@ function renderInvMetrics(){
     <div class="metric"><div class="metric-label">재고 부족</div><div class="metric-value" style="color:#92400e">${low}</div></div>
     <div class="metric"><div class="metric-label">품절</div><div class="metric-value" style="color:#991b1b">${out}</div></div>`;
 }
-
 function renderInventory(){
   renderInvMetrics();
-  // 재고 그래프 렌더링
-  const chartEl=document.getElementById('inv-chart');
-  if(chartEl){
-    chartEl.innerHTML=inventory.map(item=>{
-      const s=stockSt(item);
-      const pct=item.min>0?Math.min(100,Math.round(item.qty/item.min*100)):100;
-      const barColor=s==='out'?'#ef4444':s==='low'?'#f59e0b':'#4caf6e';
-      const bgColor=s==='out'?'#fee2e2':s==='low'?'#fef3c7':'#f0fdf4';
-      return`<div style="background:#fff;border:1px solid #ebebeb;border-radius:8px;padding:10px 14px">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-          <span style="font-size:13px;font-weight:500">${item.name}</span>
-          <div style="display:flex;align-items:center;gap:8px">
-            <span style="font-size:12px;color:#888">${item.qty}/${item.min} ${item.unit}</span>
-            <span class="badge ${stockCls(s)}">${stockLb(s)}</span>
-          </div>
-        </div>
-        <div style="height:10px;background:#f0f0f0;border-radius:5px;overflow:hidden">
-          <div style="height:100%;width:${pct}%;background:${barColor};border-radius:5px;transition:width 0.4s"></div>
-        </div>
-        <div style="display:flex;justify-content:space-between;margin-top:4px">
-          <span style="font-size:10px;color:#aaa">0</span>
-          <span style="font-size:10px;color:#aaa;font-weight:500">${pct}%</span>
-          <span style="font-size:10px;color:#aaa">최소: ${item.min}</span>
-        </div>
-      </div>`;
-    }).join('');
-  }
   document.getElementById('inv-body').innerHTML=inventory.map(item=>{
     const s=stockSt(item);
     const pct=item.min>0?Math.min(100,Math.round(item.qty/item.min*100)):100;
     const barColor=s==='out'?'#ef4444':s==='low'?'#f59e0b':'#4caf6e';
-    return`<tr>
-      <td style="font-weight:500">${item.name}</td>
+    return`<tr onclick="openInvPanel(${item.id})">
+      <td style="font-weight:500">${item.name}${item.memo?'<span style="font-size:10px;color:#888;margin-left:6px">📝</span>':''}</td>
       <td style="color:#888">${item.cat}</td>
       <td style="font-weight:600">${item.qty} ${item.unit}</td>
       <td style="color:#aaa">${item.min} ${item.unit}</td>
       <td><span class="badge ${stockCls(s)}">${stockLb(s)}</span></td>
       <td><div class="stock-bar-wrap"><div class="stock-bar"><div class="stock-bar-fill" style="width:${pct}%;background:${barColor}"></div></div><span style="font-size:11px;color:#aaa">${pct}%</span></div></td>
-      <td><div style="display:flex;gap:5px">
-        <button class="btn" style="height:28px;font-size:12px;padding:0 10px" onclick="adjustInv(${item.id},-1)">－</button>
-        <button class="btn" style="height:28px;font-size:12px;padding:0 10px" onclick="adjustInv(${item.id},1)">＋</button>
-      </div></td>
-      <td><button class="del-btn" onclick="deleteInv(${item.id})">✕</button></td></tr>`;
+      <td onclick="event.stopPropagation()"><div style="display:flex;gap:4px"><button class="btn" style="height:26px;font-size:12px;padding:0 8px" onclick="adjustInv(${item.id},-1)">－</button><button class="btn" style="height:26px;font-size:12px;padding:0 8px" onclick="adjustInv(${item.id},1)">＋</button></div></td>
+      <td onclick="event.stopPropagation()"><button class="del-btn" onclick="deleteInv(${item.id})">✕</button></td>
+    </tr>`;
+  }).join('');
+  // 그래프
+  document.getElementById('inv-chart').innerHTML=inventory.map(item=>{
+    const s=stockSt(item);
+    const pct=item.min>0?Math.min(100,Math.round(item.qty/item.min*100)):100;
+    const barColor=s==='out'?'#ef4444':s==='low'?'#f59e0b':'#4caf6e';
+    return`<div style="background:#fff;border:1px solid #ebebeb;border-radius:8px;padding:10px 14px;margin-bottom:8px;cursor:pointer" onclick="openInvPanel(${item.id})">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+        <span style="font-size:13px;font-weight:500">${item.name}</span>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font-size:12px;color:#888">${item.qty}/${item.min} ${item.unit}</span>
+          <span class="badge ${stockCls(s)}">${stockLb(s)}</span>
+        </div>
+      </div>
+      <div style="height:10px;background:#f0f0f0;border-radius:5px;overflow:hidden">
+        <div style="height:100%;width:${pct}%;background:${barColor};border-radius:5px;transition:width 0.4s"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:4px">
+        <span style="font-size:10px;color:#aaa">0</span>
+        <span style="font-size:10px;color:#aaa;font-weight:500">${pct}%</span>
+        <span style="font-size:10px;color:#aaa">최소: ${item.min}</span>
+      </div>
+    </div>`;
   }).join('');
 }
-
 function renderIncomingCal(){
   document.getElementById('ic-month').textContent=icYear+'년 '+MONTHS[icMonth];
   document.getElementById('ic-daynames').innerHTML=DAYS.map(d=>`<div class="cdname">${d}</div>`).join('');
@@ -642,7 +696,7 @@ function renderIncomingCal(){
       const p=document.getElementById('ic-detail');
       if(!di.length){p.innerHTML=`<span style="color:#aaa">${icMonth+1}월 ${d}일 — 입고 예정 없음</span>`;return;}
       p.innerHTML=`<div style="font-size:12px;font-weight:600;color:#888;margin-bottom:8px">${icMonth+1}월 ${d}일 입고 예정 (${di.length}건)</div>`+
-        di.map(i=>`<div class="cdr"><span style="flex:1;font-weight:500">${i.name}</span><span style="font-size:12px;color:#888">${i.qty} · ${i.supplier}</span><span class="badge" style="${icStSty(i.status)}">${icStLb(i.status)}</span></div>`).join('');
+        di.map(i=>`<div class="cdr"><span style="flex:1;font-weight:500">${i.name}</span><span style="font-size:12px;color:#888">${i.qty}·${i.supplier}</span><span class="badge" style="${icStSty(i.status)}">${icStLb(i.status)}</span></div>`).join('');
     });
     grid.appendChild(cell);
   }
@@ -652,7 +706,6 @@ function renderIncomingCal(){
     <td><span class="badge" style="${icStSty(i.status)}">${icStLb(i.status)}</span></td>
     <td><button class="del-btn" onclick="deleteIncoming(${i.id})">✕</button></td></tr>`).join('');
 }
-
 function renderCompleted(){
   document.getElementById('completed-body').innerHTML=
     completedProjects.map(p=>`
@@ -661,381 +714,28 @@ function renderCompleted(){
         <div class="done-meta"><span>팀: ${p.team}</span><span>기간: ${p.startDate} ~ ${p.endDate}</span><span>태스크: ${p.tasks.length}개</span></div>
         <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:${p.result?'10px':'0'}">${p.tasks.map(t=>`<span class="badge" style="background:#f5f5f5;color:#666">${t}</span>`).join('')}</div>
         ${p.result?`<div style="font-size:12px;color:#888;border-top:1px solid #f0f0f0;padding-top:10px">결과: ${p.result}</div>`:''}
-        <div style="margin-top:10px;text-align:right"><button class="del-btn" style="font-size:12px;color:#ddd" onclick="deleteCompleted(${p.id})">삭제 ✕</button></div>
+        <div style="margin-top:10px;text-align:right"><button class="del-btn" style="font-size:12px" onclick="deleteCompleted(${p.id})">삭제 ✕</button></div>
       </div>`).join('');
 }
-
-
-
-let currentPanelId = null;
-
-function openPanel(id){
-  const t = tasks.find(t=>t.id===id);
-  if(!t) return;
-  currentPanelId = id;
-  document.getElementById('panel-title').textContent = t.name;
-  document.getElementById('p-name').value = t.name;
-  document.getElementById('p-assignee').value = t.assignee||'';
-  document.getElementById('p-date').value = t.date||'';
-  document.getElementById('p-status').value = t.status;
-  document.getElementById('p-priority').value = t.priority;
-  document.getElementById('p-comment-input').value = '';
-  renderComments(t);
-  renderImages(t);
-  renderFiles(t);
-  document.getElementById('side-panel').classList.add('open');
-  document.getElementById('side-overlay').classList.add('open');
-}
-
-function closePanel(){
-  document.getElementById('side-panel').classList.remove('open');
-  document.getElementById('side-overlay').classList.remove('open');
-  currentPanelId = null;
-}
-
-function savePanel(){
-  const t = tasks.find(t=>t.id===currentPanelId);
-  if(!t) return;
-  t.name = document.getElementById('p-name').value.trim()||t.name;
-  t.assignee = document.getElementById('p-assignee').value.trim();
-  t.date = document.getElementById('p-date').value;
-  t.status = document.getElementById('p-status').value;
-  t.priority = document.getElementById('p-priority').value;
-  document.getElementById('panel-title').textContent = t.name;
-  renderAll();
-  const btn = document.querySelector('.save-btn');
-  btn.textContent = '저장됐어요 ✓';
-  btn.style.background = '#4caf6e';
-  setTimeout(()=>{btn.textContent='저장';btn.style.background='#1a1a1a';},1500);
-}
-
-function addComment(){
-  const t = tasks.find(t=>t.id===currentPanelId);
-  if(!t) return;
-  const txt = document.getElementById('p-comment-input').value.trim();
-  if(!txt) return;
-  if(!t.comments) t.comments=[];
-  t.comments.push({text:txt, time:new Date().toLocaleString('ko-KR')});
-  document.getElementById('p-comment-input').value='';
-  renderComments(t);
-  saveData();
-}
-
-function renderComments(t){
-  const el = document.getElementById('p-comment-list');
-  if(!t.comments||t.comments.length===0){el.innerHTML='<div style="font-size:12px;color:#aaa">아직 코멘트가 없어요</div>';return;}
-  el.innerHTML = t.comments.map((c,i)=>`
-    <div class="comment-item">
-      <div>${c.text}</div>
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <span class="comment-time">${c.time}</span>
-        <button class="file-del" onclick="deleteComment(${i})">✕</button>
-      </div>
-    </div>`).join('');
-}
-
-function deleteComment(idx){
-  const t = tasks.find(t=>t.id===currentPanelId);
-  if(!t||!t.comments) return;
-  t.comments.splice(idx,1);
-  renderComments(t);
-  saveData();
-}
-
-function addImages(e){
-  const t = tasks.find(t=>t.id===currentPanelId);
-  if(!t) return;
-  if(!t.images) t.images=[];
-  const files = Array.from(e.target.files);
-  files.forEach(file=>{
-    const reader = new FileReader();
-    reader.onload = ev=>{
-      t.images.push({name:file.name, data:ev.target.result});
-      renderImages(t);
-      saveData();
-    };
-    reader.readAsDataURL(file);
-  });
-}
-
-function renderImages(t){
-  const el = document.getElementById('p-images');
-  if(!t.images||t.images.length===0){el.innerHTML='';return;}
-  el.innerHTML = t.images.map((img,i)=>`
-    <div style="position:relative">
-      <img src="${img.data}" class="img-thumb" onclick="window.open('${img.data}')">
-      <button onclick="deleteImage(${i})" style="position:absolute;top:-4px;right:-4px;width:16px;height:16px;border-radius:50%;background:#ef4444;border:none;color:#fff;font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0">✕</button>
-    </div>`).join('');
-}
-
-function deleteImage(idx){
-  const t = tasks.find(t=>t.id===currentPanelId);
-  if(!t||!t.images) return;
-  t.images.splice(idx,1);
-  renderImages(t);
-  saveData();
-}
-
-function addFiles(e){
-  const t = tasks.find(t=>t.id===currentPanelId);
-  if(!t) return;
-  if(!t.files) t.files=[];
-  const files = Array.from(e.target.files);
-  files.forEach(file=>{
-    const reader = new FileReader();
-    reader.onload = ev=>{
-      t.files.push({name:file.name, data:ev.target.result, size:Math.round(file.size/1024)+'KB'});
-      renderFiles(t);
-      saveData();
-    };
-    reader.readAsDataURL(file);
-  });
-}
-
-function renderFiles(t){
-  const el = document.getElementById('p-files');
-  if(!t.files||t.files.length===0){el.innerHTML='';return;}
-  el.innerHTML = t.files.map((f,i)=>`
-    <div class="file-item">
-      <span style="font-size:16px">📄</span>
-      <span class="file-item-name">${f.name}</span>
-      <span style="font-size:10px;color:#aaa">${f.size}</span>
-      <a href="${f.data}" download="${f.name}" style="color:#4caf6e;font-size:11px;text-decoration:none">다운</a>
-      <button class="file-del" onclick="deleteFile(${i})">✕</button>
-    </div>`).join('');
-}
-
-function deleteFile(idx){
-  const t = tasks.find(t=>t.id===currentPanelId);
-  if(!t||!t.files) return;
-  t.files.splice(idx,1);
-  renderFiles(t);
-  saveData();
-}
-
-function saveData(){
-  localStorage.setItem('pm_tasks', JSON.stringify(tasks));
-  localStorage.setItem('pm_inventory', JSON.stringify(inventory));
-  localStorage.setItem('pm_incoming', JSON.stringify(incoming));
-  localStorage.setItem('pm_completed', JSON.stringify(completedProjects));
-  localStorage.setItem('pm_ids', JSON.stringify({taskId,invId,icId,cpId}));
-  localStorage.setItem('pm_extras', JSON.stringify(taskExtras));
-}
-function loadData(){
-  try{
-    const t=localStorage.getItem('pm_tasks');if(t)tasks=JSON.parse(t);
-    const i=localStorage.getItem('pm_inventory');if(i)inventory=JSON.parse(i);
-    const ic=localStorage.getItem('pm_incoming');if(ic)incoming=JSON.parse(ic);
-    const cp=localStorage.getItem('pm_completed');if(cp)completedProjects=JSON.parse(cp);
-    const ids=localStorage.getItem('pm_ids');if(ids){const o=JSON.parse(ids);taskId=o.taskId;invId=o.invId;icId=o.icId;cpId=o.cpId;}
-    const ex=localStorage.getItem('pm_extras');if(ex)taskExtras=JSON.parse(ex);
-  }catch(e){console.log('load error',e);}
-}
-
-
-let currentTaskId=null;
-let taskExtras={};
-
-function openSidePanel(id){
-  const t=tasks.find(t=>t.id===id);
-  if(!t) return;
-  currentTaskId=id;
-  if(!taskExtras[id]) taskExtras[id]={memo:'',photos:[],files:[],comments:[]};
-  const ex=taskExtras[id];
-  document.getElementById('side-task-name').textContent=t.name;
-  document.getElementById('sp-assignee').textContent=t.assignee||'-';
-  document.getElementById('sp-date').textContent=t.date||'-';
-  document.getElementById('sp-status').value=t.status;
-  document.getElementById('sp-priority').value=t.priority;
-  document.getElementById('sp-progress').textContent=progPct(t)+'%';
-  document.getElementById('sp-memo').value=ex.memo||'';
-  renderPhotoGrid();
-  renderFileList();
-  renderComments();
-  document.getElementById('side-panel').classList.add('open');
-  document.getElementById('side-overlay').classList.add('open');
-}
-
-function closeSidePanel(){
-  document.getElementById('side-panel').classList.remove('open');
-  document.getElementById('side-overlay').classList.remove('open');
-  currentTaskId=null;
-}
-
-function updateFromPanel(field,val){
-  if(!currentTaskId) return;
-  const t=tasks.find(t=>t.id===currentTaskId);
-  if(t){
-    t[field]=val;
-    document.getElementById('sp-progress').textContent=progPct(t)+'%';
-    renderAll();
-  }
-}
-
-function saveMemo(){
-  if(!currentTaskId) return;
-  if(!taskExtras[currentTaskId]) taskExtras[currentTaskId]={memo:'',photos:[],files:[],comments:[]};
-  taskExtras[currentTaskId].memo=document.getElementById('sp-memo').value;
-  saveData();
-  const btn=document.querySelector('.side-save-btn');
-  btn.textContent='저장됨 ✓';btn.style.background='#4caf6e';
-  setTimeout(()=>{btn.textContent='메모 저장';btn.style.background='#1a1a1a';},1500);
-}
-
-function addPhotos(input){
-  if(!currentTaskId) return;
-  if(!taskExtras[currentTaskId]) taskExtras[currentTaskId]={memo:'',photos:[],files:[],comments:[]};
-  Array.from(input.files).forEach(file=>{
-    const reader=new FileReader();
-    reader.onload=e=>{
-      taskExtras[currentTaskId].photos.push({name:file.name,data:e.target.result});
-      renderPhotoGrid();
-      saveData();
-    };
-    reader.readAsDataURL(file);
-  });
-  input.value='';
-}
-
-function renderPhotoGrid(){
-  if(!currentTaskId) return;
-  const photos=taskExtras[currentTaskId]?.photos||[];
-  document.getElementById('photo-grid').innerHTML=photos.map((p,i)=>`
-    <div class="photo-item">
-      <img src="${p.data}" alt="${p.name}">
-      <button class="photo-del" onclick="removePhoto(${i})">✕</button>
-    </div>`).join('');
-}
-
-function removePhoto(idx){
-  if(!currentTaskId) return;
-  taskExtras[currentTaskId].photos.splice(idx,1);
-  renderPhotoGrid();
-  saveData();
-}
-
-function addFiles(input){
-  if(!currentTaskId) return;
-  if(!taskExtras[currentTaskId]) taskExtras[currentTaskId]={memo:'',photos:[],files:[],comments:[]};
-  Array.from(input.files).forEach(file=>{
-    const reader=new FileReader();
-    reader.onload=e=>{
-      taskExtras[currentTaskId].files.push({name:file.name,size:Math.round(file.size/1024)+'KB',data:e.target.result});
-      renderFileList();
-      saveData();
-    };
-    reader.readAsDataURL(file);
-  });
-  input.value='';
-}
-
-function renderFileList(){
-  if(!currentTaskId) return;
-  const files=taskExtras[currentTaskId]?.files||[];
-  document.getElementById('file-list').innerHTML=files.map((f,i)=>`
-    <div class="file-item">
-      <span style="font-size:16px">📄</span>
-      <span class="file-item-name">${f.name}</span>
-      <span style="font-size:11px;color:#aaa">${f.size}</span>
-      <button class="file-item-del" onclick="removeFile(${i})">✕</button>
-    </div>`).join('');
-}
-
-function removeFile(idx){
-  if(!currentTaskId) return;
-  taskExtras[currentTaskId].files.splice(idx,1);
-  renderFileList();
-  saveData();
-}
-
-function addComment(){
-  if(!currentTaskId) return;
-  const input=document.getElementById('comment-input');
-  const text=input.value.trim();
-  if(!text) return;
-  if(!taskExtras[currentTaskId]) taskExtras[currentTaskId]={memo:'',photos:[],files:[],comments:[]};
-  const now=new Date();
-  taskExtras[currentTaskId].comments.push({
-    text,
-    time:now.getFullYear()+'.'+(now.getMonth()+1)+'.'+now.getDate()+' '+now.getHours()+':'+String(now.getMinutes()).padStart(2,'0')
-  });
-  input.value='';
-  renderComments();
-  saveData();
-}
-
-function renderComments(){
-  if(!currentTaskId) return;
-  const comments=taskExtras[currentTaskId]?.comments||[];
-  const list=document.getElementById('comment-list');
-  if(!comments.length){list.innerHTML='<div style="font-size:12px;color:#aaa;text-align:center;padding:8px">아직 코멘트가 없어요</div>';return;}
-  list.innerHTML=comments.map((c,i)=>`
-    <div class="comment-item">
-      <div class="comment-meta">${c.time} <button onclick="removeComment(${i})" style="background:none;border:none;cursor:pointer;color:#ccc;font-size:11px;float:right">삭제</button></div>
-      <div class="comment-text">${c.text}</div>
-    </div>`).join('');
-}
-
-function removeComment(idx){
-  if(!currentTaskId) return;
-  taskExtras[currentTaskId].comments.splice(idx,1);
-  renderComments();
-  saveData();
-}
-function checkAutoComplete(){
-  if(tasks.length===0) return;
-  const allDone=tasks.every(t=>t.status==='done');
-  if(allDone){
-    if(!localStorage.getItem('pm_auto_completed')){
-      const endDate=new Date().toISOString().slice(0,10);
-      const startDate=tasks.filter(t=>t.date).reduce((a,b)=>(!a||a.date>b.date)?b:a,null);
-      const projectName=prompt('프로젝트 이름을 입력해주세요:','신규 서비스 런칭') || '완료 프로젝트';
-      const projectResult=prompt('결과 요약을 입력해주세요 (선택사항):','') || '모든 태스크 완료';
-      completedProjects.unshift({
-        id:cpId++,
-        name:projectName,
-        team:'전체',
-        startDate:startDate?startDate.date:endDate,
-        endDate:endDate,
-        tasks:tasks.map(t=>t.name),
-        result:projectResult
-      });
-      localStorage.setItem('pm_auto_completed','1');
-      saveData();
-      renderCompleted();
-      if(confirm('🎉 완료 프로젝트에 자동 등록됐어요!\n\n태스크 목록을 초기화할까요?')){
-        tasks=[];
-        taskId=1;
-        localStorage.removeItem('pm_auto_completed');
-        saveData();
-        renderAll();
-      }
-    }
-  } else {
-    localStorage.removeItem('pm_auto_completed');
-  }
-}
-function renderAll(){checkAutoComplete();saveData();renderProjMetrics();renderDB();renderKanban();renderChecklist();renderTaskCal();renderInventory();renderIncomingCal();renderCompleted();}
+function renderAll(){saveData();renderProjMetrics();renderDB();renderKanban();renderChecklist();renderTaskCal();renderInventory();renderIncomingCal();renderCompleted();}
 
 function addTask(){
   const name=document.getElementById('f-name').value.trim();if(!name)return;
-  tasks.push({id:taskId++,name,assignee:document.getElementById('f-assignee').value.trim(),date:document.getElementById('f-date').value,priority:document.getElementById('f-pri').value,status:document.getElementById('f-status').value});
+  tasks.push({id:taskId++,name,assignee:document.getElementById('f-assignee').value.trim(),date:document.getElementById('f-date').value,priority:document.getElementById('f-pri').value,status:document.getElementById('f-status').value,comments:[],images:[],files:[]});
   document.getElementById('f-name').value='';document.getElementById('f-assignee').value='';
   renderAll();
 }
 function deleteTask(id){if(confirm('태스크를 삭제할까요?')){tasks=tasks.filter(t=>t.id!==id);renderAll();}}
 function changeTaskStatus(id,val){const t=tasks.find(t=>t.id===id);if(t){t.status=val;renderAll();}}
 function toggleDone(id){const t=tasks.find(t=>t.id===id);if(t){t.status=t.status==='done'?'todo':'done';renderAll();}}
-
 function addInventory(){
   const name=document.getElementById('i-name').value.trim();if(!name)return;
-  inventory.push({id:invId++,name,cat:document.getElementById('i-cat').value.trim()||'기타',qty:parseInt(document.getElementById('i-qty').value)||0,min:parseInt(document.getElementById('i-min').value)||0,unit:document.getElementById('i-unit').value.trim()||'개'});
+  inventory.push({id:invId++,name,cat:document.getElementById('i-cat').value.trim()||'기타',qty:parseInt(document.getElementById('i-qty').value)||0,min:parseInt(document.getElementById('i-min').value)||0,unit:document.getElementById('i-unit').value.trim()||'개',memo:'',images:[],files:[]});
   document.getElementById('i-name').value='';document.getElementById('i-cat').value='';document.getElementById('i-qty').value='';document.getElementById('i-min').value='';document.getElementById('i-unit').value='';
   renderInventory();
 }
 function deleteInv(id){if(confirm('품목을 삭제할까요?')){inventory=inventory.filter(i=>i.id!==id);renderInventory();}}
 function adjustInv(id,delta){const i=inventory.find(i=>i.id===id);if(i){i.qty=Math.max(0,i.qty+delta);renderInventory();}}
-
 function addIncoming(){
   const name=document.getElementById('ic-name').value.trim();if(!name)return;
   incoming.push({id:icId++,name,qty:parseInt(document.getElementById('ic-qty').value)||0,date:document.getElementById('ic-date').value,supplier:document.getElementById('ic-supplier').value.trim(),status:document.getElementById('ic-status').value});
@@ -1043,20 +743,17 @@ function addIncoming(){
   renderIncomingCal();
 }
 function deleteIncoming(id){if(confirm('입고 항목을 삭제할까요?')){incoming=incoming.filter(i=>i.id!==id);renderIncomingCal();}}
-
 function addCompleted(){
   const name=document.getElementById('cp-name').value.trim();if(!name)return;
   completedProjects.unshift({id:cpId++,name,team:document.getElementById('cp-team').value.trim()||'-',startDate:document.getElementById('cp-start').value||'-',endDate:document.getElementById('cp-end').value||'-',tasks:[],result:document.getElementById('cp-result').value.trim()});
   document.getElementById('cp-name').value='';document.getElementById('cp-team').value='';document.getElementById('cp-start').value='';document.getElementById('cp-end').value='';document.getElementById('cp-result').value='';
-  renderCompleted();
+  renderCompleted();saveData();
 }
-function deleteCompleted(id){if(confirm('프로젝트를 삭제할까요?')){completedProjects=completedProjects.filter(p=>p.id!==id);renderCompleted();}}
-
+function deleteCompleted(id){if(confirm('프로젝트를 삭제할까요?')){completedProjects=completedProjects.filter(p=>p.id!==id);renderCompleted();saveData();}}
 function tcPrev(){tcMonth--;if(tcMonth<0){tcMonth=11;tcYear--;}renderTaskCal();}
 function tcNext(){tcMonth++;if(tcMonth>11){tcMonth=0;tcYear++;}renderTaskCal();}
 function icPrev(){icMonth--;if(icMonth<0){icMonth=11;icYear--;}renderIncomingCal();}
 function icNext(){icMonth++;if(icMonth>11){icMonth=0;icYear++;}renderIncomingCal();}
-
 function goPage(name,el){
   document.querySelectorAll('.top-tab').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
@@ -1068,7 +765,6 @@ function switchSub(name,el){
   el.classList.add('active');
   ['db','kanban','checklist'].forEach(s=>{document.getElementById('sub-'+s).style.display=s===name?'block':'none';});
 }
-
 loadData();
 const now=new Date();
 const todayStr=now.getFullYear()+'-'+pad(now.getMonth()+1)+'-'+pad(now.getDate());
