@@ -225,9 +225,10 @@ h1{font-size:22px;font-weight:600;color:#1a1a1a}
       <div class="fg"><label>현재 재고</label><input type="number" id="i-qty" placeholder="0" style="width:72px" min="0"></div>
       <div class="fg"><label>최소 재고</label><input type="number" id="i-min" placeholder="0" style="width:72px" min="0"></div>
       <div class="fg"><label>단위</label><input id="i-unit" placeholder="개/박스" style="width:64px"></div>
+      <div class="fg"><label>담당자</label><input id="i-manager" placeholder="담당자" style="width:80px"></div>
       <button class="btn btn-primary" onclick="addInventory()">+ 품목 추가</button>
     </div>
-    <div class="tbl-wrap"><table class="tbl"><thead><tr><th>품목명</th><th>카테고리</th><th>현재 재고</th><th>최소 재고</th><th>상태</th><th>재고량</th><th>조정</th><th></th></tr></thead><tbody id="inv-body"></tbody></table></div>
+    <div class="tbl-wrap"><table class="tbl"><thead><tr><th>품목명</th><th>카테고리</th><th>담당자</th><th>현재 재고</th><th>최소 재고</th><th>상태</th><th>재고량</th><th>조정</th><th></th></tr></thead><tbody id="inv-body"></tbody></table></div>
     <div style="margin-top:20px"><div style="font-size:14px;font-weight:600;margin-bottom:14px">재고 현황 그래프</div><div id="inv-chart"></div></div>
   </div>
 
@@ -427,6 +428,7 @@ h1{font-size:22px;font-weight:600;color:#1a1a1a}
       <div class="side-row"><span class="side-lbl">현재 재고</span><input type="number" class="side-inp" id="ip-qty" min="0"></div>
       <div class="side-row"><span class="side-lbl">최소 재고</span><input type="number" class="side-inp" id="ip-min" min="0"></div>
       <div class="side-row"><span class="side-lbl">단위</span><input class="side-inp" id="ip-unit"></div>
+      <div class="side-row"><span class="side-lbl">담당자</span><input class="side-inp" id="ip-manager" placeholder="담당자 이름"></div>
     </div>
     <div class="side-sec">
       <div class="side-sec-title">수량 빠른 조정</div>
@@ -474,11 +476,11 @@ let tasks=[
 ];
 let taskId=12;
 let inventory=[
-  {id:1,name:'A4 용지',cat:'소모품',qty:150,min:50,unit:'박스',memo:'',images:[],files:[]},
-  {id:2,name:'볼펜',cat:'소모품',qty:30,min:20,unit:'개',memo:'',images:[],files:[]},
-  {id:3,name:'노트북 거치대',cat:'장비',qty:5,min:3,unit:'개',memo:'',images:[],files:[]},
-  {id:4,name:'USB 허브',cat:'장비',qty:2,min:5,unit:'개',memo:'',images:[],files:[]},
-  {id:5,name:'명함',cat:'인쇄물',qty:0,min:100,unit:'장',memo:'',images:[],files:[]},
+  {id:1,name:'A4 용지',cat:'소모품',qty:150,min:50,unit:'박스',memo:'',manager:'',images:[],files:[]},
+  {id:2,name:'볼펜',cat:'소모품',qty:30,min:20,unit:'개',memo:'',manager:'',images:[],files:[]},
+  {id:3,name:'노트북 거치대',cat:'장비',qty:5,min:3,unit:'개',memo:'',manager:'',images:[],files:[]},
+  {id:4,name:'USB 허브',cat:'장비',qty:2,min:5,unit:'개',memo:'',manager:'',images:[],files:[]},
+  {id:5,name:'명함',cat:'인쇄물',qty:0,min:100,unit:'장',memo:'',manager:'',images:[],files:[]},
   {id:6,name:'포스트잇',cat:'소모품',qty:80,min:30,unit:'개',memo:'',images:[],files:[]},
 ];
 let invId=7;
@@ -630,16 +632,101 @@ function addTeamMember(){
 }
 function delTeamMember(i){if(confirm('팀원을 삭제할까요?')){teamMembers.splice(i,1);renderTeam();saveData();}}
 
-// 이메일 전송
+
+// @멘션 감지 이메일 발송
+function checkMentions(text, taskName){
+  const mentions = text.match(/@([^\s@]+)/g);
+  if(!mentions) return;
+  mentions.forEach(mention=>{
+    const name = mention.slice(1);
+    const member = teamMembers.find(m=>m.name===name);
+    if(member && member.email){
+      const subject = encodeURIComponent('[멘션 알림] '+taskName+' 에서 @'+name+' 님을 멘션했어요');
+      const body = encodeURIComponent(name+'님,\n\n['+taskName+'] 태스크 코멘트에서 멘션되었어요.\n\n내용: '+text+'\n\n확인 부탁드립니다.');
+      window.open('mailto:'+member.email+'?subject='+subject+'&body='+body);
+      addLog('@멘션 메일: '+name+' → '+taskName);
+    } else {
+      addLog('⚠ @'+name+' — 설정에 이메일 없음 (등록 필요)');
+    }
+  });
+}
+
+// 재고 0 알림 이메일
+function checkStockZero(item){
+  if(item.qty > 0) return;
+  if(!item.manager) return;
+  const member = teamMembers.find(m=>m.name===item.manager);
+  if(!member || !member.email) return;
+  const subject = encodeURIComponent('[재고 품절 알림] '+item.name+' 재고가 0이 됐어요');
+  const body = encodeURIComponent(item.manager+'님,\n\n['+item.name+'] 재고가 0이 됐어요.\n\n빠른 재입고 확인 부탁드립니다.\n\n현재 재고: 0 '+item.unit+'\n최소 재고 기준: '+item.min+' '+item.unit);
+  window.open('mailto:'+member.email+'?subject='+subject+'&body='+body);
+  addLog('📦 재고 품절 메일: '+item.manager+' → '+item.name);
+  sendSlack('🚨 재고 품절: ['+item.name+'] 담당: '+item.manager);
+}
+
+// 이메일 확인 팝업
 function sendEmail(){
   const name=document.getElementById('tp-assignee').value.trim();
   const taskName=document.getElementById('tp-name').value.trim();
+  if(!name){alert('담당자를 먼저 입력해주세요!');return;}
   const member=teamMembers.find(m=>m.name===name);
-  if(!member){alert('⚙️ 설정에서 ['+name+']의 이메일을 먼저 등록해주세요!');return;}
+  if(!member||!member.email){
+    const goSettings=confirm('⚙️ ['+name+']의 이메일이 등록되어 있지 않아요.\n\n설정 페이지에서 등록하시겠어요?');
+    if(goSettings)goSettings_page();
+    return;
+  }
+  showEmailPopup(name, member.email, taskName);
+}
+function goSettings_page(){
+  document.querySelectorAll('.top-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-settings').classList.add('active');
+  updateSettingsStatus();renderTeam();renderLog();
+  closePanel();
+}
+function showEmailPopup(name, email, taskName){
+  // 기존 팝업 제거
+  const old=document.getElementById('email-popup');if(old)old.remove();
+  const popup=document.createElement('div');
+  popup.id='email-popup';
+  popup.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#fff;border:1px solid #e5e5e5;border-radius:12px;padding:24px;z-index:2000;width:340px;box-shadow:0 8px 32px rgba(0,0,0,0.12)';
+  popup.innerHTML=`
+    <div style="font-size:15px;font-weight:600;color:#1a1a1a;margin-bottom:16px">✉ 이메일 발송 확인</div>
+    <div style="background:#f7f7f5;border-radius:8px;padding:12px 14px;margin-bottom:16px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <span style="font-size:11px;color:#aaa;min-width:50px">받는 사람</span>
+        <span style="font-size:13px;font-weight:500;color:#1a1a1a">${name}</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <span style="font-size:11px;color:#aaa;min-width:50px">이메일</span>
+        <span style="font-size:13px;color:#4f90e5">${email}</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:11px;color:#aaa;min-width:50px">태스크</span>
+        <span style="font-size:13px;color:#1a1a1a">${taskName}</span>
+      </div>
+    </div>
+    <textarea id="email-extra-msg" placeholder="추가 메시지 입력 (선택사항)" style="width:100%;min-height:70px;font-size:12px;border:1px solid #e5e5e5;border-radius:8px;padding:8px 10px;resize:vertical;font-family:inherit;outline:none;margin-bottom:12px;color:#1a1a1a"></textarea>
+    <div style="display:flex;gap:8px">
+      <button onclick="document.getElementById('email-popup').remove();document.getElementById('email-popup-overlay').remove();" style="flex:1;height:38px;border-radius:8px;border:1px solid #ddd;background:#fff;cursor:pointer;font-size:13px;color:#888">취소</button>
+      <button onclick="confirmSendEmail('${name}','${email}','${taskName}')" style="flex:2;height:38px;border-radius:8px;border:none;background:#1a1a1a;color:#fff;cursor:pointer;font-size:13px;font-weight:600">발송하기</button>
+    </div>
+  `;
+  const overlay=document.createElement('div');
+  overlay.id='email-popup-overlay';
+  overlay.style.cssText='position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.3);z-index:1999';
+  overlay.onclick=()=>{popup.remove();overlay.remove();};
+  document.body.appendChild(overlay);
+  document.body.appendChild(popup);
+}
+function confirmSendEmail(name, email, taskName){
+  const extra=document.getElementById('email-extra-msg').value.trim();
   const subject=encodeURIComponent('[태스크 알림] '+taskName);
-  const body=encodeURIComponent('안녕하세요 '+name+'님,\n\n['+taskName+'] 태스크가 배정되었습니다.\n\n확인 부탁드립니다.\n\n감사합니다.');
-  window.open('mailto:'+member.email+'?subject='+subject+'&body='+body);
-  addLog('✉ 이메일: '+name+' → '+taskName);
+  const body=encodeURIComponent('안녕하세요 '+name+'님,\n\n['+taskName+'] 태스크가 배정되었습니다.\n'+(extra?'\n'+extra+'\n':'')+'\n확인 부탁드립니다.\n\n감사합니다.');
+  window.open('mailto:'+email+'?subject='+subject+'&body='+body);
+  addLog('✉ 이메일 발송: '+name+' ('+email+') → '+taskName);
+  document.getElementById('email-popup').remove();
+  document.getElementById('email-popup-overlay').remove();
 }
 
 // 헬퍼
@@ -706,11 +793,13 @@ function addTaskComment(){
   t.comments.push({text:txt,time:new Date().toLocaleString('ko-KR')});
   document.getElementById('tp-comment-input').value='';
   renderTaskComments(t);saveData();
+  // @멘션 감지
+  if(txt.includes('@')) checkMentions(txt, t.name);
 }
 function renderTaskComments(t){
   const el=document.getElementById('tp-comments');
   if(!t.comments||!t.comments.length){el.innerHTML='<div style="font-size:12px;color:#aaa;margin-bottom:8px">아직 코멘트가 없어요</div>';return;}
-  el.innerHTML=t.comments.map((c,i)=>`<div class="comment-item"><div>${c.text}</div><div style="display:flex;justify-content:space-between"><span class="comment-time">${c.time}</span><button class="del-btn" onclick="delTaskComment(${i})">✕</button></div></div>`).join('');
+  el.innerHTML=t.comments.map((c,i)=>`<div class="comment-item"><div>${c.text.replace(/@([^\s@]+)/g,'<span style="background:#dbeafe;color:#1e40af;padding:1px 5px;border-radius:4px;font-weight:600">@$1</span>')}</div><div style="display:flex;justify-content:space-between"><span class="comment-time">${c.time}</span><button class="del-btn" onclick="delTaskComment(${i})">✕</button></div></div>`).join('');
 }
 function delTaskComment(i){const t=tasks.find(t=>t.id===currentTaskId);if(!t)return;t.comments.splice(i,1);renderTaskComments(t);saveData();}
 function addTaskImages(e){const t=tasks.find(t=>t.id===currentTaskId);if(!t)return;if(!t.images)t.images=[];Array.from(e.target.files).forEach(f=>{const r=new FileReader();r.onload=ev=>{t.images.push({name:f.name,data:ev.target.result});renderTaskImages(t);saveData();};r.readAsDataURL(f);});}
@@ -781,12 +870,13 @@ function openInvPanel(id){
   document.getElementById('ip-min').value=item.min;
   document.getElementById('ip-unit').value=item.unit;
   document.getElementById('ip-memo').value=item.memo||'';
+  document.getElementById('ip-manager').value=item.manager||'';
   document.getElementById('ip-qty-display').textContent=item.qty+' '+item.unit;
   renderInvImages(item);renderInvFiles(item);
   document.getElementById('inv-panel').classList.add('open');
   document.getElementById('side-overlay').classList.add('open');
 }
-function quickAdjust(delta){const item=inventory.find(i=>i.id===currentInvId);if(!item)return;item.qty=Math.max(0,item.qty+delta);document.getElementById('ip-qty').value=item.qty;document.getElementById('ip-qty-display').textContent=item.qty+' '+item.unit;renderInventory();saveData();}
+function quickAdjust(delta){const item=inventory.find(i=>i.id===currentInvId);if(!item)return;item.qty=Math.max(0,item.qty+delta);document.getElementById('ip-qty').value=item.qty;document.getElementById('ip-qty-display').textContent=item.qty+' '+item.unit;renderInventory();saveData();if(item.qty===0)checkStockZero(item);}
 function saveInvPanel(){
   const item=inventory.find(i=>i.id===currentInvId);if(!item)return;
   item.name=document.getElementById('ip-name').value.trim()||item.name;
@@ -795,6 +885,7 @@ function saveInvPanel(){
   item.min=parseInt(document.getElementById('ip-min').value)||0;
   item.unit=document.getElementById('ip-unit').value.trim()||item.unit;
   item.memo=document.getElementById('ip-memo').value;
+  item.manager=document.getElementById('ip-manager').value.trim();
   document.getElementById('ip-title').textContent=item.name;
   document.getElementById('ip-qty-display').textContent=item.qty+' '+item.unit;
   renderInventory();saveData();
@@ -903,6 +994,7 @@ function renderInventory(){
     return`<tr onclick="openInvPanel(${item.id})">
       <td style="font-weight:500">${item.name}${item.memo?'<span style="font-size:10px;color:#888;margin-left:5px">📝</span>':''}</td>
       <td style="color:#888">${item.cat}</td>
+      <td style="color:#888">${item.manager||'-'}</td>
       <td style="font-weight:600">${item.qty} ${item.unit}</td>
       <td style="color:#aaa">${item.min} ${item.unit}</td>
       <td><span class="badge ${stockCls(s)}">${stockLb(s)}</span></td>
@@ -985,12 +1077,12 @@ function deleteTask(id){if(confirm('태스크를 삭제할까요?')){tasks=tasks
 function toggleDone(id){const t=tasks.find(t=>t.id===id);if(t){autoMoveToCompleted(t);}}
 function addInventory(){
   const name=document.getElementById('i-name').value.trim();if(!name)return;
-  inventory.push({id:invId++,name,cat:document.getElementById('i-cat').value.trim()||'기타',qty:parseInt(document.getElementById('i-qty').value)||0,min:parseInt(document.getElementById('i-min').value)||0,unit:document.getElementById('i-unit').value.trim()||'개',memo:'',images:[],files:[]});
-  document.getElementById('i-name').value='';document.getElementById('i-cat').value='';document.getElementById('i-qty').value='';document.getElementById('i-min').value='';document.getElementById('i-unit').value='';
+  inventory.push({id:invId++,name,cat:document.getElementById('i-cat').value.trim()||'기타',qty:parseInt(document.getElementById('i-qty').value)||0,min:parseInt(document.getElementById('i-min').value)||0,unit:document.getElementById('i-unit').value.trim()||'개',memo:'',manager:document.getElementById('i-manager').value.trim(),images:[],files:[]});
+  document.getElementById('i-name').value='';document.getElementById('i-cat').value='';document.getElementById('i-qty').value='';document.getElementById('i-min').value='';document.getElementById('i-unit').value='';document.getElementById('i-manager').value='';
   renderInventory();saveData();
 }
 function deleteInv(id){if(confirm('품목을 삭제할까요?')){inventory=inventory.filter(i=>i.id!==id);renderInventory();saveData();}}
-function adjustInv(id,delta){const i=inventory.find(i=>i.id===id);if(i){i.qty=Math.max(0,i.qty+delta);renderInventory();saveData();}}
+function adjustInv(id,delta){const i=inventory.find(i=>i.id===id);if(i){i.qty=Math.max(0,i.qty+delta);renderInventory();saveData();if(i.qty===0)checkStockZero(i);}}
 function addIncoming(){
   const name=document.getElementById('ic-name').value.trim();if(!name)return;
   incoming.push({id:icId++,name,qty:parseInt(document.getElementById('ic-qty').value)||0,date:document.getElementById('ic-date').value,supplier:document.getElementById('ic-supplier').value.trim(),status:document.getElementById('ic-status').value});
