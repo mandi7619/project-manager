@@ -432,8 +432,16 @@ function saveTaskPanel(){
   t.name=document.getElementById('tp-name').value.trim()||t.name;
   t.assignee=document.getElementById('tp-assignee').value.trim();
   t.date=document.getElementById('tp-date').value;
-  t.status=document.getElementById('tp-status').value;
   t.priority=document.getElementById('tp-priority').value;
+  const newStatus=document.getElementById('tp-status').value;
+  if(newStatus==='done'){
+    // 코멘트/사진/파일 먼저 저장 후 완료 이동
+    t.status='done';
+    saveData();
+    autoMoveToCompleted(t);
+    return;
+  }
+  t.status=newStatus;
   document.getElementById('tp-title').textContent=t.name;
   renderAll();
   const btn=document.querySelector('#task-panel .save-panel-btn');
@@ -726,8 +734,38 @@ function addTask(){
   renderAll();
 }
 function deleteTask(id){if(confirm('태스크를 삭제할까요?')){tasks=tasks.filter(t=>t.id!==id);renderAll();}}
-function changeTaskStatus(id,val){const t=tasks.find(t=>t.id===id);if(t){t.status=val;renderAll();}}
-function toggleDone(id){const t=tasks.find(t=>t.id===id);if(t){t.status=t.status==='done'?'todo':'done';renderAll();}}
+function changeTaskStatus(id,val){
+  const t=tasks.find(t=>t.id===id);if(!t)return;
+  if(val==='done'){
+    autoMoveToCompleted(t);
+  } else {
+    t.status=val;renderAll();
+  }
+}
+function autoMoveToCompleted(t){
+  const endDate=new Date().toISOString().slice(0,10);
+  completedProjects.unshift({
+    id:cpId++,
+    name:t.name,
+    team:t.assignee||'전체',
+    startDate:t.date||endDate,
+    endDate:endDate,
+    tasks:[t.name],
+    result:'완료 — 자동 이동'
+  });
+  tasks=tasks.filter(tt=>tt.id!==t.id);
+  saveData();renderAll();
+  // 사이드패널이 열려있으면 닫기
+  closePanel();
+}
+function toggleDone(id){
+  const t=tasks.find(t=>t.id===id);if(!t)return;
+  if(t.status==='done'){
+    t.status='todo';renderAll();
+  } else {
+    autoMoveToCompleted(t);
+  }
+}
 function addInventory(){
   const name=document.getElementById('i-name').value.trim();if(!name)return;
   inventory.push({id:invId++,name,cat:document.getElementById('i-cat').value.trim()||'기타',qty:parseInt(document.getElementById('i-qty').value)||0,min:parseInt(document.getElementById('i-min').value)||0,unit:document.getElementById('i-unit').value.trim()||'개',memo:'',images:[],files:[]});
