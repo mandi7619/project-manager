@@ -177,6 +177,10 @@ h1{font-size:22px;font-weight:600;color:#1a1a1a;margin-bottom:4px}
     </div>
     <div class="tbl-wrap"><table class="tbl"><thead><tr><th>품목명</th><th>카테고리</th><th>현재 재고</th><th>최소 재고</th><th>상태</th><th>재고량</th><th>수량 조정</th><th></th></tr></thead><tbody id="inv-body"></tbody></table></div>
     <div class="tip">최소 재고 이하로 떨어지면 자동으로 "부족" / 0이 되면 "품절"로 표시돼요.</div>
+  <div style="margin-top:20px">
+    <div style="font-size:13px;font-weight:600;color:#1a1a1a;margin-bottom:14px">재고 현황 그래프</div>
+    <div id="inv-chart" style="display:flex;flex-direction:column;gap:10px"></div>
+  </div>
   </div>
 
   <!-- 입고 캘린더 -->
@@ -358,6 +362,33 @@ function renderInvMetrics(){
 
 function renderInventory(){
   renderInvMetrics();
+  // 재고 그래프 렌더링
+  const chartEl=document.getElementById('inv-chart');
+  if(chartEl){
+    chartEl.innerHTML=inventory.map(item=>{
+      const s=stockSt(item);
+      const pct=item.min>0?Math.min(100,Math.round(item.qty/item.min*100)):100;
+      const barColor=s==='out'?'#ef4444':s==='low'?'#f59e0b':'#4caf6e';
+      const bgColor=s==='out'?'#fee2e2':s==='low'?'#fef3c7':'#f0fdf4';
+      return`<div style="background:#fff;border:1px solid #ebebeb;border-radius:8px;padding:10px 14px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <span style="font-size:13px;font-weight:500">${item.name}</span>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="font-size:12px;color:#888">${item.qty}/${item.min} ${item.unit}</span>
+            <span class="badge ${stockCls(s)}">${stockLb(s)}</span>
+          </div>
+        </div>
+        <div style="height:10px;background:#f0f0f0;border-radius:5px;overflow:hidden">
+          <div style="height:100%;width:${pct}%;background:${barColor};border-radius:5px;transition:width 0.4s"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:4px">
+          <span style="font-size:10px;color:#aaa">0</span>
+          <span style="font-size:10px;color:#aaa;font-weight:500">${pct}%</span>
+          <span style="font-size:10px;color:#aaa">최소: ${item.min}</span>
+        </div>
+      </div>`;
+    }).join('');
+  }
   document.getElementById('inv-body').innerHTML=inventory.map(item=>{
     const s=stockSt(item);
     const pct=item.min>0?Math.min(100,Math.round(item.qty/item.min*100)):100;
@@ -435,7 +466,32 @@ function loadData(){
     const ids=localStorage.getItem('pm_ids');if(ids){const o=JSON.parse(ids);taskId=o.taskId;invId=o.invId;icId=o.icId;cpId=o.cpId;}
   }catch(e){console.log('load error',e);}
 }
-function renderAll(){saveData();renderProjMetrics();renderDB();renderKanban();renderChecklist();renderTaskCal();renderInventory();renderIncomingCal();renderCompleted();}
+
+function checkAutoComplete(){
+  if(tasks.length===0) return;
+  const allDone=tasks.every(t=>t.status==='done');
+  if(allDone){
+    const alreadyAdded=completedProjects.some(p=>p.name==='신규 서비스 런칭 (자동완료)');
+    if(!alreadyAdded && !localStorage.getItem('pm_auto_completed')){
+      const endDate=new Date().toISOString().slice(0,10);
+      completedProjects.unshift({
+        id:cpId++,
+        name:'신규 서비스 런칭',
+        team:'전체',
+        startDate:tasks.reduce((a,b)=>a.date<b.date?a:b).date,
+        endDate:endDate,
+        tasks:tasks.map(t=>t.name),
+        result:'모든 태스크 완료 — 자동 등록'
+      });
+      localStorage.setItem('pm_auto_completed','1');
+      renderCompleted();
+      alert('🎉 모든 태스크가 완료되어 완료 프로젝트에 자동 등록됐어요!');
+    }
+  } else {
+    localStorage.removeItem('pm_auto_completed');
+  }
+}
+function renderAll(){checkAutoComplete();saveData();renderProjMetrics();renderDB();renderKanban();renderChecklist();renderTaskCal();renderInventory();renderIncomingCal();renderCompleted();}
 
 function addTask(){
   const name=document.getElementById('f-name').value.trim();if(!name)return;
