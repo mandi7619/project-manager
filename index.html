@@ -114,7 +114,7 @@ h1{font-size:22px;font-weight:600;color:#1a1a1a;margin-bottom:4px}
 <body>
 <div class="app">
   <h1>프로젝트 관리 앱</h1>
-  <div class="subtitle">태스크 · 재고 · 입고 캘린더 · 완료 프로젝트</div>
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:4px"><div class="subtitle">태스크 · 재고 · 입고 캘린더 · 완료 프로젝트</div><div style="display:flex;align-items:center;gap:8px"><span id="save-status" style="font-size:11px;color:#4caf6e"></span><button class="btn" style="font-size:11px;height:28px;padding:0 10px;color:#ef4444;border-color:#fca5a5" onclick="if(confirm('모든 데이터를 초기화할까요?')){localStorage.clear();location.reload();}">데이터 초기화</button></div></div>
 
   <div class="top-nav">
     <div class="top-tab active" onclick="goPage('project',this)">프로젝트 관리</div>
@@ -418,7 +418,24 @@ function renderCompleted(){
       </div>`).join('');
 }
 
-function renderAll(){renderProjMetrics();renderDB();renderKanban();renderChecklist();renderTaskCal();renderInventory();renderIncomingCal();renderCompleted();}
+
+function saveData(){
+  localStorage.setItem('pm_tasks', JSON.stringify(tasks));
+  localStorage.setItem('pm_inventory', JSON.stringify(inventory));
+  localStorage.setItem('pm_incoming', JSON.stringify(incoming));
+  localStorage.setItem('pm_completed', JSON.stringify(completedProjects));
+  localStorage.setItem('pm_ids', JSON.stringify({taskId,invId,icId,cpId}));
+}
+function loadData(){
+  try{
+    const t=localStorage.getItem('pm_tasks');if(t)tasks=JSON.parse(t);
+    const i=localStorage.getItem('pm_inventory');if(i)inventory=JSON.parse(i);
+    const ic=localStorage.getItem('pm_incoming');if(ic)incoming=JSON.parse(ic);
+    const cp=localStorage.getItem('pm_completed');if(cp)completedProjects=JSON.parse(cp);
+    const ids=localStorage.getItem('pm_ids');if(ids){const o=JSON.parse(ids);taskId=o.taskId;invId=o.invId;icId=o.icId;cpId=o.cpId;}
+  }catch(e){console.log('load error',e);}
+}
+function renderAll(){saveData();renderProjMetrics();renderDB();renderKanban();renderChecklist();renderTaskCal();renderInventory();renderIncomingCal();renderCompleted();}
 
 function addTask(){
   const name=document.getElementById('f-name').value.trim();if(!name)return;
@@ -472,6 +489,7 @@ function switchSub(name,el){
   ['db','kanban','checklist'].forEach(s=>{document.getElementById('sub-'+s).style.display=s===name?'block':'none';});
 }
 
+loadData();
 const now=new Date();
 const todayStr=now.getFullYear()+'-'+pad(now.getMonth()+1)+'-'+pad(now.getDate());
 document.getElementById('f-date').value=todayStr;
