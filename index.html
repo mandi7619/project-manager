@@ -471,21 +471,30 @@ function checkAutoComplete(){
   if(tasks.length===0) return;
   const allDone=tasks.every(t=>t.status==='done');
   if(allDone){
-    const alreadyAdded=completedProjects.some(p=>p.name==='신규 서비스 런칭 (자동완료)');
-    if(!alreadyAdded && !localStorage.getItem('pm_auto_completed')){
+    if(!localStorage.getItem('pm_auto_completed')){
       const endDate=new Date().toISOString().slice(0,10);
+      const startDate=tasks.filter(t=>t.date).reduce((a,b)=>(!a||a.date>b.date)?b:a,null);
+      const projectName=prompt('프로젝트 이름을 입력해주세요:','신규 서비스 런칭') || '완료 프로젝트';
+      const projectResult=prompt('결과 요약을 입력해주세요 (선택사항):','') || '모든 태스크 완료';
       completedProjects.unshift({
         id:cpId++,
-        name:'신규 서비스 런칭',
+        name:projectName,
         team:'전체',
-        startDate:tasks.reduce((a,b)=>a.date<b.date?a:b).date,
+        startDate:startDate?startDate.date:endDate,
         endDate:endDate,
         tasks:tasks.map(t=>t.name),
-        result:'모든 태스크 완료 — 자동 등록'
+        result:projectResult
       });
       localStorage.setItem('pm_auto_completed','1');
+      saveData();
       renderCompleted();
-      alert('🎉 모든 태스크가 완료되어 완료 프로젝트에 자동 등록됐어요!');
+      if(confirm('🎉 완료 프로젝트에 자동 등록됐어요!\n\n태스크 목록을 초기화할까요?')){
+        tasks=[];
+        taskId=1;
+        localStorage.removeItem('pm_auto_completed');
+        saveData();
+        renderAll();
+      }
     }
   } else {
     localStorage.removeItem('pm_auto_completed');
