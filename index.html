@@ -8,8 +8,12 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans-serif;font-size:14px;color:#1a1a1a;background:#f7f7f5;min-height:100vh}
 .app{max-width:1100px;margin:0 auto;padding:24px 20px}
-h1{font-size:22px;font-weight:600;color:#1a1a1a;margin-bottom:4px}
+.app-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+h1{font-size:22px;font-weight:600;color:#1a1a1a}
 .subtitle{font-size:13px;color:#888;margin-bottom:20px}
+.header-btns{display:flex;gap:8px;align-items:center}
+.icon-btn{width:34px;height:34px;border-radius:8px;border:1px solid #e5e5e5;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;color:#666}
+.icon-btn:hover{background:#f5f5f5}
 .top-nav{display:flex;gap:4px;margin-bottom:20px;border-bottom:1px solid #e5e5e5;flex-wrap:wrap}
 .top-tab{font-size:13px;padding:9px 18px;cursor:pointer;color:#888;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap}
 .top-tab:hover{color:#444}
@@ -60,10 +64,10 @@ h1{font-size:22px;font-weight:600;color:#1a1a1a;margin-bottom:4px}
 .k-col-hdr{font-size:12px;font-weight:600;color:#666;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
 .k-cnt{background:#fff;border:1px solid #e5e5e5;border-radius:20px;font-size:11px;padding:1px 8px;color:#888}
 .k-card{background:#fff;border:1px solid #ebebeb;border-radius:8px;padding:10px 12px;margin-bottom:8px;font-size:13px;cursor:pointer}
-.k-card:hover{border-color:#bbb;background:#fafafa}
+.k-card:hover{border-color:#bbb}
 .k-card:last-child{margin-bottom:0}
 .check-row{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:8px;border:1px solid #ebebeb;background:#fff;margin-bottom:7px;cursor:pointer}
-.check-row:hover{border-color:#bbb;background:#fafafa}
+.check-row:hover{border-color:#bbb}
 .cb{width:18px;height:18px;border:2px solid #ddd;border-radius:4px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center}
 .cb.done{background:#4caf6e;border-color:#4caf6e}
 .cb.done::after{content:'';display:block;width:10px;height:6px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg) translate(1px,-1px)}
@@ -95,15 +99,29 @@ h1{font-size:22px;font-weight:600;color:#1a1a1a;margin-bottom:4px}
 .cdetail{background:#f7f7f5;border-radius:8px;padding:12px 14px;margin-top:12px;font-size:13px;color:#888;border:1px solid #ebebeb}
 .cdr{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #f0f0f0;font-size:13px;color:#1a1a1a}
 .cdr:last-child{border-bottom:none}
-.done-card{background:#fff;border:1px solid #ebebeb;border-radius:10px;padding:16px 18px;margin-bottom:12px}
+.done-card{background:#fff;border:1px solid #ebebeb;border-radius:10px;padding:16px 18px;margin-bottom:12px;cursor:pointer}
+.done-card:hover{border-color:#bbb}
 .done-card-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
 .done-title{font-size:15px;font-weight:600;color:#1a1a1a}
 .done-meta{display:flex;gap:10px;flex-wrap:wrap;font-size:12px;color:#888;margin-bottom:10px}
 .stock-bar-wrap{display:flex;align-items:center;gap:8px}
 .stock-bar{height:8px;background:#f0f0f0;border-radius:4px;overflow:hidden;width:80px}
 .stock-bar-fill{height:100%;border-radius:4px}
-.status-sel{font-size:11px;border:none;background:transparent;cursor:pointer;color:inherit;padding:0;font-weight:600}
-.tip{background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:10px 14px;font-size:12px;color:#92400e;margin-top:14px}
+/* 설정 페이지 */
+.settings-section{background:#fff;border:1px solid #ebebeb;border-radius:10px;padding:20px;margin-bottom:16px}
+.settings-title{font-size:15px;font-weight:600;color:#1a1a1a;margin-bottom:4px}
+.settings-desc{font-size:12px;color:#888;margin-bottom:16px;line-height:1.6}
+.settings-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.settings-row label{font-size:12px;color:#888;min-width:80px}
+.settings-inp{font-size:13px;padding:7px 10px;border-radius:8px;border:1px solid #ddd;background:#fff;color:#1a1a1a;flex:1;min-width:200px;outline:none}
+.settings-inp:focus{border-color:#999}
+.status-badge{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600}
+.status-on{background:#dcfce7;color:#166534}
+.status-off{background:#ebebeb;color:#555}
+.notify-log{background:#f7f7f5;border-radius:8px;padding:10px 14px;font-size:12px;color:#555;max-height:160px;overflow-y:auto;border:1px solid #ebebeb}
+.log-item{padding:5px 0;border-bottom:0.5px solid #f0f0f0;display:flex;gap:8px}
+.log-item:last-child{border-bottom:none}
+.log-time{color:#aaa;min-width:80px;font-size:11px}
 /* 사이드패널 */
 .side-overlay{position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.25);z-index:999;display:none}
 .side-overlay.open{display:block}
@@ -137,6 +155,8 @@ h1{font-size:22px;font-weight:600;color:#1a1a1a;margin-bottom:4px}
 .save-panel-btn:hover{background:#333}
 .complete-btn{width:100%;height:40px;background:#4caf6e;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;margin-top:8px}
 .complete-btn:hover{background:#3d9e5f}
+.cancel-btn{width:100%;height:40px;background:#fffbeb;color:#92400e;border:1px solid #fde68a;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;margin-top:8px}
+.cancel-btn:hover{background:#fef3c7}
 @media(max-width:600px){
   .metrics{grid-template-columns:repeat(2,1fr)}
   .kanban{grid-template-columns:repeat(2,1fr)}
@@ -146,9 +166,12 @@ h1{font-size:22px;font-weight:600;color:#1a1a1a;margin-bottom:4px}
 </head>
 <body>
 <div class="app">
-  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:4px">
+  <div class="app-header">
     <h1>프로젝트 관리 앱</h1>
-    <button class="btn" style="font-size:11px;height:28px;padding:0 10px;color:#ef4444;border-color:#fca5a5" onclick="if(confirm('모든 데이터를 초기화할까요?')){localStorage.clear();location.reload();}">데이터 초기화</button>
+    <div class="header-btns">
+      <button class="icon-btn" onclick="goSettings()" title="설정">⚙️</button>
+      <button class="btn" style="font-size:11px;height:28px;padding:0 10px;color:#ef4444;border-color:#fca5a5" onclick="if(confirm('모든 데이터를 초기화할까요?')){localStorage.clear();location.reload();}">초기화</button>
+    </div>
   </div>
   <div class="subtitle">태스크 · 재고 · 입고 캘린더 · 완료 프로젝트</div>
 
@@ -182,7 +205,7 @@ h1{font-size:22px;font-weight:600;color:#1a1a1a;margin-bottom:4px}
       <div class="cal-section-title">마감일 캘린더</div>
       <div class="legend">
         <div class="leg-item"><div class="leg-dot" style="background:#fca5a5"></div>높은 우선순위</div>
-        <div class="leg-item"><div class="leg-dot" style="background:#fcd34d"></div>중간 우선순위</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#fcd34d"></div>중간</div>
         <div class="leg-item"><div class="leg-dot" style="background:#86efac"></div>낮음/완료</div>
         <div class="leg-item"><div class="leg-dot" style="background:#93c5fd"></div>검토 중</div>
       </div>
@@ -204,11 +227,8 @@ h1{font-size:22px;font-weight:600;color:#1a1a1a;margin-bottom:4px}
       <div class="fg"><label>단위</label><input id="i-unit" placeholder="개/박스" style="width:64px"></div>
       <button class="btn btn-primary" onclick="addInventory()">+ 품목 추가</button>
     </div>
-    <div class="tbl-wrap"><table class="tbl"><thead><tr><th>품목명</th><th>카테고리</th><th>현재 재고</th><th>최소 재고</th><th>상태</th><th>재고량</th><th>수량 조정</th><th></th></tr></thead><tbody id="inv-body"></tbody></table></div>
-    <div style="margin-top:20px">
-      <div style="font-size:14px;font-weight:600;margin-bottom:14px">재고 현황 그래프</div>
-      <div id="inv-chart"></div>
-    </div>
+    <div class="tbl-wrap"><table class="tbl"><thead><tr><th>품목명</th><th>카테고리</th><th>현재 재고</th><th>최소 재고</th><th>상태</th><th>재고량</th><th>조정</th><th></th></tr></thead><tbody id="inv-body"></tbody></table></div>
+    <div style="margin-top:20px"><div style="font-size:14px;font-weight:600;margin-bottom:14px">재고 현황 그래프</div><div id="inv-chart"></div></div>
   </div>
 
   <!-- 입고 캘린더 -->
@@ -242,9 +262,70 @@ h1{font-size:22px;font-weight:600;color:#1a1a1a;margin-bottom:4px}
     </div>
     <div id="completed-body"></div>
   </div>
+
+  <!-- 설정 페이지 -->
+  <div id="page-settings" class="page">
+    <div class="settings-section">
+      <div class="settings-title">👥 팀원 이메일 관리</div>
+      <div class="settings-desc">팀원 이름과 이메일을 등록하면 태스크 사이드패널에서 바로 이메일 알림을 보낼 수 있어요.</div>
+      <div class="add-form" style="margin-bottom:12px">
+        <div class="fg"><label>이름</label><input id="tm-name" placeholder="홍길동" style="width:100px"></div>
+        <div class="fg"><label>이메일</label><input id="tm-email" type="email" placeholder="example@email.com" style="width:200px"></div>
+        <button class="btn btn-primary" onclick="addTeamMember()">+ 추가</button>
+      </div>
+      <div class="tbl-wrap"><table class="tbl"><thead><tr><th>이름</th><th>이메일</th><th></th></tr></thead><tbody id="team-body"></tbody></table></div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-title">📨 Slack 알림 연동</div>
+      <div class="settings-desc">Slack Incoming Webhook URL을 입력하면 태스크 추가/완료/상태 변경 시 Slack 채널로 자동 알림이 전송돼요.<br>설정 방법: Slack 앱 → Incoming Webhooks → 채널 선택 → URL 복사</div>
+      <div class="settings-row">
+        <label>Webhook URL</label>
+        <input class="settings-inp" id="slack-url" placeholder="https://hooks.slack.com/services/...">
+      </div>
+      <div class="settings-row">
+        <label>알림 상태</label>
+        <span id="slack-status" class="status-badge status-off">비활성</span>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button class="btn btn-primary" onclick="saveSlack()">저장</button>
+        <button class="btn" onclick="testSlack()">테스트 전송</button>
+        <button class="btn" style="color:#ef4444;border-color:#fca5a5" onclick="clearSlack()">연동 해제</button>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-title">📋 Notion 알림 연동</div>
+      <div class="settings-desc">Notion Integration Token과 Database ID를 입력하면 태스크 완료 시 Notion 데이터베이스에 자동으로 기록돼요.<br>설정 방법: notion.so/my-integrations → 새 통합 만들기 → 토큰 복사 → Notion 페이지에서 통합 연결</div>
+      <div class="settings-row">
+        <label>Integration Token</label>
+        <input class="settings-inp" id="notion-token" placeholder="secret_xxxx...">
+      </div>
+      <div class="settings-row">
+        <label>Database ID</label>
+        <input class="settings-inp" id="notion-db" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx">
+      </div>
+      <div class="settings-row">
+        <label>알림 상태</label>
+        <span id="notion-status" class="status-badge status-off">비활성</span>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button class="btn btn-primary" onclick="saveNotion()">저장</button>
+        <button class="btn" onclick="testNotion()">연결 테스트</button>
+        <button class="btn" style="color:#ef4444;border-color:#fca5a5" onclick="clearNotion()">연동 해제</button>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-title">📋 알림 로그</div>
+      <div class="settings-desc">최근 전송된 알림 기록이에요.</div>
+      <div class="notify-log" id="notify-log"><div style="color:#aaa;font-size:12px">아직 알림 기록이 없어요</div></div>
+      <button class="btn" style="margin-top:8px;font-size:12px" onclick="clearLog()">로그 초기화</button>
+    </div>
+  </div>
 </div>
 
-<!-- 사이드 오버레이 -->
+<!-- 오버레이 -->
 <div class="side-overlay" id="side-overlay" onclick="closePanel()"></div>
 
 <!-- 태스크 사이드패널 -->
@@ -257,21 +338,21 @@ h1{font-size:22px;font-weight:600;color:#1a1a1a;margin-bottom:4px}
     <div class="side-sec">
       <div class="side-sec-title">기본 정보</div>
       <div class="side-row"><span class="side-lbl">태스크명</span><input class="side-inp" id="tp-name"></div>
-      <div class="side-row"><span class="side-lbl">담당자</span><input class="side-inp" id="tp-assignee" placeholder="담당자"></div>
+      <div class="side-row">
+        <span class="side-lbl">담당자</span>
+        <input class="side-inp" id="tp-assignee" placeholder="담당자" style="flex:1">
+        <button onclick="sendEmail()" style="height:28px;font-size:11px;padding:0 8px;border-radius:6px;border:1px solid #93c5fd;background:#dbeafe;color:#1e40af;cursor:pointer;font-weight:600;white-space:nowrap">✉ 메일</button>
+      </div>
       <div class="side-row"><span class="side-lbl">마감일</span><input type="date" class="side-inp" id="tp-date"></div>
       <div class="side-row"><span class="side-lbl">상태</span>
         <select class="side-sel" id="tp-status">
-          <option value="todo">할 일</option>
-          <option value="inprogress">진행 중</option>
-          <option value="review">검토 중</option>
-          <option value="done">완료</option>
+          <option value="todo">할 일</option><option value="inprogress">진행 중</option>
+          <option value="review">검토 중</option><option value="done">완료</option>
         </select>
       </div>
       <div class="side-row"><span class="side-lbl">우선순위</span>
         <select class="side-sel" id="tp-priority">
-          <option value="high">높음</option>
-          <option value="mid">중간</option>
-          <option value="low">낮음</option>
+          <option value="high">높음</option><option value="mid">중간</option><option value="low">낮음</option>
         </select>
       </div>
     </div>
@@ -295,7 +376,6 @@ h1{font-size:22px;font-weight:600;color:#1a1a1a;margin-bottom:4px}
     <button class="complete-btn" onclick="moveToCompleted()">완료 프로젝트로 등록 →</button>
   </div>
 </div>
-
 
 <!-- 완료 프로젝트 사이드패널 -->
 <div class="side-panel" id="cp-panel">
@@ -329,7 +409,7 @@ h1{font-size:22px;font-weight:600;color:#1a1a1a;margin-bottom:4px}
       <div id="cpp-files"></div>
     </div>
     <button class="save-panel-btn" onclick="saveCpPanel()">저장</button>
-    <button class="btn" style="width:100%;margin-top:8px;height:40px;font-size:13px;font-weight:600;border-color:#f59e0b;color:#92400e;background:#fffbeb" onclick="cancelCompleted()">⟵ 완료 취소 (프로젝트 관리로 복귀)</button>
+    <button class="cancel-btn" onclick="cancelCompleted()">⟵ 완료 취소 (프로젝트 관리로 복귀)</button>
   </div>
 </div>
 
@@ -411,17 +491,236 @@ let incoming=[
 ];
 let icId=6;
 let completedProjects=[
-  {id:1,name:'브랜드 리뉴얼',team:'디자인팀',startDate:'2026-01-05',endDate:'2026-02-28',tasks:['로고 리디자인','컬러 팔레트','브랜드 가이드','소셜 템플릿'],result:'브랜드 가이드북 완성 및 전팀 배포'},
-  {id:2,name:'내부 시스템 구축',team:'개발팀',startDate:'2025-11-01',endDate:'2026-01-31',tasks:['요구사항 분석','DB 설계','API 개발','테스트','배포'],result:'사내 업무 자동화 시스템 정식 오픈'},
-  {id:3,name:'Q4 마케팅 캠페인',team:'마케팅팀',startDate:'2025-10-01',endDate:'2025-12-31',tasks:['캠페인 기획','콘텐츠 제작','광고 집행','성과 분석'],result:'전환율 23% 향상, 신규 가입자 1,200명'},
+  {id:1,name:'브랜드 리뉴얼',team:'디자인팀',startDate:'2026-01-05',endDate:'2026-02-28',tasks:['로고 리디자인','컬러 팔레트','브랜드 가이드','소셜 템플릿'],result:'브랜드 가이드북 완성 및 전팀 배포',comments:[],images:[],files:[]},
+  {id:2,name:'내부 시스템 구축',team:'개발팀',startDate:'2025-11-01',endDate:'2026-01-31',tasks:['요구사항 분석','DB 설계','API 개발','테스트','배포'],result:'사내 업무 자동화 시스템 정식 오픈',comments:[],images:[],files:[]},
+  {id:3,name:'Q4 마케팅 캠페인',team:'마케팅팀',startDate:'2025-10-01',endDate:'2025-12-31',tasks:['캠페인 기획','콘텐츠 제작','광고 집행','성과 분석'],result:'전환율 23% 향상, 신규 가입자 1,200명',comments:[],images:[],files:[]},
 ];
 let cpId=4;
 let tcYear=2026,tcMonth=3,icYear=2026,icMonth=3;
 let currentTaskId=null,currentInvId=null,currentCpId=null;
+let teamMembers=[];
+let notifyLog=[];
+let settings={slackUrl:'',notionToken:'',notionDb:''};
 
+// 저장/로드
+function saveData(){
+  try{
+    localStorage.setItem('pm_tasks',JSON.stringify(tasks));
+    localStorage.setItem('pm_inventory',JSON.stringify(inventory));
+    localStorage.setItem('pm_incoming',JSON.stringify(incoming));
+    localStorage.setItem('pm_completed',JSON.stringify(completedProjects));
+    localStorage.setItem('pm_ids',JSON.stringify({taskId,invId,icId,cpId}));
+    localStorage.setItem('pm_team',JSON.stringify(teamMembers));
+    localStorage.setItem('pm_settings',JSON.stringify(settings));
+    localStorage.setItem('pm_log',JSON.stringify(notifyLog));
+  }catch(e){}
+}
+function loadData(){
+  try{
+    const t=localStorage.getItem('pm_tasks');if(t)tasks=JSON.parse(t);
+    const i=localStorage.getItem('pm_inventory');if(i)inventory=JSON.parse(i);
+    const ic=localStorage.getItem('pm_incoming');if(ic)incoming=JSON.parse(ic);
+    const cp=localStorage.getItem('pm_completed');if(cp)completedProjects=JSON.parse(cp);
+    const ids=localStorage.getItem('pm_ids');if(ids){const o=JSON.parse(ids);taskId=o.taskId;invId=o.invId;icId=o.icId;cpId=o.cpId;}
+    const tm=localStorage.getItem('pm_team');if(tm)teamMembers=JSON.parse(tm);
+    const st=localStorage.getItem('pm_settings');if(st)settings=JSON.parse(st);
+    const lg=localStorage.getItem('pm_log');if(lg)notifyLog=JSON.parse(lg);
+  }catch(e){}
+}
+
+// 알림 로그
+function addLog(msg){
+  const now=new Date().toLocaleString('ko-KR');
+  notifyLog.unshift({time:now,msg});
+  if(notifyLog.length>50)notifyLog.pop();
+  saveData();
+  renderLog();
+}
+function renderLog(){
+  const el=document.getElementById('notify-log');
+  if(!el)return;
+  if(!notifyLog.length){el.innerHTML='<div style="color:#aaa;font-size:12px">아직 알림 기록이 없어요</div>';return;}
+  el.innerHTML=notifyLog.map(l=>`<div class="log-item"><span class="log-time">${l.time}</span><span>${l.msg}</span></div>`).join('');
+}
+function clearLog(){notifyLog=[];saveData();renderLog();}
+
+// Slack 알림
+function saveSlack(){
+  const url=document.getElementById('slack-url').value.trim();
+  settings.slackUrl=url;
+  saveData();
+  updateSettingsStatus();
+  alert(url?'Slack 연동이 저장됐어요!':'Slack URL이 삭제됐어요.');
+}
+function clearSlack(){settings.slackUrl='';document.getElementById('slack-url').value='';saveData();updateSettingsStatus();}
+async function testSlack(){
+  if(!settings.slackUrl){alert('먼저 Slack Webhook URL을 입력하고 저장해주세요!');return;}
+  await sendSlack('🔔 테스트 알림 — 프로젝트 관리 앱에서 보낸 테스트 메시지예요!');
+}
+async function sendSlack(text){
+  if(!settings.slackUrl)return;
+  try{
+    await fetch(settings.slackUrl,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text})});
+    addLog('📨 Slack: '+text.slice(0,40));
+  }catch(e){addLog('❌ Slack 전송 실패: '+e.message);}
+}
+
+// Notion 알림
+function saveNotion(){
+  settings.notionToken=document.getElementById('notion-token').value.trim();
+  settings.notionDb=document.getElementById('notion-db').value.trim();
+  saveData();
+  updateSettingsStatus();
+  alert((settings.notionToken&&settings.notionDb)?'Notion 연동이 저장됐어요!':'Notion 정보가 삭제됐어요.');
+}
+function clearNotion(){settings.notionToken='';settings.notionDb='';document.getElementById('notion-token').value='';document.getElementById('notion-db').value='';saveData();updateSettingsStatus();}
+async function testNotion(){
+  if(!settings.notionToken||!settings.notionDb){alert('Notion Token과 Database ID를 모두 입력하고 저장해주세요!');return;}
+  await sendNotion('테스트','연결 테스트','todo');
+}
+async function sendNotion(name,status,priority){
+  if(!settings.notionToken||!settings.notionDb)return;
+  try{
+    const res=await fetch('https://api.notion.com/v1/pages',{
+      method:'POST',
+      headers:{'Authorization':'Bearer '+settings.notionToken,'Content-Type':'application/json','Notion-Version':'2022-06-28'},
+      body:JSON.stringify({
+        parent:{database_id:settings.notionDb},
+        properties:{
+          Name:{title:[{text:{content:name}}]},
+          Status:{select:{name:status}},
+          Priority:{select:{name:priority}},
+          Date:{date:{start:new Date().toISOString().slice(0,10)}}
+        }
+      })
+    });
+    if(res.ok){addLog('📋 Notion: ['+name+'] 등록 완료');}
+    else{const e=await res.json();addLog('❌ Notion 오류: '+e.message);}
+  }catch(e){addLog('❌ Notion 전송 실패 (CORS 이슈일 수 있어요)');}
+}
+
+function updateSettingsStatus(){
+  const slackEl=document.getElementById('slack-status');
+  const notionEl=document.getElementById('notion-status');
+  if(slackEl){slackEl.className='status-badge '+(settings.slackUrl?'status-on':'status-off');slackEl.textContent=settings.slackUrl?'활성':'비활성';}
+  if(notionEl){notionEl.className='status-badge '+((settings.notionToken&&settings.notionDb)?'status-on':'status-off');notionEl.textContent=(settings.notionToken&&settings.notionDb)?'활성':'비활성';}
+  if(document.getElementById('slack-url'))document.getElementById('slack-url').value=settings.slackUrl||'';
+  if(document.getElementById('notion-token'))document.getElementById('notion-token').value=settings.notionToken||'';
+  if(document.getElementById('notion-db'))document.getElementById('notion-db').value=settings.notionDb||'';
+}
+
+// 팀원 관리
+function renderTeam(){
+  const el=document.getElementById('team-body');if(!el)return;
+  el.innerHTML=teamMembers.map((m,i)=>`
+    <tr>
+      <td style="font-weight:500">${m.name}</td>
+      <td style="color:#4f90e5">${m.email}</td>
+      <td onclick="event.stopPropagation()"><button class="del-btn" onclick="delTeamMember(${i})">✕</button></td>
+    </tr>`).join('');
+}
+function addTeamMember(){
+  const name=document.getElementById('tm-name').value.trim();
+  const email=document.getElementById('tm-email').value.trim();
+  if(!name||!email){alert('이름과 이메일을 모두 입력해주세요!');return;}
+  teamMembers.push({name,email});
+  document.getElementById('tm-name').value='';
+  document.getElementById('tm-email').value='';
+  renderTeam();saveData();
+}
+function delTeamMember(i){if(confirm('팀원을 삭제할까요?')){teamMembers.splice(i,1);renderTeam();saveData();}}
+
+// 이메일 전송
+function sendEmail(){
+  const name=document.getElementById('tp-assignee').value.trim();
+  const taskName=document.getElementById('tp-name').value.trim();
+  const member=teamMembers.find(m=>m.name===name);
+  if(!member){alert('⚙️ 설정에서 ['+name+']의 이메일을 먼저 등록해주세요!');return;}
+  const subject=encodeURIComponent('[태스크 알림] '+taskName);
+  const body=encodeURIComponent('안녕하세요 '+name+'님,\n\n['+taskName+'] 태스크가 배정되었습니다.\n\n확인 부탁드립니다.\n\n감사합니다.');
+  window.open('mailto:'+member.email+'?subject='+subject+'&body='+body);
+  addLog('✉ 이메일: '+name+' → '+taskName);
+}
+
+// 헬퍼
+function sLabel(s){return{todo:'할 일',inprogress:'진행 중',review:'검토 중',done:'완료'}[s]||s}
+function pLabel(p){return{high:'높음',mid:'중간',low:'낮음'}[p]||p}
+function progPct(t){return{done:100,review:80,inprogress:40,todo:0}[t.status]||0}
+function stockSt(i){if(i.qty===0)return'out';if(i.qty<=i.min)return'low';return'ok'}
+function stockLb(s){return{ok:'정상',low:'부족',out:'품절'}[s]}
+function stockCls(s){return{ok:'stock-ok',low:'stock-low',out:'stock-out'}[s]}
+function icStLb(s){return{scheduled:'예정',confirmed:'확정',arrived:'입고 완료'}[s]||s}
+function icStSty(s){if(s==='arrived')return'background:#dcfce7;color:#166534';if(s==='confirmed')return'background:#dbeafe;color:#1e40af';return'background:#ebebeb;color:#555'}
+function chipCls(t){if(t.status==='done')return'chip-done';if(t.status==='review')return'chip-review';return t.priority==='high'?'chip-high':t.priority==='mid'?'chip-mid':'chip-low'}
+
+// 완료 자동 이동
+function autoMoveToCompleted(t){
+  const endDate=new Date().toISOString().slice(0,10);
+  const newCp={id:cpId++,name:t.name,team:t.assignee||'전체',startDate:t.date||endDate,endDate,tasks:[t.name],result:'완료 — 자동 이동',comments:t.comments||[],images:t.images||[],files:t.files||[],originTask:{name:t.name,assignee:t.assignee,date:t.date,priority:t.priority,comments:t.comments||[],images:t.images||[],files:t.files||[]}};
+  completedProjects.unshift(newCp);
+  tasks=tasks.filter(tt=>tt.id!==t.id);
+  saveData();renderAll();closePanel();
+  sendSlack('✅ ['+t.name+'] 완료 — 담당자: '+(t.assignee||'-'));
+  sendNotion(t.name,'완료',t.priority);
+  setTimeout(()=>openCompletedPanel(newCp.id),300);
+}
+
+// 태스크 사이드패널
+function openTaskPanel(id){
+  const t=tasks.find(t=>t.id===id);if(!t)return;
+  currentTaskId=id;
+  document.getElementById('tp-title').textContent=t.name;
+  document.getElementById('tp-name').value=t.name;
+  document.getElementById('tp-assignee').value=t.assignee||'';
+  document.getElementById('tp-date').value=t.date||'';
+  document.getElementById('tp-status').value=t.status;
+  document.getElementById('tp-priority').value=t.priority;
+  document.getElementById('tp-comment-input').value='';
+  renderTaskComments(t);renderTaskImages(t);renderTaskFiles(t);
+  document.getElementById('task-panel').classList.add('open');
+  document.getElementById('side-overlay').classList.add('open');
+}
+function saveTaskPanel(){
+  const t=tasks.find(t=>t.id===currentTaskId);if(!t)return;
+  t.name=document.getElementById('tp-name').value.trim()||t.name;
+  t.assignee=document.getElementById('tp-assignee').value.trim();
+  t.date=document.getElementById('tp-date').value;
+  t.priority=document.getElementById('tp-priority').value;
+  const newStatus=document.getElementById('tp-status').value;
+  if(newStatus==='done'){t.status='done';saveData();autoMoveToCompleted(t);return;}
+  t.status=newStatus;
+  document.getElementById('tp-title').textContent=t.name;
+  renderAll();
+  const btn=document.querySelector('#task-panel .save-panel-btn');
+  btn.textContent='저장됐어요 ✓';btn.style.background='#4caf6e';
+  setTimeout(()=>{btn.textContent='저장';btn.style.background='#1a1a1a';},1500);
+}
+function moveToCompleted(){
+  const t=tasks.find(t=>t.id===currentTaskId);if(!t)return;
+  autoMoveToCompleted(t);
+}
+function addTaskComment(){
+  const t=tasks.find(t=>t.id===currentTaskId);if(!t)return;
+  const txt=document.getElementById('tp-comment-input').value.trim();if(!txt)return;
+  if(!t.comments)t.comments=[];
+  t.comments.push({text:txt,time:new Date().toLocaleString('ko-KR')});
+  document.getElementById('tp-comment-input').value='';
+  renderTaskComments(t);saveData();
+}
+function renderTaskComments(t){
+  const el=document.getElementById('tp-comments');
+  if(!t.comments||!t.comments.length){el.innerHTML='<div style="font-size:12px;color:#aaa;margin-bottom:8px">아직 코멘트가 없어요</div>';return;}
+  el.innerHTML=t.comments.map((c,i)=>`<div class="comment-item"><div>${c.text}</div><div style="display:flex;justify-content:space-between"><span class="comment-time">${c.time}</span><button class="del-btn" onclick="delTaskComment(${i})">✕</button></div></div>`).join('');
+}
+function delTaskComment(i){const t=tasks.find(t=>t.id===currentTaskId);if(!t)return;t.comments.splice(i,1);renderTaskComments(t);saveData();}
+function addTaskImages(e){const t=tasks.find(t=>t.id===currentTaskId);if(!t)return;if(!t.images)t.images=[];Array.from(e.target.files).forEach(f=>{const r=new FileReader();r.onload=ev=>{t.images.push({name:f.name,data:ev.target.result});renderTaskImages(t);saveData();};r.readAsDataURL(f);});}
+function renderTaskImages(t){const el=document.getElementById('tp-images');if(!t.images||!t.images.length){el.innerHTML='';return;}el.innerHTML=t.images.map((img,i)=>`<div style="position:relative"><img src="${img.data}" class="img-thumb" onclick="window.open('${img.data}')"><button onclick="delTaskImg(${i})" style="position:absolute;top:-4px;right:-4px;width:18px;height:18px;border-radius:50%;background:#ef4444;border:none;color:#fff;font-size:10px;cursor:pointer">✕</button></div>`).join('');}
+function delTaskImg(i){const t=tasks.find(t=>t.id===currentTaskId);if(!t)return;t.images.splice(i,1);renderTaskImages(t);saveData();}
+function addTaskFiles(e){const t=tasks.find(t=>t.id===currentTaskId);if(!t)return;if(!t.files)t.files=[];Array.from(e.target.files).forEach(f=>{const r=new FileReader();r.onload=ev=>{t.files.push({name:f.name,data:ev.target.result,size:Math.round(f.size/1024)+'KB'});renderTaskFiles(t);saveData();};r.readAsDataURL(f);});}
+function renderTaskFiles(t){const el=document.getElementById('tp-files');if(!t.files||!t.files.length){el.innerHTML='';return;}el.innerHTML=t.files.map((f,i)=>`<div class="file-row"><span style="font-size:15px">📄</span><span class="file-name">${f.name}</span><span class="file-size">${f.size}</span><a href="${f.data}" download="${f.name}" style="color:#4caf6e;font-size:11px">다운</a><button class="del-btn" onclick="delTaskFile(${i})">✕</button></div>`).join('');}
+function delTaskFile(i){const t=tasks.find(t=>t.id===currentTaskId);if(!t)return;t.files.splice(i,1);renderTaskFiles(t);saveData();}
 
 // 완료 프로젝트 사이드패널
-let currentCpId=null;
 function openCompletedPanel(id){
   const p=completedProjects.find(p=>p.id===id);if(!p)return;
   currentCpId=id;
@@ -452,188 +751,24 @@ function saveCpPanel(){
 function cancelCompleted(){
   const p=completedProjects.find(p=>p.id===currentCpId);if(!p)return;
   if(!confirm('완료를 취소하고 프로젝트 관리로 복귀할까요?'))return;
-  // 원본 태스크 정보로 복귀
   const origin=p.originTask||{};
-  tasks.unshift({
-    id:taskId++,
-    name:p.name,
-    assignee:p.team!=='전체'?p.team:(origin.assignee||''),
-    date:p.startDate||'',
-    priority:origin.priority||'mid',
-    status:'todo',
-    comments:p.comments||[],
-    images:p.images||[],
-    files:p.files||[]
-  });
+  tasks.unshift({id:taskId++,name:p.name,assignee:p.team!=='전체'?p.team:(origin.assignee||''),date:p.startDate||'',priority:origin.priority||'mid',status:'todo',comments:p.comments||[],images:p.images||[],files:p.files||[]});
   completedProjects=completedProjects.filter(cp=>cp.id!==currentCpId);
   closePanel();saveData();renderAll();
-  // 프로젝트 관리 탭으로 이동
   document.querySelectorAll('.top-tab').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.page').forEach(pg=>pg.classList.remove('active'));
   document.querySelector('.top-tab').classList.add('active');
   document.getElementById('page-project').classList.add('active');
-  alert('프로젝트 관리로 복귀됐어요!');
 }
-function addCpComment(){
-  const p=completedProjects.find(p=>p.id===currentCpId);if(!p)return;
-  const txt=document.getElementById('cpp-comment-input').value.trim();if(!txt)return;
-  if(!p.comments)p.comments=[];
-  p.comments.push({text:txt,time:new Date().toLocaleString('ko-KR')});
-  document.getElementById('cpp-comment-input').value='';
-  renderCpComments(p);saveData();
-}
-function renderCpComments(p){
-  const el=document.getElementById('cpp-comments');
-  if(!p.comments||!p.comments.length){el.innerHTML='<div style="font-size:12px;color:#aaa;margin-bottom:8px">아직 코멘트가 없어요</div>';return;}
-  el.innerHTML=p.comments.map((c,i)=>`<div class="comment-item"><div>${c.text}</div><div style="display:flex;justify-content:space-between"><span class="comment-time">${c.time}</span><button class="del-btn" onclick="delCpComment(${i})">✕</button></div></div>`).join('');
-}
+function addCpComment(){const p=completedProjects.find(p=>p.id===currentCpId);if(!p)return;const txt=document.getElementById('cpp-comment-input').value.trim();if(!txt)return;if(!p.comments)p.comments=[];p.comments.push({text:txt,time:new Date().toLocaleString('ko-KR')});document.getElementById('cpp-comment-input').value='';renderCpComments(p);saveData();}
+function renderCpComments(p){const el=document.getElementById('cpp-comments');if(!p.comments||!p.comments.length){el.innerHTML='<div style="font-size:12px;color:#aaa;margin-bottom:8px">아직 코멘트가 없어요</div>';return;}el.innerHTML=p.comments.map((c,i)=>`<div class="comment-item"><div>${c.text}</div><div style="display:flex;justify-content:space-between"><span class="comment-time">${c.time}</span><button class="del-btn" onclick="delCpComment(${i})">✕</button></div></div>`).join('');}
 function delCpComment(i){const p=completedProjects.find(p=>p.id===currentCpId);if(!p)return;p.comments.splice(i,1);renderCpComments(p);saveData();}
-function addCpImages(e){
-  const p=completedProjects.find(p=>p.id===currentCpId);if(!p)return;
-  if(!p.images)p.images=[];
-  Array.from(e.target.files).forEach(f=>{const r=new FileReader();r.onload=ev=>{p.images.push({name:f.name,data:ev.target.result});renderCpImages(p);saveData();};r.readAsDataURL(f);});
-}
-function renderCpImages(p){
-  const el=document.getElementById('cpp-images');
-  if(!p.images||!p.images.length){el.innerHTML='';return;}
-  el.innerHTML=p.images.map((img,i)=>`<div style="position:relative"><img src="${img.data}" class="img-thumb" onclick="window.open('${img.data}')"><button onclick="delCpImg(${i})" style="position:absolute;top:-4px;right:-4px;width:18px;height:18px;border-radius:50%;background:#ef4444;border:none;color:#fff;font-size:10px;cursor:pointer">✕</button></div>`).join('');
-}
+function addCpImages(e){const p=completedProjects.find(p=>p.id===currentCpId);if(!p)return;if(!p.images)p.images=[];Array.from(e.target.files).forEach(f=>{const r=new FileReader();r.onload=ev=>{p.images.push({name:f.name,data:ev.target.result});renderCpImages(p);saveData();};r.readAsDataURL(f);});}
+function renderCpImages(p){const el=document.getElementById('cpp-images');if(!p.images||!p.images.length){el.innerHTML='';return;}el.innerHTML=p.images.map((img,i)=>`<div style="position:relative"><img src="${img.data}" class="img-thumb" onclick="window.open('${img.data}')"><button onclick="delCpImg(${i})" style="position:absolute;top:-4px;right:-4px;width:18px;height:18px;border-radius:50%;background:#ef4444;border:none;color:#fff;font-size:10px;cursor:pointer">✕</button></div>`).join('');}
 function delCpImg(i){const p=completedProjects.find(p=>p.id===currentCpId);if(!p)return;p.images.splice(i,1);renderCpImages(p);saveData();}
-function addCpFiles(e){
-  const p=completedProjects.find(p=>p.id===currentCpId);if(!p)return;
-  if(!p.files)p.files=[];
-  Array.from(e.target.files).forEach(f=>{const r=new FileReader();r.onload=ev=>{p.files.push({name:f.name,data:ev.target.result,size:Math.round(f.size/1024)+'KB'});renderCpFiles(p);saveData();};r.readAsDataURL(f);});
-}
-function renderCpFiles(p){
-  const el=document.getElementById('cpp-files');
-  if(!p.files||!p.files.length){el.innerHTML='';return;}
-  el.innerHTML=p.files.map((f,i)=>`<div class="file-row"><span style="font-size:15px">📄</span><span class="file-name">${f.name}</span><span class="file-size">${f.size}</span><a href="${f.data}" download="${f.name}" style="color:#4caf6e;font-size:11px">다운</a><button class="del-btn" onclick="delCpFile(${i})">✕</button></div>`).join('');
-}
+function addCpFiles(e){const p=completedProjects.find(p=>p.id===currentCpId);if(!p)return;if(!p.files)p.files=[];Array.from(e.target.files).forEach(f=>{const r=new FileReader();r.onload=ev=>{p.files.push({name:f.name,data:ev.target.result,size:Math.round(f.size/1024)+'KB'});renderCpFiles(p);saveData();};r.readAsDataURL(f);});}
+function renderCpFiles(p){const el=document.getElementById('cpp-files');if(!p.files||!p.files.length){el.innerHTML='';return;}el.innerHTML=p.files.map((f,i)=>`<div class="file-row"><span style="font-size:15px">📄</span><span class="file-name">${f.name}</span><span class="file-size">${f.size}</span><a href="${f.data}" download="${f.name}" style="color:#4caf6e;font-size:11px">다운</a><button class="del-btn" onclick="delCpFile(${i})">✕</button></div>`).join('');}
 function delCpFile(i){const p=completedProjects.find(p=>p.id===currentCpId);if(!p)return;p.files.splice(i,1);renderCpFiles(p);saveData();}
-
-function sLabel(s){return{todo:'할 일',inprogress:'진행 중',review:'검토 중',done:'완료'}[s]||s}
-function pLabel(p){return{high:'높음',mid:'중간',low:'낮음'}[p]||p}
-function progPct(t){return{done:100,review:80,inprogress:40,todo:0}[t.status]||0}
-function stockSt(i){if(i.qty===0)return'out';if(i.qty<=i.min)return'low';return'ok'}
-function stockLb(s){return{ok:'정상',low:'부족',out:'품절'}[s]}
-function stockCls(s){return{ok:'stock-ok',low:'stock-low',out:'stock-out'}[s]}
-function icStLb(s){return{scheduled:'예정',confirmed:'확정',arrived:'입고 완료'}[s]||s}
-function icStSty(s){if(s==='arrived')return'background:#dcfce7;color:#166534';if(s==='confirmed')return'background:#dbeafe;color:#1e40af';return'background:#ebebeb;color:#555'}
-function chipCls(t){if(t.status==='done')return'chip-done';if(t.status==='review')return'chip-review';return t.priority==='high'?'chip-high':t.priority==='mid'?'chip-mid':'chip-low'}
-
-// 저장/로드
-function saveData(){
-  try{
-    localStorage.setItem('pm_tasks',JSON.stringify(tasks));
-    localStorage.setItem('pm_inventory',JSON.stringify(inventory));
-    localStorage.setItem('pm_incoming',JSON.stringify(incoming));
-    localStorage.setItem('pm_completed',JSON.stringify(completedProjects));
-    localStorage.setItem('pm_ids',JSON.stringify({taskId,invId,icId,cpId}));
-  }catch(e){}
-}
-function loadData(){
-  try{
-    const t=localStorage.getItem('pm_tasks');if(t)tasks=JSON.parse(t);
-    const i=localStorage.getItem('pm_inventory');if(i)inventory=JSON.parse(i);
-    const ic=localStorage.getItem('pm_incoming');if(ic)incoming=JSON.parse(ic);
-    const cp=localStorage.getItem('pm_completed');if(cp)completedProjects=JSON.parse(cp);
-    const ids=localStorage.getItem('pm_ids');if(ids){const o=JSON.parse(ids);taskId=o.taskId;invId=o.invId;icId=o.icId;cpId=o.cpId;}
-  }catch(e){}
-}
-
-// 태스크 사이드패널
-function openTaskPanel(id){
-  const t=tasks.find(t=>t.id===id);if(!t)return;
-  currentTaskId=id;
-  document.getElementById('tp-title').textContent=t.name;
-  document.getElementById('tp-name').value=t.name;
-  document.getElementById('tp-assignee').value=t.assignee||'';
-  document.getElementById('tp-date').value=t.date||'';
-  document.getElementById('tp-status').value=t.status;
-  document.getElementById('tp-priority').value=t.priority;
-  document.getElementById('tp-comment-input').value='';
-  renderTaskComments(t);renderTaskImages(t);renderTaskFiles(t);
-  document.getElementById('task-panel').classList.add('open');
-  document.getElementById('side-overlay').classList.add('open');
-}
-function saveTaskPanel(){
-  const t=tasks.find(t=>t.id===currentTaskId);if(!t)return;
-  t.name=document.getElementById('tp-name').value.trim()||t.name;
-  t.assignee=document.getElementById('tp-assignee').value.trim();
-  t.date=document.getElementById('tp-date').value;
-  t.priority=document.getElementById('tp-priority').value;
-  const newStatus=document.getElementById('tp-status').value;
-  if(newStatus==='done'){
-    // 코멘트/사진/파일 먼저 저장 후 완료 이동
-    t.status='done';
-    saveData();
-    autoMoveToCompleted(t);
-    return;
-  }
-  t.status=newStatus;
-  document.getElementById('tp-title').textContent=t.name;
-  renderAll();
-  const btn=document.querySelector('#task-panel .save-panel-btn');
-  btn.textContent='저장됐어요 ✓';btn.style.background='#4caf6e';
-  setTimeout(()=>{btn.textContent='저장';btn.style.background='#1a1a1a';},1500);
-}
-function moveToCompleted(){
-  const t=tasks.find(t=>t.id===currentTaskId);if(!t)return;
-  const endDate=new Date().toISOString().slice(0,10);
-  const newCp={
-    id:cpId++,
-    name:t.name,
-    team:t.assignee||'전체',
-    startDate:t.date||endDate,
-    endDate:endDate,
-    tasks:[t.name],
-    result:'완료 프로젝트로 등록',
-    comments:t.comments||[],
-    images:t.images||[],
-    files:t.files||[],
-    originTask:{name:t.name,assignee:t.assignee,date:t.date,priority:t.priority,comments:t.comments||[],images:t.images||[],files:t.files||[]}
-  };
-  completedProjects.unshift(newCp);
-  tasks=tasks.filter(tt=>tt.id!==currentTaskId);
-  closePanel();saveData();renderAll();
-  setTimeout(()=>openCompletedPanel(newCp.id),300);
-}
-function addTaskComment(){
-  const t=tasks.find(t=>t.id===currentTaskId);if(!t)return;
-  const txt=document.getElementById('tp-comment-input').value.trim();if(!txt)return;
-  if(!t.comments)t.comments=[];
-  t.comments.push({text:txt,time:new Date().toLocaleString('ko-KR')});
-  document.getElementById('tp-comment-input').value='';
-  renderTaskComments(t);saveData();
-}
-function renderTaskComments(t){
-  const el=document.getElementById('tp-comments');
-  if(!t.comments||!t.comments.length){el.innerHTML='<div style="font-size:12px;color:#aaa;margin-bottom:8px">아직 코멘트가 없어요</div>';return;}
-  el.innerHTML=t.comments.map((c,i)=>`<div class="comment-item"><div>${c.text}</div><div style="display:flex;justify-content:space-between"><span class="comment-time">${c.time}</span><button class="del-btn" onclick="delTaskComment(${i})">✕</button></div></div>`).join('');
-}
-function delTaskComment(i){const t=tasks.find(t=>t.id===currentTaskId);if(!t)return;t.comments.splice(i,1);renderTaskComments(t);saveData();}
-function addTaskImages(e){
-  const t=tasks.find(t=>t.id===currentTaskId);if(!t)return;
-  if(!t.images)t.images=[];
-  Array.from(e.target.files).forEach(f=>{const r=new FileReader();r.onload=ev=>{t.images.push({name:f.name,data:ev.target.result});renderTaskImages(t);saveData();};r.readAsDataURL(f);});
-}
-function renderTaskImages(t){
-  const el=document.getElementById('tp-images');
-  if(!t.images||!t.images.length){el.innerHTML='';return;}
-  el.innerHTML=t.images.map((img,i)=>`<div style="position:relative"><img src="${img.data}" class="img-thumb" onclick="window.open('${img.data}')"><button onclick="delTaskImg(${i})" style="position:absolute;top:-4px;right:-4px;width:18px;height:18px;border-radius:50%;background:#ef4444;border:none;color:#fff;font-size:10px;cursor:pointer">✕</button></div>`).join('');
-}
-function delTaskImg(i){const t=tasks.find(t=>t.id===currentTaskId);if(!t)return;t.images.splice(i,1);renderTaskImages(t);saveData();}
-function addTaskFiles(e){
-  const t=tasks.find(t=>t.id===currentTaskId);if(!t)return;
-  if(!t.files)t.files=[];
-  Array.from(e.target.files).forEach(f=>{const r=new FileReader();r.onload=ev=>{t.files.push({name:f.name,data:ev.target.result,size:Math.round(f.size/1024)+'KB'});renderTaskFiles(t);saveData();};r.readAsDataURL(f);});
-}
-function renderTaskFiles(t){
-  const el=document.getElementById('tp-files');
-  if(!t.files||!t.files.length){el.innerHTML='';return;}
-  el.innerHTML=t.files.map((f,i)=>`<div class="file-row"><span style="font-size:15px">📄</span><span class="file-name">${f.name}</span><span class="file-size">${f.size}</span><a href="${f.data}" download="${f.name}" style="color:#4caf6e;font-size:11px">다운</a><button class="del-btn" onclick="delTaskFile(${i})">✕</button></div>`).join('');
-}
-function delTaskFile(i){const t=tasks.find(t=>t.id===currentTaskId);if(!t)return;t.files.splice(i,1);renderTaskFiles(t);saveData();}
 
 // 재고 사이드패널
 function openInvPanel(id){
@@ -651,13 +786,7 @@ function openInvPanel(id){
   document.getElementById('inv-panel').classList.add('open');
   document.getElementById('side-overlay').classList.add('open');
 }
-function quickAdjust(delta){
-  const item=inventory.find(i=>i.id===currentInvId);if(!item)return;
-  item.qty=Math.max(0,item.qty+delta);
-  document.getElementById('ip-qty').value=item.qty;
-  document.getElementById('ip-qty-display').textContent=item.qty+' '+item.unit;
-  renderInventory();saveData();
-}
+function quickAdjust(delta){const item=inventory.find(i=>i.id===currentInvId);if(!item)return;item.qty=Math.max(0,item.qty+delta);document.getElementById('ip-qty').value=item.qty;document.getElementById('ip-qty-display').textContent=item.qty+' '+item.unit;renderInventory();saveData();}
 function saveInvPanel(){
   const item=inventory.find(i=>i.id===currentInvId);if(!item)return;
   item.name=document.getElementById('ip-name').value.trim()||item.name;
@@ -673,34 +802,14 @@ function saveInvPanel(){
   btn.textContent='저장됐어요 ✓';btn.style.background='#4caf6e';
   setTimeout(()=>{btn.textContent='저장';btn.style.background='#1a1a1a';},1500);
 }
-function addInvImages(e){
-  const item=inventory.find(i=>i.id===currentInvId);if(!item)return;
-  if(!item.images)item.images=[];
-  Array.from(e.target.files).forEach(f=>{const r=new FileReader();r.onload=ev=>{item.images.push({name:f.name,data:ev.target.result});renderInvImages(item);saveData();};r.readAsDataURL(f);});
-}
-function renderInvImages(item){
-  const el=document.getElementById('ip-images');
-  if(!item.images||!item.images.length){el.innerHTML='';return;}
-  el.innerHTML=item.images.map((img,i)=>`<div style="position:relative"><img src="${img.data}" class="img-thumb" onclick="window.open('${img.data}')"><button onclick="delInvImg(${i})" style="position:absolute;top:-4px;right:-4px;width:18px;height:18px;border-radius:50%;background:#ef4444;border:none;color:#fff;font-size:10px;cursor:pointer">✕</button></div>`).join('');
-}
+function addInvImages(e){const item=inventory.find(i=>i.id===currentInvId);if(!item)return;if(!item.images)item.images=[];Array.from(e.target.files).forEach(f=>{const r=new FileReader();r.onload=ev=>{item.images.push({name:f.name,data:ev.target.result});renderInvImages(item);saveData();};r.readAsDataURL(f);});}
+function renderInvImages(item){const el=document.getElementById('ip-images');if(!item.images||!item.images.length){el.innerHTML='';return;}el.innerHTML=item.images.map((img,i)=>`<div style="position:relative"><img src="${img.data}" class="img-thumb" onclick="window.open('${img.data}')"><button onclick="delInvImg(${i})" style="position:absolute;top:-4px;right:-4px;width:18px;height:18px;border-radius:50%;background:#ef4444;border:none;color:#fff;font-size:10px;cursor:pointer">✕</button></div>`).join('');}
 function delInvImg(i){const item=inventory.find(i=>i.id===currentInvId);if(!item)return;item.images.splice(i,1);renderInvImages(item);saveData();}
-function addInvFiles(e){
-  const item=inventory.find(i=>i.id===currentInvId);if(!item)return;
-  if(!item.files)item.files=[];
-  Array.from(e.target.files).forEach(f=>{const r=new FileReader();r.onload=ev=>{item.files.push({name:f.name,data:ev.target.result,size:Math.round(f.size/1024)+'KB'});renderInvFiles(item);saveData();};r.readAsDataURL(f);});
-}
-function renderInvFiles(item){
-  const el=document.getElementById('ip-files');
-  if(!item.files||!item.files.length){el.innerHTML='';return;}
-  el.innerHTML=item.files.map((f,i)=>`<div class="file-row"><span style="font-size:15px">📄</span><span class="file-name">${f.name}</span><span class="file-size">${f.size}</span><a href="${f.data}" download="${f.name}" style="color:#4caf6e;font-size:11px">다운</a><button class="del-btn" onclick="delInvFile(${i})">✕</button></div>`).join('');
-}
+function addInvFiles(e){const item=inventory.find(i=>i.id===currentInvId);if(!item)return;if(!item.files)item.files=[];Array.from(e.target.files).forEach(f=>{const r=new FileReader();r.onload=ev=>{item.files.push({name:f.name,data:ev.target.result,size:Math.round(f.size/1024)+'KB'});renderInvFiles(item);saveData();};r.readAsDataURL(f);});}
+function renderInvFiles(item){const el=document.getElementById('ip-files');if(!item.files||!item.files.length){el.innerHTML='';return;}el.innerHTML=item.files.map((f,i)=>`<div class="file-row"><span style="font-size:15px">📄</span><span class="file-name">${f.name}</span><span class="file-size">${f.size}</span><a href="${f.data}" download="${f.name}" style="color:#4caf6e;font-size:11px">다운</a><button class="del-btn" onclick="delInvFile(${i})">✕</button></div>`).join('');}
 function delInvFile(i){const item=inventory.find(i=>i.id===currentInvId);if(!item)return;item.files.splice(i,1);renderInvFiles(item);saveData();}
 
-function closePanel(){
-  document.querySelectorAll('.side-panel').forEach(p=>p.classList.remove('open'));
-  document.getElementById('side-overlay').classList.remove('open');
-  currentTaskId=null;currentInvId=null;
-}
+function closePanel(){document.querySelectorAll('.side-panel').forEach(p=>p.classList.remove('open'));document.getElementById('side-overlay').classList.remove('open');currentTaskId=null;currentInvId=null;currentCpId=null;}
 
 // 렌더링
 function renderProjMetrics(){
@@ -718,7 +827,7 @@ function renderProjMetrics(){
 function renderDB(){
   document.getElementById('db-body').innerHTML=tasks.map(t=>`
     <tr onclick="openTaskPanel(${t.id})">
-      <td style="font-weight:500">${t.name}${(t.comments&&t.comments.length)?`<span style="font-size:10px;color:#4caf6e;margin-left:6px">💬${t.comments.length}</span>`:''}${(t.images&&t.images.length)?`<span style="font-size:10px;color:#4f90e5;margin-left:4px">🖼${t.images.length}</span>`:''}${(t.files&&t.files.length)?`<span style="font-size:10px;color:#f59e0b;margin-left:4px">📎${t.files.length}</span>`:''}</td>
+      <td style="font-weight:500">${t.name}${(t.comments&&t.comments.length)?`<span style="font-size:10px;color:#4caf6e;margin-left:5px">💬${t.comments.length}</span>`:''}${(t.images&&t.images.length)?`<span style="font-size:10px;color:#4f90e5;margin-left:4px">🖼${t.images.length}</span>`:''}${(t.files&&t.files.length)?`<span style="font-size:10px;color:#f59e0b;margin-left:4px">📎${t.files.length}</span>`:''}</td>
       <td style="color:#888">${t.assignee||'-'}</td>
       <td><span class="badge s-${t.status}">${sLabel(t.status)}</span></td>
       <td><span class="badge p-${t.priority}">${pLabel(t.priority)}</span></td>
@@ -792,7 +901,7 @@ function renderInventory(){
     const pct=item.min>0?Math.min(100,Math.round(item.qty/item.min*100)):100;
     const barColor=s==='out'?'#ef4444':s==='low'?'#f59e0b':'#4caf6e';
     return`<tr onclick="openInvPanel(${item.id})">
-      <td style="font-weight:500">${item.name}${item.memo?'<span style="font-size:10px;color:#888;margin-left:6px">📝</span>':''}</td>
+      <td style="font-weight:500">${item.name}${item.memo?'<span style="font-size:10px;color:#888;margin-left:5px">📝</span>':''}</td>
       <td style="color:#888">${item.cat}</td>
       <td style="font-weight:600">${item.qty} ${item.unit}</td>
       <td style="color:#aaa">${item.min} ${item.unit}</td>
@@ -802,7 +911,6 @@ function renderInventory(){
       <td onclick="event.stopPropagation()"><button class="del-btn" onclick="deleteInv(${item.id})">✕</button></td>
     </tr>`;
   }).join('');
-  // 그래프
   document.getElementById('inv-chart').innerHTML=inventory.map(item=>{
     const s=stockSt(item);
     const pct=item.min>0?Math.min(100,Math.round(item.qty/item.min*100)):100;
@@ -820,7 +928,7 @@ function renderInventory(){
       </div>
       <div style="display:flex;justify-content:space-between;margin-top:4px">
         <span style="font-size:10px;color:#aaa">0</span>
-        <span style="font-size:10px;color:#aaa;font-weight:500">${pct}%</span>
+        <span style="font-size:10px;font-weight:500;color:#aaa">${pct}%</span>
         <span style="font-size:10px;color:#aaa">최소: ${item.min}</span>
       </div>
     </div>`;
@@ -855,101 +963,70 @@ function renderIncomingCal(){
     <td><button class="del-btn" onclick="deleteIncoming(${i.id})">✕</button></td></tr>`).join('');
 }
 function renderCompleted(){
-  document.getElementById('completed-body').innerHTML=
-    completedProjects.map(p=>`
-      <div class="done-card" style="cursor:pointer" onclick="openCompletedPanel(${p.id})">
-        <div class="done-card-hdr"><span class="done-title">${p.name}</span><span class="badge s-done">완료</span></div>
-        <div class="done-meta"><span>팀: ${p.team}</span><span>기간: ${p.startDate} ~ ${p.endDate}</span><span>태스크: ${p.tasks.length}개</span></div>
-        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:${p.result?'10px':'0'}">${p.tasks.map(t=>`<span class="badge" style="background:#f5f5f5;color:#666">${t}</span>`).join('')}</div>
-        ${p.result?`<div style="font-size:12px;color:#888;border-top:1px solid #f0f0f0;padding-top:10px">결과: ${p.result}</div>`:''}
-        <div style="margin-top:10px;text-align:right"><button class="del-btn" style="font-size:12px" onclick="deleteCompleted(${p.id})">삭제 ✕</button></div>
-      </div>`).join('');
+  document.getElementById('completed-body').innerHTML=completedProjects.map(p=>`
+    <div class="done-card" onclick="openCompletedPanel(${p.id})">
+      <div class="done-card-hdr"><span class="done-title">${p.name}</span><span class="badge s-done">완료</span></div>
+      <div class="done-meta"><span>팀: ${p.team}</span><span>기간: ${p.startDate} ~ ${p.endDate}</span><span>태스크: ${p.tasks.length}개</span></div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:${p.result?'10px':'0'}">${p.tasks.map(t=>`<span class="badge" style="background:#f5f5f5;color:#666">${t}</span>`).join('')}</div>
+      ${p.result?`<div style="font-size:12px;color:#888;border-top:1px solid #f0f0f0;padding-top:10px">결과: ${p.result}</div>`:''}
+    </div>`).join('');
 }
 function renderAll(){saveData();renderProjMetrics();renderDB();renderKanban();renderChecklist();renderTaskCal();renderInventory();renderIncomingCal();renderCompleted();}
 
 function addTask(){
   const name=document.getElementById('f-name').value.trim();if(!name)return;
-  tasks.push({id:taskId++,name,assignee:document.getElementById('f-assignee').value.trim(),date:document.getElementById('f-date').value,priority:document.getElementById('f-pri').value,status:document.getElementById('f-status').value,comments:[],images:[],files:[]});
+  const t={id:taskId++,name,assignee:document.getElementById('f-assignee').value.trim(),date:document.getElementById('f-date').value,priority:document.getElementById('f-pri').value,status:document.getElementById('f-status').value,comments:[],images:[],files:[]};
+  tasks.push(t);
   document.getElementById('f-name').value='';document.getElementById('f-assignee').value='';
+  sendSlack('📌 새 태스크: ['+t.name+'] 담당자: '+(t.assignee||'-')+' 마감: '+(t.date||'-'));
   renderAll();
 }
 function deleteTask(id){if(confirm('태스크를 삭제할까요?')){tasks=tasks.filter(t=>t.id!==id);renderAll();}}
-function changeTaskStatus(id,val){
-  const t=tasks.find(t=>t.id===id);if(!t)return;
-  if(val==='done'){
-    autoMoveToCompleted(t);
-  } else {
-    t.status=val;renderAll();
-  }
-}
-function autoMoveToCompleted(t){
-  const endDate=new Date().toISOString().slice(0,10);
-  const newCp={
-    id:cpId++,
-    name:t.name,
-    team:t.assignee||'전체',
-    startDate:t.date||endDate,
-    endDate:endDate,
-    tasks:[t.name],
-    result:'완료 — 자동 이동',
-    comments:t.comments||[],
-    images:t.images||[],
-    files:t.files||[],
-    // 복귀용 원본 태스크 정보 저장
-    originTask:{name:t.name,assignee:t.assignee,date:t.date,priority:t.priority,comments:t.comments||[],images:t.images||[],files:t.files||[]}
-  };
-  completedProjects.unshift(newCp);
-  tasks=tasks.filter(tt=>tt.id!==t.id);
-  saveData();renderAll();
-  closePanel();
-  // 완료 프로젝트 사이드패널 바로 열기
-  setTimeout(()=>openCompletedPanel(newCp.id),300);
-}
-function toggleDone(id){
-  const t=tasks.find(t=>t.id===id);if(!t)return;
-  if(t.status==='done'){
-    t.status='todo';renderAll();
-  } else {
-    autoMoveToCompleted(t);
-  }
-}
+function toggleDone(id){const t=tasks.find(t=>t.id===id);if(t){autoMoveToCompleted(t);}}
 function addInventory(){
   const name=document.getElementById('i-name').value.trim();if(!name)return;
   inventory.push({id:invId++,name,cat:document.getElementById('i-cat').value.trim()||'기타',qty:parseInt(document.getElementById('i-qty').value)||0,min:parseInt(document.getElementById('i-min').value)||0,unit:document.getElementById('i-unit').value.trim()||'개',memo:'',images:[],files:[]});
   document.getElementById('i-name').value='';document.getElementById('i-cat').value='';document.getElementById('i-qty').value='';document.getElementById('i-min').value='';document.getElementById('i-unit').value='';
-  renderInventory();
+  renderInventory();saveData();
 }
-function deleteInv(id){if(confirm('품목을 삭제할까요?')){inventory=inventory.filter(i=>i.id!==id);renderInventory();}}
-function adjustInv(id,delta){const i=inventory.find(i=>i.id===id);if(i){i.qty=Math.max(0,i.qty+delta);renderInventory();}}
+function deleteInv(id){if(confirm('품목을 삭제할까요?')){inventory=inventory.filter(i=>i.id!==id);renderInventory();saveData();}}
+function adjustInv(id,delta){const i=inventory.find(i=>i.id===id);if(i){i.qty=Math.max(0,i.qty+delta);renderInventory();saveData();}}
 function addIncoming(){
   const name=document.getElementById('ic-name').value.trim();if(!name)return;
   incoming.push({id:icId++,name,qty:parseInt(document.getElementById('ic-qty').value)||0,date:document.getElementById('ic-date').value,supplier:document.getElementById('ic-supplier').value.trim(),status:document.getElementById('ic-status').value});
   document.getElementById('ic-name').value='';document.getElementById('ic-qty').value='';document.getElementById('ic-supplier').value='';
-  renderIncomingCal();
+  renderIncomingCal();saveData();
 }
-function deleteIncoming(id){if(confirm('입고 항목을 삭제할까요?')){incoming=incoming.filter(i=>i.id!==id);renderIncomingCal();}}
+function deleteIncoming(id){if(confirm('입고 항목을 삭제할까요?')){incoming=incoming.filter(i=>i.id!==id);renderIncomingCal();saveData();}}
 function addCompleted(){
   const name=document.getElementById('cp-name').value.trim();if(!name)return;
-  completedProjects.unshift({id:cpId++,name,team:document.getElementById('cp-team').value.trim()||'-',startDate:document.getElementById('cp-start').value||'-',endDate:document.getElementById('cp-end').value||'-',tasks:[],result:document.getElementById('cp-result').value.trim()});
+  completedProjects.unshift({id:cpId++,name,team:document.getElementById('cp-team').value.trim()||'-',startDate:document.getElementById('cp-start').value||'-',endDate:document.getElementById('cp-end').value||'-',tasks:[],result:document.getElementById('cp-result').value.trim(),comments:[],images:[],files:[]});
   document.getElementById('cp-name').value='';document.getElementById('cp-team').value='';document.getElementById('cp-start').value='';document.getElementById('cp-end').value='';document.getElementById('cp-result').value='';
   renderCompleted();saveData();
 }
-function deleteCompleted(id){if(confirm('프로젝트를 삭제할까요?')){completedProjects=completedProjects.filter(p=>p.id!==id);renderCompleted();saveData();}}
 function tcPrev(){tcMonth--;if(tcMonth<0){tcMonth=11;tcYear--;}renderTaskCal();}
 function tcNext(){tcMonth++;if(tcMonth>11){tcMonth=0;tcYear++;}renderTaskCal();}
 function icPrev(){icMonth--;if(icMonth<0){icMonth=11;icYear--;}renderIncomingCal();}
 function icNext(){icMonth++;if(icMonth>11){icMonth=0;icYear++;}renderIncomingCal();}
+
 function goPage(name,el){
   document.querySelectorAll('.top-tab').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   el.classList.add('active');
   document.getElementById('page-'+name).classList.add('active');
 }
+function goSettings(){
+  document.querySelectorAll('.top-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-settings').classList.add('active');
+  updateSettingsStatus();renderTeam();renderLog();
+}
 function switchSub(name,el){
   document.querySelectorAll('.sub-tab').forEach(t=>t.classList.remove('active'));
   el.classList.add('active');
   ['db','kanban','checklist'].forEach(s=>{document.getElementById('sub-'+s).style.display=s===name?'block':'none';});
 }
+
 loadData();
 const now=new Date();
 const todayStr=now.getFullYear()+'-'+pad(now.getMonth()+1)+'-'+pad(now.getDate());
