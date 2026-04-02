@@ -465,7 +465,8 @@ const pad=n=>String(n).padStart(2,'0');
 const DAYS=['일','월','화','수','목','금','토'];
 const MONTHS=['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
 
-let tasks=[
+// 샘플 데이터 (localStorage에 없을 때만 사용)
+const SAMPLE_TASKS=[
   {id:1,name:'요구사항 정의',assignee:'홍길동',date:'2026-03-28',priority:'high',status:'done',comments:[],images:[],files:[]},
   {id:2,name:'팀 킥오프',assignee:'전체',date:'2026-03-30',priority:'mid',status:'done',comments:[],images:[],files:[]},
   {id:3,name:'개발 환경 세팅',assignee:'이개발',date:'2026-04-01',priority:'mid',status:'done',comments:[],images:[],files:[]},
@@ -478,8 +479,7 @@ let tasks=[
   {id:10,name:'QA 체크리스트',assignee:'전체',date:'2026-04-15',priority:'low',status:'todo',comments:[],images:[],files:[]},
   {id:11,name:'최종 런칭',assignee:'홍길동',date:'2026-04-15',priority:'high',status:'todo',comments:[],images:[],files:[]},
 ];
-let taskId=12;
-let inventory=[
+const SAMPLE_INV=[
   {id:1,name:'A4 용지',cat:'소모품',qty:150,min:50,unit:'박스',memo:'',manager:'',images:[],files:[]},
   {id:2,name:'볼펜',cat:'소모품',qty:30,min:20,unit:'개',memo:'',manager:'',images:[],files:[]},
   {id:3,name:'노트북 거치대',cat:'장비',qty:5,min:3,unit:'개',memo:'',manager:'',images:[],files:[]},
@@ -487,21 +487,22 @@ let inventory=[
   {id:5,name:'명함',cat:'인쇄물',qty:0,min:100,unit:'장',memo:'',manager:'',images:[],files:[]},
   {id:6,name:'포스트잇',cat:'소모품',qty:80,min:30,unit:'개',memo:'',manager:'',images:[],files:[]},
 ];
-let invId=7;
-let incoming=[
+const SAMPLE_IC=[
   {id:1,name:'USB 허브',qty:10,date:'2026-04-05',supplier:'테크몰',status:'confirmed'},
   {id:2,name:'명함',qty:500,date:'2026-04-08',supplier:'명함나라',status:'scheduled'},
   {id:3,name:'A4 용지',qty:50,date:'2026-04-12',supplier:'오피스플러스',status:'scheduled'},
   {id:4,name:'볼펜',qty:100,date:'2026-04-15',supplier:'문구사',status:'scheduled'},
   {id:5,name:'모니터',qty:3,date:'2026-04-20',supplier:'전자마트',status:'confirmed'},
 ];
-let icId=6;
-let completedProjects=[
+const SAMPLE_CP=[
   {id:1,name:'브랜드 리뉴얼',team:'디자인팀',startDate:'2026-01-05',endDate:'2026-02-28',tasks:['로고 리디자인','컬러 팔레트','브랜드 가이드','소셜 템플릿'],result:'브랜드 가이드북 완성 및 전팀 배포',comments:[],images:[],files:[]},
   {id:2,name:'내부 시스템 구축',team:'개발팀',startDate:'2025-11-01',endDate:'2026-01-31',tasks:['요구사항 분석','DB 설계','API 개발','테스트','배포'],result:'사내 업무 자동화 시스템 정식 오픈',comments:[],images:[],files:[]},
   {id:3,name:'Q4 마케팅 캠페인',team:'마케팅팀',startDate:'2025-10-01',endDate:'2025-12-31',tasks:['캠페인 기획','콘텐츠 제작','광고 집행','성과 분석'],result:'전환율 23% 향상, 신규 가입자 1,200명',comments:[],images:[],files:[]},
 ];
-let cpId=4;
+let tasks=[];let taskId=12;
+let inventory=[];let invId=7;
+let incoming=[];let icId=6;
+let completedProjects=[];let cpId=4;
 let tcYear=2026,tcMonth=3,icYear=2026,icMonth=3;
 let currentTaskId=null,currentInvId=null,currentCpId=null;
 let teamMembers=[];
@@ -522,15 +523,26 @@ function saveData(){
 }
 function loadData(){
   try{
-    const t=localStorage.getItem('pm_tasks');if(t)tasks=JSON.parse(t);
-    const i=localStorage.getItem('pm_inventory');if(i)inventory=JSON.parse(i);
-    const ic=localStorage.getItem('pm_incoming');if(ic)incoming=JSON.parse(ic);
-    const cp=localStorage.getItem('pm_completed');if(cp)completedProjects=JSON.parse(cp);
+    const t=localStorage.getItem('pm_tasks');
+    tasks=t?JSON.parse(t):JSON.parse(JSON.stringify(SAMPLE_TASKS));
+    const i=localStorage.getItem('pm_inventory');
+    inventory=i?JSON.parse(i):JSON.parse(JSON.stringify(SAMPLE_INV));
+    const ic=localStorage.getItem('pm_incoming');
+    incoming=ic?JSON.parse(ic):JSON.parse(JSON.stringify(SAMPLE_IC));
+    const cp=localStorage.getItem('pm_completed');
+    completedProjects=cp?JSON.parse(cp):JSON.parse(JSON.stringify(SAMPLE_CP));
     const ids=localStorage.getItem('pm_ids');if(ids){const o=JSON.parse(ids);taskId=o.taskId;invId=o.invId;icId=o.icId;cpId=o.cpId;}
     const tm=localStorage.getItem('pm_team');if(tm)teamMembers=JSON.parse(tm);
     const st=localStorage.getItem('pm_settings');if(st)settings={...settings,...JSON.parse(st)};
     const lg=localStorage.getItem('pm_log');if(lg)notifyLog=JSON.parse(lg);
-  }catch(e){}
+    // 첫 로드 시 샘플 데이터 저장
+    if(!t)saveData();
+  }catch(e){
+    tasks=JSON.parse(JSON.stringify(SAMPLE_TASKS));
+    inventory=JSON.parse(JSON.stringify(SAMPLE_INV));
+    incoming=JSON.parse(JSON.stringify(SAMPLE_IC));
+    completedProjects=JSON.parse(JSON.stringify(SAMPLE_CP));
+  }
 }
 
 function addLog(msg){
