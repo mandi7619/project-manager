@@ -34,8 +34,6 @@ h1{font-size:22px;font-weight:600;color:#1a1a1a}
 .btn:hover{background:#f5f5f5}
 .btn-primary{background:#1a1a1a;color:#fff;border-color:#1a1a1a}
 .btn-primary:hover{background:#333}
-.btn-green{background:#4caf6e;color:#fff;border-color:#4caf6e}
-.btn-green:hover{background:#3d9e5f}
 .badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap}
 .s-todo{background:#ebebeb;color:#555}
 .s-inprogress{background:#dbeafe;color:#1e40af}
@@ -107,7 +105,6 @@ h1{font-size:22px;font-weight:600;color:#1a1a1a}
 .stock-bar-wrap{display:flex;align-items:center;gap:8px}
 .stock-bar{height:8px;background:#f0f0f0;border-radius:4px;overflow:hidden;width:80px}
 .stock-bar-fill{height:100%;border-radius:4px}
-/* 설정 페이지 */
 .settings-section{background:#fff;border:1px solid #ebebeb;border-radius:10px;padding:20px;margin-bottom:16px}
 .settings-title{font-size:15px;font-weight:600;color:#1a1a1a;margin-bottom:4px}
 .settings-desc{font-size:12px;color:#888;margin-bottom:16px;line-height:1.6}
@@ -122,7 +119,6 @@ h1{font-size:22px;font-weight:600;color:#1a1a1a}
 .log-item{padding:5px 0;border-bottom:0.5px solid #f0f0f0;display:flex;gap:8px}
 .log-item:last-child{border-bottom:none}
 .log-time{color:#aaa;min-width:80px;font-size:11px}
-/* 사이드패널 */
 .side-overlay{position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.25);z-index:999;display:none}
 .side-overlay.open{display:block}
 .side-panel{position:fixed;top:0;right:-460px;width:460px;height:100vh;background:#fff;border-left:1px solid #e5e5e5;z-index:1000;transition:right 0.3s ease;overflow-y:auto}
@@ -174,7 +170,6 @@ h1{font-size:22px;font-weight:600;color:#1a1a1a}
     </div>
   </div>
   <div class="subtitle">태스크 · 재고 · 입고 캘린더 · 완료 프로젝트</div>
-
   <div class="top-nav">
     <div class="top-tab active" onclick="goPage('project',this)">프로젝트 관리</div>
     <div class="top-tab" onclick="goPage('inventory',this)">재고 관리</div>
@@ -182,7 +177,6 @@ h1{font-size:22px;font-weight:600;color:#1a1a1a}
     <div class="top-tab" onclick="goPage('completed',this)">완료 프로젝트</div>
   </div>
 
-  <!-- 프로젝트 관리 -->
   <div id="page-project" class="page active">
     <div class="metrics" id="proj-metrics"></div>
     <div class="add-form">
@@ -216,7 +210,6 @@ h1{font-size:22px;font-weight:600;color:#1a1a1a}
     </div>
   </div>
 
-  <!-- 재고 관리 -->
   <div id="page-inventory" class="page">
     <div class="metrics" id="inv-metrics"></div>
     <div class="add-form">
@@ -232,7 +225,6 @@ h1{font-size:22px;font-weight:600;color:#1a1a1a}
     <div style="margin-top:20px"><div style="font-size:14px;font-weight:600;margin-bottom:14px">재고 현황 그래프</div><div id="inv-chart"></div></div>
   </div>
 
-  <!-- 입고 캘린더 -->
   <div id="page-incoming" class="page">
     <div class="add-form">
       <div class="fg"><label>품목명</label><input id="ic-name" placeholder="품목명" style="width:120px"></div>
@@ -251,7 +243,6 @@ h1{font-size:22px;font-weight:600;color:#1a1a1a}
     <div class="tbl-wrap"><table class="tbl"><thead><tr><th>품목명</th><th>수량</th><th>입고 예정일</th><th>공급업체</th><th>상태</th><th></th></tr></thead><tbody id="ic-list-body"></tbody></table></div>
   </div>
 
-  <!-- 완료 프로젝트 -->
   <div id="page-completed" class="page">
     <div class="add-form">
       <div class="fg"><label>프로젝트명</label><input id="cp-name" placeholder="프로젝트 이름" style="width:140px"></div>
@@ -266,19 +257,22 @@ h1{font-size:22px;font-weight:600;color:#1a1a1a}
 
   <!-- 설정 페이지 -->
   <div id="page-settings" class="page">
+
+    <!-- 🏢 회사 정보 -->
     <div class="settings-section">
       <div class="settings-title">🏢 회사 정보</div>
-      <div class="settings-desc">@멘션 이메일 발송 시 사용할 회사명을 입력해주세요.</div>
+      <div class="settings-desc">@멘션 이메일 발송 시 사용할 회사명을 입력해주세요.<br>예: (주)유니원 → 이메일 제목이 "(주)유니원의 업무요청이 왔습니다."로 발송돼요.</div>
       <div class="settings-row">
         <label>회사명</label>
-        <input class="settings-inp" id="company-name" placeholder="(주)유니원" style="max-width:240px">
+        <input class="settings-inp" id="company-name" placeholder="(주)유니원" style="max-width:280px">
       </div>
-      <button class="btn btn-primary" style="margin-top:8px" onclick="saveCompany()">저장</button>
+      <button class="btn btn-primary" style="margin-top:4px" onclick="saveCompany()">저장</button>
     </div>
 
+    <!-- 👥 팀원 이메일 -->
     <div class="settings-section">
       <div class="settings-title">👥 팀원 이메일 관리</div>
-      <div class="settings-desc">팀원 이름과 이메일을 등록하면 태스크 사이드패널에서 바로 이메일 알림을 보낼 수 있어요.</div>
+      <div class="settings-desc">팀원 이름과 이메일을 등록하면 @멘션 시 자동으로 업무 요청 이메일이 발송돼요.</div>
       <div class="add-form" style="margin-bottom:12px">
         <div class="fg"><label>이름</label><input id="tm-name" placeholder="홍길동" style="width:100px"></div>
         <div class="fg"><label>이메일</label><input id="tm-email" type="email" placeholder="example@email.com" style="width:200px"></div>
@@ -287,9 +281,45 @@ h1{font-size:22px;font-weight:600;color:#1a1a1a}
       <div class="tbl-wrap"><table class="tbl"><thead><tr><th>이름</th><th>이메일</th><th></th></tr></thead><tbody id="team-body"></tbody></table></div>
     </div>
 
+    <!-- 🔗 Make Webhook -->
+    <div class="settings-section">
+      <div class="settings-title">🔗 Make Webhook 연동 (Notion 알림)</div>
+      <div class="settings-desc">Make Webhook URL을 입력하면 @멘션 시 Make를 통해 Notion DB에 자동으로 기록돼요.</div>
+      <div class="settings-row">
+        <label>Webhook URL</label>
+        <input class="settings-inp" id="make-webhook-url" placeholder="https://hook.eu1.make.com/...">
+      </div>
+      <div class="settings-row">
+        <label>알림 상태</label>
+        <span id="make-status" class="status-badge status-off">비활성</span>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button class="btn btn-primary" onclick="saveMakeWebhook()">저장</button>
+        <button class="btn" style="color:#ef4444;border-color:#fca5a5" onclick="clearMakeWebhook()">연동 해제</button>
+      </div>
+    </div>
+
+    <!-- 📨 Slack -->
+    <div class="settings-section">
+      <div class="settings-title">🔗 Make Webhook 연동 (Notion 알림)</div>
+      <div class="settings-desc">Make Webhook URL을 입력하면 @멘션 시 Make를 통해 Notion DB에 자동으로 기록되고 알림이 발송돼요.<br>현재 연결 URL: https://hook.eu1.make.com/xgxk2bjujxf8xa4odjqd6t9iwdtk3wn8</div>
+      <div class="settings-row">
+        <label>Webhook URL</label>
+        <input class="settings-inp" id="make-webhook-url" placeholder="https://hook.eu1.make.com/...">
+      </div>
+      <div class="settings-row">
+        <label>알림 상태</label>
+        <span id="make-status" class="status-badge status-off">비활성</span>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button class="btn btn-primary" onclick="saveMakeWebhook()">저장</button>
+        <button class="btn" style="color:#ef4444;border-color:#fca5a5" onclick="clearMakeWebhook()">연동 해제</button>
+      </div>
+    </div>
+
     <div class="settings-section">
       <div class="settings-title">📨 Slack 알림 연동</div>
-      <div class="settings-desc">Slack Incoming Webhook URL을 입력하면 태스크 추가/완료/상태 변경 시 Slack 채널로 자동 알림이 전송돼요.<br>설정 방법: Slack 앱 → Incoming Webhooks → 채널 선택 → URL 복사</div>
+      <div class="settings-desc">Slack Incoming Webhook URL을 입력하면 태스크 추가/완료 시 Slack 채널로 자동 알림이 전송돼요.</div>
       <div class="settings-row">
         <label>Webhook URL</label>
         <input class="settings-inp" id="slack-url" placeholder="https://hooks.slack.com/services/...">
@@ -305,63 +335,7 @@ h1{font-size:22px;font-weight:600;color:#1a1a1a}
       </div>
     </div>
 
-    <div class="settings-section">
-      <div class="settings-title">⚡ Make Webhook 연동 (Notion 알림)</div>
-      <div class="settings-desc">Make Webhook URL을 입력하면 @멘션 시 Make를 통해 Notion DB에 자동으로 기록되고 알림이 발송돼요.</div>
-      <div class="settings-row">
-        <label>Webhook URL</label>
-        <input class="settings-inp" id="make-webhook-url" placeholder="https://hook.eu1.make.com/...">
-      </div>
-      <div class="settings-row">
-        <label>연동 상태</label>
-        <span id="make-status" class="status-badge status-off">비활성</span>
-      </div>
-      <div style="display:flex;gap:8px;margin-top:8px">
-        <button class="btn btn-primary" onclick="saveMakeWebhook()">저장</button>
-        <button class="btn" onclick="testMakeWebhook()">테스트 전송</button>
-        <button class="btn" style="color:#ef4444;border-color:#fca5a5" onclick="clearMakeWebhook()">연동 해제</button>
-      </div>
-    </div>
-
-    <div class="settings-section">
-      <div class="settings-title">🔗 Make Webhook 연동</div>
-      <div class="settings-desc">Make Webhook URL을 입력하면 @멘션 시 Make를 통해 Notion에 자동으로 기록되고 알림이 발송돼요.<br>현재 연결된 URL이 자동으로 설정되어 있어요.</div>
-      <div class="settings-row">
-        <label>Webhook URL</label>
-        <input class="settings-inp" id="make-webhook-url" placeholder="https://hook.eu1.make.com/...">
-      </div>
-      <div class="settings-row">
-        <label>알림 상태</label>
-        <span id="make-status" class="status-badge status-on">활성</span>
-      </div>
-      <div style="display:flex;gap:8px;margin-top:8px">
-        <button class="btn btn-primary" onclick="saveMakeWebhook()">저장</button>
-        <button class="btn" style="color:#ef4444;border-color:#fca5a5" onclick="clearMakeWebhook()">연동 해제</button>
-      </div>
-    </div>
-
-    <div class="settings-section">
-      <div class="settings-title">📋 Notion 알림 연동</div>
-      <div class="settings-desc">Notion Integration Token과 Database ID를 입력하면 태스크 완료 시 Notion 데이터베이스에 자동으로 기록돼요.<br>설정 방법: notion.so/my-integrations → 새 통합 만들기 → 토큰 복사 → Notion 페이지에서 통합 연결</div>
-      <div class="settings-row">
-        <label>Integration Token</label>
-        <input class="settings-inp" id="notion-token" placeholder="secret_xxxx...">
-      </div>
-      <div class="settings-row">
-        <label>Database ID</label>
-        <input class="settings-inp" id="notion-db" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx">
-      </div>
-      <div class="settings-row">
-        <label>알림 상태</label>
-        <span id="notion-status" class="status-badge status-off">비활성</span>
-      </div>
-      <div style="display:flex;gap:8px;margin-top:8px">
-        <button class="btn btn-primary" onclick="saveNotion()">저장</button>
-        <button class="btn" onclick="testNotion()">연결 테스트</button>
-        <button class="btn" style="color:#ef4444;border-color:#fca5a5" onclick="clearNotion()">연동 해제</button>
-      </div>
-    </div>
-
+    <!-- 📋 알림 로그 -->
     <div class="settings-section">
       <div class="settings-title">📋 알림 로그</div>
       <div class="settings-desc">최근 전송된 알림 기록이에요.</div>
@@ -371,15 +345,11 @@ h1{font-size:22px;font-weight:600;color:#1a1a1a}
   </div>
 </div>
 
-<!-- 오버레이 -->
 <div class="side-overlay" id="side-overlay" onclick="closePanel()"></div>
 
 <!-- 태스크 사이드패널 -->
 <div class="side-panel" id="task-panel">
-  <div class="side-hdr">
-    <span class="side-hdr-title" id="tp-title">태스크 상세</span>
-    <button class="side-close" onclick="closePanel()">×</button>
-  </div>
+  <div class="side-hdr"><span class="side-hdr-title" id="tp-title">태스크 상세</span><button class="side-close" onclick="closePanel()">×</button></div>
   <div class="side-body">
     <div class="side-sec">
       <div class="side-sec-title">기본 정보</div>
@@ -391,21 +361,16 @@ h1{font-size:22px;font-weight:600;color:#1a1a1a}
       </div>
       <div class="side-row"><span class="side-lbl">마감일</span><input type="date" class="side-inp" id="tp-date"></div>
       <div class="side-row"><span class="side-lbl">상태</span>
-        <select class="side-sel" id="tp-status">
-          <option value="todo">할 일</option><option value="inprogress">진행 중</option>
-          <option value="review">검토 중</option><option value="done">완료</option>
-        </select>
+        <select class="side-sel" id="tp-status"><option value="todo">할 일</option><option value="inprogress">진행 중</option><option value="review">검토 중</option><option value="done">완료</option></select>
       </div>
       <div class="side-row"><span class="side-lbl">우선순위</span>
-        <select class="side-sel" id="tp-priority">
-          <option value="high">높음</option><option value="mid">중간</option><option value="low">낮음</option>
-        </select>
+        <select class="side-sel" id="tp-priority"><option value="high">높음</option><option value="mid">중간</option><option value="low">낮음</option></select>
       </div>
     </div>
     <div class="side-sec">
       <div class="side-sec-title">메모 / 코멘트</div>
       <div id="tp-comments"></div>
-      <textarea class="memo-area" id="tp-comment-input" placeholder="코멘트를 입력하세요..."></textarea>
+      <textarea class="memo-area" id="tp-comment-input" placeholder="@이름 으로 멘션하면 업무 요청 이메일이 자동 발송돼요"></textarea>
       <button class="btn" style="width:100%;margin-top:6px;font-size:12px" onclick="addTaskComment()">+ 코멘트 추가</button>
     </div>
     <div class="side-sec">
@@ -425,10 +390,7 @@ h1{font-size:22px;font-weight:600;color:#1a1a1a}
 
 <!-- 완료 프로젝트 사이드패널 -->
 <div class="side-panel" id="cp-panel">
-  <div class="side-hdr">
-    <span class="side-hdr-title" id="cpp-title">완료 프로젝트 상세</span>
-    <button class="side-close" onclick="closePanel()">×</button>
-  </div>
+  <div class="side-hdr"><span class="side-hdr-title" id="cpp-title">완료 프로젝트 상세</span><button class="side-close" onclick="closePanel()">×</button></div>
   <div class="side-body">
     <div class="side-sec">
       <div class="side-sec-title">프로젝트 정보</div>
@@ -461,10 +423,7 @@ h1{font-size:22px;font-weight:600;color:#1a1a1a}
 
 <!-- 재고 사이드패널 -->
 <div class="side-panel" id="inv-panel">
-  <div class="side-hdr">
-    <span class="side-hdr-title" id="ip-title">재고 상세</span>
-    <button class="side-close" onclick="closePanel()">×</button>
-  </div>
+  <div class="side-hdr"><span class="side-hdr-title" id="ip-title">재고 상세</span><button class="side-close" onclick="closePanel()">×</button></div>
   <div class="side-body">
     <div class="side-sec">
       <div class="side-sec-title">기본 정보</div>
@@ -526,7 +485,7 @@ let inventory=[
   {id:3,name:'노트북 거치대',cat:'장비',qty:5,min:3,unit:'개',memo:'',manager:'',images:[],files:[]},
   {id:4,name:'USB 허브',cat:'장비',qty:2,min:5,unit:'개',memo:'',manager:'',images:[],files:[]},
   {id:5,name:'명함',cat:'인쇄물',qty:0,min:100,unit:'장',memo:'',manager:'',images:[],files:[]},
-  {id:6,name:'포스트잇',cat:'소모품',qty:80,min:30,unit:'개',memo:'',images:[],files:[]},
+  {id:6,name:'포스트잇',cat:'소모품',qty:80,min:30,unit:'개',memo:'',manager:'',images:[],files:[]},
 ];
 let invId=7;
 let incoming=[
@@ -547,9 +506,8 @@ let tcYear=2026,tcMonth=3,icYear=2026,icMonth=3;
 let currentTaskId=null,currentInvId=null,currentCpId=null;
 let teamMembers=[];
 let notifyLog=[];
-let settings={slackUrl:'',notionToken:'',notionDb:'',companyName:'',makeWebhookUrl:''};
+let settings={slackUrl:'',companyName:'',makeWebhook:''};
 
-// 저장/로드
 function saveData(){
   try{
     localStorage.setItem('pm_tasks',JSON.stringify(tasks));
@@ -570,55 +528,32 @@ function loadData(){
     const cp=localStorage.getItem('pm_completed');if(cp)completedProjects=JSON.parse(cp);
     const ids=localStorage.getItem('pm_ids');if(ids){const o=JSON.parse(ids);taskId=o.taskId;invId=o.invId;icId=o.icId;cpId=o.cpId;}
     const tm=localStorage.getItem('pm_team');if(tm)teamMembers=JSON.parse(tm);
-    const st=localStorage.getItem('pm_settings');if(st)settings=JSON.parse(st);
+    const st=localStorage.getItem('pm_settings');if(st)settings={...settings,...JSON.parse(st)};
     const lg=localStorage.getItem('pm_log');if(lg)notifyLog=JSON.parse(lg);
   }catch(e){}
 }
 
-// 알림 로그
 function addLog(msg){
   const now=new Date().toLocaleString('ko-KR');
   notifyLog.unshift({time:now,msg});
   if(notifyLog.length>50)notifyLog.pop();
-  saveData();
-  renderLog();
+  saveData();renderLog();
 }
 function renderLog(){
-  const el=document.getElementById('notify-log');
-  if(!el)return;
+  const el=document.getElementById('notify-log');if(!el)return;
   if(!notifyLog.length){el.innerHTML='<div style="color:#aaa;font-size:12px">아직 알림 기록이 없어요</div>';return;}
   el.innerHTML=notifyLog.map(l=>`<div class="log-item"><span class="log-time">${l.time}</span><span>${l.msg}</span></div>`).join('');
 }
 function clearLog(){notifyLog=[];saveData();renderLog();}
 
+// 회사명
+function saveCompany(){
+  settings.companyName=document.getElementById('company-name').value.trim();
+  saveData();
+  alert(settings.companyName?settings.companyName+'(으)로 저장됐어요!':'회사명이 삭제됐어요.');
+}
 
 // Make Webhook
-  const url=document.getElementById('make-webhook-url').value.trim();
-  settings.makeWebhookUrl=url;
-  saveData();
-  updateSettingsStatus();
-  alert(url?'Make Webhook이 저장됐어요! 이제 @멘션 시 Notion에 자동 기록돼요 🎉':'Make Webhook URL이 삭제됐어요.');
-}
-function clearMakeWebhook(){
-  settings.makeWebhookUrl='';
-  document.getElementById('make-webhook-url').value='';
-  saveData();updateSettingsStatus();
-}
-async function testMakeWebhook(){
-  if(!settings.makeWebhookUrl){alert('먼저 Make Webhook URL을 입력하고 저장해주세요!');return;}
-  await sendToMake({
-    taskName:'테스트 태스크',
-    mentionName:'테스트',
-    content:'@테스트 연결 테스트입니다',
-    company:settings.companyName||'테스트',
-    date:new Date().toISOString().slice(0,10),
-    email:'test@test.com'
-  });
-  alert('테스트 데이터를 Make로 전송했어요! Make 시나리오에서 확인해보세요 😊');
-}
-
-// Slack 알림
-
 function saveMakeWebhook(){
   settings.makeWebhook=document.getElementById('make-webhook-url').value.trim();
   saveData();updateMakeStatus();
@@ -626,295 +561,127 @@ function saveMakeWebhook(){
 }
 function clearMakeWebhook(){
   settings.makeWebhook='';
-  document.getElementById('make-webhook-url').value='';
+  if(document.getElementById('make-webhook-url'))document.getElementById('make-webhook-url').value='';
   saveData();updateMakeStatus();
 }
 function updateMakeStatus(){
-  const el=document.getElementById('make-status');
-  if(!el)return;
+  const el=document.getElementById('make-status');if(!el)return;
   el.className='status-badge '+(settings.makeWebhook?'status-on':'status-off');
   el.textContent=settings.makeWebhook?'활성':'비활성';
-  if(document.getElementById('make-webhook-url'))
-    document.getElementById('make-webhook-url').value=settings.makeWebhook||'';
+  if(document.getElementById('make-webhook-url'))document.getElementById('make-webhook-url').value=settings.makeWebhook||'';
+}
+async function sendToMake(name,email,taskName,text,company){
+  if(!settings.makeWebhook)return;
+  try{
+    await fetch(settings.makeWebhook,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:'mention',mentionName:name,mentionEmail:email,taskName,content:text,company,date:new Date().toLocaleString('ko-KR')})});
+    addLog('🔗 Make → Notion: @'+name+' 멘션 전송');
+  }catch(e){addLog('❌ Make 전송 실패: '+e.message);}
 }
 
+// Slack
 function saveSlack(){
-  const url=document.getElementById('slack-url').value.trim();
-  settings.slackUrl=url;
-  saveData();
-  updateSettingsStatus();
-  alert(url?'Slack 연동이 저장됐어요!':'Slack URL이 삭제됐어요.');
+  settings.slackUrl=document.getElementById('slack-url').value.trim();
+  saveData();updateSettingsStatus();
+  alert(settings.slackUrl?'Slack 연동이 저장됐어요!':'Slack URL이 삭제됐어요.');
 }
-function clearSlack(){settings.slackUrl='';document.getElementById('slack-url').value='';saveData();updateSettingsStatus();}
-async function testSlack(){
-  if(!settings.slackUrl){alert('먼저 Slack Webhook URL을 입력하고 저장해주세요!');return;}
-  await sendSlack('🔔 테스트 알림 — 프로젝트 관리 앱에서 보낸 테스트 메시지예요!');
-}
+function clearSlack(){settings.slackUrl='';if(document.getElementById('slack-url'))document.getElementById('slack-url').value='';saveData();updateSettingsStatus();}
+async function testSlack(){if(!settings.slackUrl){alert('먼저 Slack Webhook URL을 입력해주세요!');return;}await sendSlack('🔔 테스트 알림');}
 async function sendSlack(text){
   if(!settings.slackUrl)return;
-  try{
-    await fetch(settings.slackUrl,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text})});
-    addLog('📨 Slack: '+text.slice(0,40));
-  }catch(e){addLog('❌ Slack 전송 실패: '+e.message);}
-}
-
-// Notion 알림
-function saveNotion(){
-  settings.notionToken=document.getElementById('notion-token').value.trim();
-  settings.notionDb=document.getElementById('notion-db').value.trim();
-  saveData();
-  updateSettingsStatus();
-  alert((settings.notionToken&&settings.notionDb)?'Notion 연동이 저장됐어요!':'Notion 정보가 삭제됐어요.');
-}
-function clearNotion(){settings.notionToken='';settings.notionDb='';document.getElementById('notion-token').value='';document.getElementById('notion-db').value='';saveData();updateSettingsStatus();}
-async function testNotion(){
-  if(!settings.notionToken||!settings.notionDb){alert('Notion Token과 Database ID를 모두 입력하고 저장해주세요!');return;}
-  await sendNotion('테스트','연결 테스트','todo');
-}
-async function sendNotion(name,status,priority){
-  if(!settings.notionToken||!settings.notionDb)return;
-  try{
-    const res=await fetch('https://api.notion.com/v1/pages',{
-      method:'POST',
-      headers:{'Authorization':'Bearer '+settings.notionToken,'Content-Type':'application/json','Notion-Version':'2022-06-28'},
-      body:JSON.stringify({
-        parent:{database_id:settings.notionDb},
-        properties:{
-          Name:{title:[{text:{content:name}}]},
-          Status:{select:{name:status}},
-          Priority:{select:{name:priority}},
-          Date:{date:{start:new Date().toISOString().slice(0,10)}}
-        }
-      })
-    });
-    if(res.ok){addLog('📋 Notion: ['+name+'] 등록 완료');}
-    else{const e=await res.json();addLog('❌ Notion 오류: '+e.message);}
-  }catch(e){addLog('❌ Notion 전송 실패 (CORS 이슈일 수 있어요)');}
+  try{await fetch(settings.slackUrl,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text})});addLog('📨 Slack: '+text.slice(0,40));}
+  catch(e){addLog('❌ Slack 실패: '+e.message);}
 }
 
 function updateSettingsStatus(){
   const slackEl=document.getElementById('slack-status');
-  const notionEl=document.getElementById('notion-status');
   if(slackEl){slackEl.className='status-badge '+(settings.slackUrl?'status-on':'status-off');slackEl.textContent=settings.slackUrl?'활성':'비활성';}
-  if(notionEl){notionEl.className='status-badge '+((settings.notionToken&&settings.notionDb)?'status-on':'status-off');notionEl.textContent=(settings.notionToken&&settings.notionDb)?'활성':'비활성';}
   if(document.getElementById('slack-url'))document.getElementById('slack-url').value=settings.slackUrl||'';
   updateMakeStatus();
-  const makeEl=document.getElementById('make-status');
-  if(makeEl){makeEl.className='status-badge '+(settings.makeWebhookUrl?'status-on':'status-off');makeEl.textContent=settings.makeWebhookUrl?'활성':'비활성';}
-  if(document.getElementById('make-webhook-url'))document.getElementById('make-webhook-url').value=settings.makeWebhookUrl||'';
   if(document.getElementById('company-name'))document.getElementById('company-name').value=settings.companyName||'';
-  if(document.getElementById('notion-token'))document.getElementById('notion-token').value=settings.notionToken||'';
-  if(document.getElementById('notion-db'))document.getElementById('notion-db').value=settings.notionDb||'';
+  updateMakeStatus();
 }
 
-// 팀원 관리
+// 팀원
 function renderTeam(){
   const el=document.getElementById('team-body');if(!el)return;
-  el.innerHTML=teamMembers.map((m,i)=>`
-    <tr>
-      <td style="font-weight:500">${m.name}</td>
-      <td style="color:#4f90e5">${m.email}</td>
-      <td onclick="event.stopPropagation()"><button class="del-btn" onclick="delTeamMember(${i})">✕</button></td>
-    </tr>`).join('');
+  el.innerHTML=teamMembers.map((m,i)=>`<tr><td style="font-weight:500">${m.name}</td><td style="color:#4f90e5">${m.email}</td><td onclick="event.stopPropagation()"><button class="del-btn" onclick="delTeamMember(${i})">✕</button></td></tr>`).join('');
 }
 function addTeamMember(){
   const name=document.getElementById('tm-name').value.trim();
   const email=document.getElementById('tm-email').value.trim();
   if(!name||!email){alert('이름과 이메일을 모두 입력해주세요!');return;}
   teamMembers.push({name,email});
-  document.getElementById('tm-name').value='';
-  document.getElementById('tm-email').value='';
+  document.getElementById('tm-name').value='';document.getElementById('tm-email').value='';
   renderTeam();saveData();
 }
 function delTeamMember(i){if(confirm('팀원을 삭제할까요?')){teamMembers.splice(i,1);renderTeam();saveData();}}
 
-
-function closeMentionPopup(){
-  const p=document.getElementById('mention-popup');if(p)p.remove();
-  const o=document.getElementById('mention-overlay');if(o)o.remove();
-}
-function copyMentionEmail(elId){
-  const el=document.getElementById(elId);if(!el)return;
-  const txt=el.textContent;
-  navigator.clipboard.writeText(txt).catch(()=>{
-    const ta=document.createElement('textarea');ta.value=txt;
-    document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);
+// @멘션 팝업
+function checkMentions(text,taskName){
+  const mentions=text.match(/@(\S+)/g);if(!mentions)return;
+  const company=settings.companyName||'업무 요청';
+  const results=[];
+  mentions.forEach(m=>{
+    const name=m.slice(1);
+    const member=teamMembers.find(tm=>tm.name===name);
+    results.push({name,email:member?member.email:null});
+    if(member&&member.email)sendToMake(name,member.email,taskName,text,company);
   });
-  const orig=el.textContent;
-  el.style.color='#4caf6e';el.textContent='복사됐어요 ✓';
-  setTimeout(()=>{el.style.color='#4f90e5';el.textContent=orig;},1500);
-  addLog('📋 이메일 복사: '+txt);
-}
-function openMailClient2(email,subject,body,name,taskName){
-  window.location.href='mailto:'+email+'?subject='+subject+'&body='+body;
-  addLog('✉ 메일 앱: '+name+' ('+email+') → '+taskName);
-}
-function openNaverMail2(email,subject){
-  window.open('https://mail.naver.com/compose?to='+email+'&subject='+subject,'_blank');
-  addLog('N 네이버 메일: '+email);
-}
-function openGmail2(email,subject,body,name,taskName){
-  window.open('https://mail.google.com/mail/?view=cm&to='+email+'&su='+subject+'&body='+body,'_blank');
-  addLog('G Gmail: '+name+' ('+email+') → '+taskName);
+  showMentionPopup(results,text,taskName,company);
 }
 
-// 회사명 저장
-function saveCompany(){
-  const name=document.getElementById('company-name').value.trim();
-  settings.companyName=name;
-  saveData();
-  alert((name||'회사명')+'(으)로 저장됐어요!');
-}
-
-// @멘션 감지 → 업무 요청 팝업 표시
-function checkMentions(text, taskName){
-  const mentions = text.match(/@(\S+)/g);
-  if(!mentions) return;
-  const company = settings.companyName || '업무 요청';
-  const results = [];
-  mentions.forEach(mention=>{
-    const name = mention.slice(1);
-    const member = teamMembers.find(m=>m.name===name);
-    if(member && member.email){
-      results.push({name, email:member.email});
-    } else {
-      results.push({name, email:null});
-    }
-  });
-  showMentionPopup(results, text, taskName, company);
-}
-
-// Make Webhook으로 @멘션 데이터 전송
-async function sendToMake(name, email, taskName, text, company){
-  const webhookUrl = settings.makeWebhook;
-  if(!webhookUrl) return;
-  try{
-    await fetch(webhookUrl, {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({
-        type: 'mention',
-        mentionName: name,
-        mentionEmail: email,
-        taskName: taskName,
-        content: text,
-        company: company,
-        date: new Date().toLocaleString('ko-KR')
-      })
-    });
-    addLog('🔗 Make → Notion: @'+name+' 멘션 전송 완료');
-  }catch(e){
-    addLog('❌ Make 전송 실패: '+e.message);
-  }
-}
-
-function showMentionPopup(results, text, taskName, company){
+function showMentionPopup(results,text,taskName,company){
   const old=document.getElementById('mention-popup');if(old)old.remove();
   const oldOv=document.getElementById('mention-overlay');if(oldOv)oldOv.remove();
-
-  const rows = results.map((r,i)=>{
+  const rows=results.map((r,i)=>{
     if(r.email){
-      const subject = company+'의 업무요청이 왔습니다.';
-      const body = r.name+'님, 안녕하세요.\n\n'+company+'에서 업무 요청드립니다.\n\n'+'━━━━━━━━━━━━━━━━━━━━\n'+'태스크: '+taskName+'\n'+'내용: '+text+'\n'+'━━━━━━━━━━━━━━━━━━━━\n\n'+'확인 후 회신 부탁드립니다.\n\n감사합니다.\n'+company;
-      const mailtoLink = 'mailto:'+r.email+'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
-      return `<div style="background:#f7f7f5;border-radius:8px;padding:12px 14px;margin-bottom:10px">
+      const subject=company+'의 업무요청이 왔습니다.';
+      const body=r.name+'님, 안녕하세요.\n\n'+company+'에서 업무 요청드립니다.\n\n━━━━━━━━━━━━━━━━━━━━\n태스크: '+taskName+'\n내용: '+text+'\n━━━━━━━━━━━━━━━━━━━━\n\n확인 후 회신 부탁드립니다.\n\n감사합니다.\n'+company;
+      return`<div style="background:#f7f7f5;border-radius:8px;padding:12px 14px;margin-bottom:10px">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-          <span style="font-size:13px;font-weight:600;color:#1a1a1a">@${r.name}</span>
-          <span style="font-size:11px;background:#dcfce7;color:#166534;padding:2px 8px;border-radius:20px;font-weight:600">이메일 등록됨</span>
+          <span style="font-size:13px;font-weight:600">@${r.name}</span>
+          <span style="font-size:11px;background:#dcfce7;color:#166534;padding:2px 8px;border-radius:20px;font-weight:600">등록됨</span>
         </div>
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
           <span style="font-size:11px;color:#aaa;min-width:50px">이메일</span>
-          <span id="email-txt-${i}" style="font-size:13px;color:#4f90e5;flex:1">${r.email}</span>
-          <button onclick="copyEmail('email-txt-${i}')" style="height:28px;font-size:11px;padding:0 10px;border-radius:6px;border:1px solid #e5e5e5;background:#fff;cursor:pointer;color:#555;white-space:nowrap">복사</button>
+          <span id="mention-email-${i}" style="font-size:13px;color:#4f90e5;flex:1">${r.email}</span>
+          <button onclick="copyMentionEmail('mention-email-${i}')" style="height:28px;font-size:11px;padding:0 10px;border-radius:6px;border:1px solid #e5e5e5;background:#fff;cursor:pointer;color:#555">복사</button>
         </div>
         <div style="display:flex;gap:6px">
-          <button onclick="openMailClient('${mailtoLink.replace(/'/g,"\'")}','${r.name}','${r.email}','${taskName}')" style="flex:1;height:34px;border-radius:8px;border:1px solid #ddd;background:#fff;cursor:pointer;font-size:12px;color:#555">✉ 메일 앱으로 열기</button>
-          <button onclick="openNaverMail('${r.email}','${encodeURIComponent(subject)}','${encodeURIComponent(body)}')" style="flex:1;height:34px;border-radius:8px;border:none;background:#03c75a;color:#fff;cursor:pointer;font-size:12px;font-weight:600">N 네이버 메일</button>
-          <button onclick="openGmail('${r.email}','${encodeURIComponent(subject)}','${encodeURIComponent(body)}')" style="flex:1;height:34px;border-radius:8px;border:none;background:#ea4335;color:#fff;cursor:pointer;font-size:12px;font-weight:600">G Gmail</button>
+          <button onclick="window.location.href='mailto:${r.email}?subject='+encodeURIComponent('${subject}')+'&body='+encodeURIComponent('${body.replace(/'/g,"\\'")}');addLog('✉ 메일앱: ${r.name}');" style="flex:1;height:34px;border-radius:8px;border:1px solid #ddd;background:#fff;cursor:pointer;font-size:12px;color:#555">✉ 메일 앱</button>
+          <button onclick="window.open('https://mail.naver.com/compose?to=${r.email}&subject='+encodeURIComponent('${subject}'),'_blank');addLog('N 네이버: ${r.name}');" style="flex:1;height:34px;border-radius:8px;border:none;background:#03c75a;color:#fff;cursor:pointer;font-size:12px;font-weight:600">N 네이버</button>
+          <button onclick="window.open('https://mail.google.com/mail/?view=cm&to=${r.email}&su='+encodeURIComponent('${subject}')+'&body='+encodeURIComponent('${body.replace(/'/g,"\\'")}'),'_blank');addLog('G Gmail: ${r.name}');" style="flex:1;height:34px;border-radius:8px;border:none;background:#ea4335;color:#fff;cursor:pointer;font-size:12px;font-weight:600">G Gmail</button>
         </div>
       </div>`;
     } else {
-      return `<div style="background:#fff8f8;border:1px solid #fca5a5;border-radius:8px;padding:12px 14px;margin-bottom:10px">
+      return`<div style="background:#fff8f8;border:1px solid #fca5a5;border-radius:8px;padding:12px 14px;margin-bottom:10px">
         <div style="display:flex;align-items:center;justify-content:space-between">
-          <span style="font-size:13px;font-weight:600;color:#1a1a1a">@${r.name}</span>
+          <span style="font-size:13px;font-weight:600">@${r.name}</span>
           <span style="font-size:11px;background:#fee2e2;color:#991b1b;padding:2px 8px;border-radius:20px;font-weight:600">이메일 미등록</span>
         </div>
         <div style="font-size:12px;color:#888;margin-top:6px">⚙️ 설정 → 팀원 이메일 관리에서 등록해주세요</div>
       </div>`;
     }
   }).join('');
-
-  const popup = document.createElement('div');
-  popup.id = 'mention-popup';
-  popup.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#fff;border:1px solid #e5e5e5;border-radius:12px;padding:20px;z-index:2000;width:380px;max-height:80vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,0.12)';
-  popup.innerHTML = `
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
-      <div style="font-size:15px;font-weight:600;color:#1a1a1a">@멘션 업무 요청</div>
-      <button onclick="document.getElementById('mention-popup').remove();document.getElementById('mention-overlay').remove();" style="background:none;border:none;font-size:20px;cursor:pointer;color:#aaa;line-height:1">×</button>
-    </div>
-    <div style="font-size:12px;color:#888;margin-bottom:12px;background:#f7f7f5;border-radius:6px;padding:8px 10px">
-      태스크: <strong style="color:#1a1a1a">${taskName}</strong>
-    </div>
-    ${rows}
-    <button onclick="document.getElementById('mention-popup').remove();document.getElementById('mention-overlay').remove();" style="width:100%;height:36px;border-radius:8px;border:1px solid #ddd;background:#fff;cursor:pointer;font-size:13px;color:#888;margin-top:4px">닫기</button>
-  `;
-
-  const overlay = document.createElement('div');
-  overlay.id = 'mention-overlay';
-  overlay.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.3);z-index:1999';
-  overlay.onclick = ()=>{popup.remove();overlay.remove();};
-
+  const popup=document.createElement('div');
+  popup.id='mention-popup';
+  popup.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#fff;border:1px solid #e5e5e5;border-radius:12px;padding:20px;z-index:2000;width:380px;max-height:80vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,0.12)';
+  popup.innerHTML=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px"><div style="font-size:15px;font-weight:600">@멘션 업무 요청</div><button onclick="closeMentionPopup()" style="background:none;border:none;font-size:20px;cursor:pointer;color:#aaa">×</button></div><div style="font-size:12px;color:#888;margin-bottom:12px;background:#f7f7f5;border-radius:6px;padding:8px 10px">태스크: <strong style="color:#1a1a1a">${taskName}</strong></div>${rows}<button onclick="closeMentionPopup()" style="width:100%;height:36px;border-radius:8px;border:1px solid #ddd;background:#fff;cursor:pointer;font-size:13px;color:#888;margin-top:4px">닫기</button>`;
+  const overlay=document.createElement('div');
+  overlay.id='mention-overlay';
+  overlay.style.cssText='position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.3);z-index:1999';
+  overlay.onclick=closeMentionPopup;
   document.body.appendChild(overlay);
   document.body.appendChild(popup);
 }
-
-function copyEmail(elId){
-  const el = document.getElementById(elId);
-  if(!el) return;
-  navigator.clipboard.writeText(el.textContent).then(()=>{
-    el.style.color = '#4caf6e';
-    setTimeout(()=>{el.style.color='#4f90e5';}, 1500);
-    addLog('📋 이메일 복사: '+el.textContent);
-  }).catch(()=>{
-    const txt = el.textContent;
-    const ta = document.createElement('textarea');
-    ta.value = txt;
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand('copy');
-    document.body.removeChild(ta);
-    el.style.color = '#4caf6e';
-    setTimeout(()=>{el.style.color='#4f90e5';}, 1500);
-    addLog('📋 이메일 복사: '+txt);
-  });
-}
-
-function openMailClient(link, name, email, taskName){
-  window.location.href = link;
-  addLog('✉ 메일 앱: '+name+' ('+email+') → '+taskName);
-}
-
-function openNaverMail(email, subject, body){
-  window.open('https://mail.naver.com/compose?to='+email+'&subject='+subject, '_blank');
-  addLog('N 네이버 메일: '+email);
-}
-
-function openGmail(email, subject, body){
-  window.open('https://mail.google.com/mail/?view=cm&to='+email+'&su='+subject+'&body='+body, '_blank');
-  addLog('G Gmail: '+email);
-}
-
-// 재고 0 알림 이메일
-function checkStockZero(item){
-  if(item.qty > 0) return;
-  if(!item.manager) return;
-  const member = teamMembers.find(m=>m.name===item.manager);
-  if(!member || !member.email) return;
-  const subject = encodeURIComponent('[재고 품절 알림] '+item.name+' 재고가 0이 됐어요');
-  const body = encodeURIComponent(item.manager+'님,\n\n['+item.name+'] 재고가 0이 됐어요.\n\n빠른 재입고 확인 부탁드립니다.\n\n현재 재고: 0 '+item.unit+'\n최소 재고 기준: '+item.min+' '+item.unit);
-  window.open('mailto:'+member.email+'?subject='+subject+'&body='+body);
-  addLog('📦 재고 품절 메일: '+item.manager+' → '+item.name);
-  sendSlack('🚨 재고 품절: ['+item.name+'] 담당: '+item.manager);
+function closeMentionPopup(){const p=document.getElementById('mention-popup');if(p)p.remove();const o=document.getElementById('mention-overlay');if(o)o.remove();}
+function copyMentionEmail(elId){
+  const el=document.getElementById(elId);if(!el)return;
+  const txt=el.textContent;
+  navigator.clipboard.writeText(txt).catch(()=>{const ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);});
+  const orig=el.textContent;el.style.color='#4caf6e';el.textContent='복사됐어요 ✓';
+  setTimeout(()=>{el.style.color='#4f90e5';el.textContent=orig;},1500);
+  addLog('📋 이메일 복사: '+txt);
 }
 
 // 이메일 확인 팝업
@@ -924,62 +691,42 @@ function sendEmail(){
   if(!name){alert('담당자를 먼저 입력해주세요!');return;}
   const member=teamMembers.find(m=>m.name===name);
   if(!member||!member.email){
-    const goSettings=confirm('⚙️ ['+name+']의 이메일이 등록되어 있지 않아요.\n\n설정 페이지에서 등록하시겠어요?');
-    if(goSettings)goSettings_page();
+    if(confirm('⚙️ ['+name+']의 이메일이 등록되어 있지 않아요.\n\n설정 페이지에서 등록하시겠어요?')){goSettings_page();}
     return;
   }
-  showEmailPopup(name, member.email, taskName);
+  const popup=document.createElement('div');
+  popup.id='email-popup';
+  popup.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#fff;border:1px solid #e5e5e5;border-radius:12px;padding:24px;z-index:2000;width:340px;box-shadow:0 8px 32px rgba(0,0,0,0.12)';
+  popup.innerHTML=`<div style="font-size:15px;font-weight:600;color:#1a1a1a;margin-bottom:16px">✉ 이메일 발송 확인</div>
+    <div style="background:#f7f7f5;border-radius:8px;padding:12px 14px;margin-bottom:16px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span style="font-size:11px;color:#aaa;min-width:50px">받는 사람</span><span style="font-size:13px;font-weight:500">${name}</span></div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span style="font-size:11px;color:#aaa;min-width:50px">이메일</span><span style="font-size:13px;color:#4f90e5">${member.email}</span></div>
+      <div style="display:flex;align-items:center;gap:8px"><span style="font-size:11px;color:#aaa;min-width:50px">태스크</span><span style="font-size:13px">${taskName}</span></div>
+    </div>
+    <textarea id="email-extra-msg" placeholder="추가 메시지 (선택사항)" style="width:100%;min-height:70px;font-size:12px;border:1px solid #e5e5e5;border-radius:8px;padding:8px 10px;resize:vertical;font-family:inherit;outline:none;margin-bottom:12px;color:#1a1a1a"></textarea>
+    <div style="display:flex;gap:8px">
+      <button onclick="document.getElementById('email-popup').remove();document.getElementById('email-popup-overlay').remove();" style="flex:1;height:38px;border-radius:8px;border:1px solid #ddd;background:#fff;cursor:pointer;font-size:13px;color:#888">취소</button>
+      <button onclick="confirmSendEmail('${name}','${member.email}','${taskName}')" style="flex:2;height:38px;border-radius:8px;border:none;background:#1a1a1a;color:#fff;cursor:pointer;font-size:13px;font-weight:600">발송하기</button>
+    </div>`;
+  const overlay=document.createElement('div');
+  overlay.id='email-popup-overlay';
+  overlay.style.cssText='position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.3);z-index:1999';
+  overlay.onclick=()=>{popup.remove();overlay.remove();};
+  document.body.appendChild(overlay);document.body.appendChild(popup);
 }
 function goSettings_page(){
   document.querySelectorAll('.top-tab').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById('page-settings').classList.add('active');
-  updateSettingsStatus();renderTeam();renderLog();
-  closePanel();
+  updateSettingsStatus();renderTeam();renderLog();closePanel();
 }
-function showEmailPopup(name, email, taskName){
-  // 기존 팝업 제거
-  const old=document.getElementById('email-popup');if(old)old.remove();
-  const popup=document.createElement('div');
-  popup.id='email-popup';
-  popup.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#fff;border:1px solid #e5e5e5;border-radius:12px;padding:24px;z-index:2000;width:340px;box-shadow:0 8px 32px rgba(0,0,0,0.12)';
-  popup.innerHTML=`
-    <div style="font-size:15px;font-weight:600;color:#1a1a1a;margin-bottom:16px">✉ 이메일 발송 확인</div>
-    <div style="background:#f7f7f5;border-radius:8px;padding:12px 14px;margin-bottom:16px">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-        <span style="font-size:11px;color:#aaa;min-width:50px">받는 사람</span>
-        <span style="font-size:13px;font-weight:500;color:#1a1a1a">${name}</span>
-      </div>
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-        <span style="font-size:11px;color:#aaa;min-width:50px">이메일</span>
-        <span style="font-size:13px;color:#4f90e5">${email}</span>
-      </div>
-      <div style="display:flex;align-items:center;gap:8px">
-        <span style="font-size:11px;color:#aaa;min-width:50px">태스크</span>
-        <span style="font-size:13px;color:#1a1a1a">${taskName}</span>
-      </div>
-    </div>
-    <textarea id="email-extra-msg" placeholder="추가 메시지 입력 (선택사항)" style="width:100%;min-height:70px;font-size:12px;border:1px solid #e5e5e5;border-radius:8px;padding:8px 10px;resize:vertical;font-family:inherit;outline:none;margin-bottom:12px;color:#1a1a1a"></textarea>
-    <div style="display:flex;gap:8px">
-      <button onclick="document.getElementById('email-popup').remove();document.getElementById('email-popup-overlay').remove();" style="flex:1;height:38px;border-radius:8px;border:1px solid #ddd;background:#fff;cursor:pointer;font-size:13px;color:#888">취소</button>
-      <button onclick="confirmSendEmail('${name}','${email}','${taskName}')" style="flex:2;height:38px;border-radius:8px;border:none;background:#1a1a1a;color:#fff;cursor:pointer;font-size:13px;font-weight:600">발송하기</button>
-    </div>
-  `;
-  const overlay=document.createElement('div');
-  overlay.id='email-popup-overlay';
-  overlay.style.cssText='position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.3);z-index:1999';
-  overlay.onclick=()=>{popup.remove();overlay.remove();};
-  document.body.appendChild(overlay);
-  document.body.appendChild(popup);
-}
-function confirmSendEmail(name, email, taskName){
+function confirmSendEmail(name,email,taskName){
   const extra=document.getElementById('email-extra-msg').value.trim();
   const subject=encodeURIComponent('[태스크 알림] '+taskName);
   const body=encodeURIComponent('안녕하세요 '+name+'님,\n\n['+taskName+'] 태스크가 배정되었습니다.\n'+(extra?'\n'+extra+'\n':'')+'\n확인 부탁드립니다.\n\n감사합니다.');
   window.open('mailto:'+email+'?subject='+subject+'&body='+body);
-  addLog('✉ 이메일 발송: '+name+' ('+email+') → '+taskName);
-  document.getElementById('email-popup').remove();
-  document.getElementById('email-popup-overlay').remove();
+  addLog('✉ 이메일: '+name+' → '+taskName);
+  document.getElementById('email-popup').remove();document.getElementById('email-popup-overlay').remove();
 }
 
 // 헬퍼
@@ -1001,7 +748,6 @@ function autoMoveToCompleted(t){
   tasks=tasks.filter(tt=>tt.id!==t.id);
   saveData();renderAll();closePanel();
   sendSlack('✅ ['+t.name+'] 완료 — 담당자: '+(t.assignee||'-'));
-  sendNotion(t.name,'완료',t.priority);
   setTimeout(()=>openCompletedPanel(newCp.id),300);
 }
 
@@ -1035,10 +781,7 @@ function saveTaskPanel(){
   btn.textContent='저장됐어요 ✓';btn.style.background='#4caf6e';
   setTimeout(()=>{btn.textContent='저장';btn.style.background='#1a1a1a';},1500);
 }
-function moveToCompleted(){
-  const t=tasks.find(t=>t.id===currentTaskId);if(!t)return;
-  autoMoveToCompleted(t);
-}
+function moveToCompleted(){const t=tasks.find(t=>t.id===currentTaskId);if(!t)return;autoMoveToCompleted(t);}
 function addTaskComment(){
   const t=tasks.find(t=>t.id===currentTaskId);if(!t)return;
   const txt=document.getElementById('tp-comment-input').value.trim();if(!txt)return;
@@ -1046,8 +789,7 @@ function addTaskComment(){
   t.comments.push({text:txt,time:new Date().toLocaleString('ko-KR')});
   document.getElementById('tp-comment-input').value='';
   renderTaskComments(t);saveData();
-  // @멘션 감지
-  if(txt.includes('@')) checkMentions(txt, t.name);
+  if(txt.includes('@'))checkMentions(txt,t.name);
 }
 function renderTaskComments(t){
   const el=document.getElementById('tp-comments');
@@ -1130,6 +872,16 @@ function openInvPanel(id){
   document.getElementById('side-overlay').classList.add('open');
 }
 function quickAdjust(delta){const item=inventory.find(i=>i.id===currentInvId);if(!item)return;item.qty=Math.max(0,item.qty+delta);document.getElementById('ip-qty').value=item.qty;document.getElementById('ip-qty-display').textContent=item.qty+' '+item.unit;renderInventory();saveData();if(item.qty===0)checkStockZero(item);}
+function checkStockZero(item){
+  if(item.qty>0||!item.manager)return;
+  const member=teamMembers.find(m=>m.name===item.manager);
+  if(!member||!member.email)return;
+  const subject=encodeURIComponent('[재고 품절] '+item.name+' 재고가 0이 됐어요');
+  const body=encodeURIComponent(item.manager+'님,\n\n['+item.name+'] 재고가 0이 됐어요.\n\n빠른 재입고 확인 부탁드립니다.\n\n현재: 0 '+item.unit+'\n최소 기준: '+item.min+' '+item.unit);
+  window.open('mailto:'+member.email+'?subject='+subject+'&body='+body);
+  addLog('📦 품절 메일: '+item.manager+' → '+item.name);
+  sendSlack('🚨 재고 품절: ['+item.name+'] 담당: '+item.manager);
+}
 function saveInvPanel(){
   const item=inventory.find(i=>i.id===currentInvId);if(!item)return;
   item.name=document.getElementById('ip-name').value.trim()||item.name;
@@ -1162,11 +914,7 @@ function renderProjMetrics(){
   const today=new Date();today.setHours(0,0,0,0);
   const up=tasks.filter(t=>t.status!=='done'&&t.date).map(t=>({...t,d:new Date(t.date)})).filter(t=>t.d>=today).sort((a,b)=>a.d-b.d);
   const nxt=up.length?up[0].date.slice(5).replace('-','/')+' '+up[0].name.slice(0,5)+'…':'-';
-  document.getElementById('proj-metrics').innerHTML=`
-    <div class="metric"><div class="metric-label">전체 태스크</div><div class="metric-value">${total}</div></div>
-    <div class="metric"><div class="metric-label">완료</div><div class="metric-value" style="color:#166534">${done}</div></div>
-    <div class="metric"><div class="metric-label">진행률</div><div class="metric-value">${pct}%</div><div class="pb"><div class="pbf" style="width:${pct}%"></div></div></div>
-    <div class="metric"><div class="metric-label">가장 빠른 마감</div><div class="metric-value" style="font-size:13px">${nxt}</div></div>`;
+  document.getElementById('proj-metrics').innerHTML=`<div class="metric"><div class="metric-label">전체 태스크</div><div class="metric-value">${total}</div></div><div class="metric"><div class="metric-label">완료</div><div class="metric-value" style="color:#166534">${done}</div></div><div class="metric"><div class="metric-label">진행률</div><div class="metric-value">${pct}%</div><div class="pb"><div class="pbf" style="width:${pct}%"></div></div></div><div class="metric"><div class="metric-label">가장 빠른 마감</div><div class="metric-value" style="font-size:13px">${nxt}</div></div>`;
 }
 function renderDB(){
   document.getElementById('db-body').innerHTML=tasks.map(t=>`
@@ -1184,15 +932,7 @@ function renderKanban(){
   ['todo','inprogress','review','done'].forEach(s=>{
     const f=tasks.filter(t=>t.status===s);
     document.getElementById('kc-'+s).textContent=f.length;
-    document.getElementById('k-'+s).innerHTML=f.map(t=>`
-      <div class="k-card" onclick="openTaskPanel(${t.id})">
-        <div style="margin-bottom:6px;font-weight:500">${t.name}</div>
-        <div style="display:flex;gap:5px;flex-wrap:wrap">
-          <span class="badge p-${t.priority}">${pLabel(t.priority)}</span>
-          ${t.date?`<span style="font-size:11px;color:#888">${t.date.slice(5).replace('-','/')}</span>`:''}
-          ${t.assignee?`<span style="font-size:11px;color:#aaa">${t.assignee}</span>`:''}
-        </div>
-      </div>`).join('');
+    document.getElementById('k-'+s).innerHTML=f.map(t=>`<div class="k-card" onclick="openTaskPanel(${t.id})"><div style="margin-bottom:6px;font-weight:500">${t.name}</div><div style="display:flex;gap:5px;flex-wrap:wrap"><span class="badge p-${t.priority}">${pLabel(t.priority)}</span>${t.date?`<span style="font-size:11px;color:#888">${t.date.slice(5).replace('-','/')}</span>`:''}${t.assignee?`<span style="font-size:11px;color:#aaa">${t.assignee}</span>`:''}</div></div>`).join('');
   });
 }
 function renderChecklist(){
@@ -1224,110 +964,56 @@ function renderTaskCal(){
     cell.addEventListener('click',()=>{
       const p=document.getElementById('tc-detail');
       if(!dt.length){p.innerHTML=`<span style="color:#aaa">${tcMonth+1}월 ${d}일 — 마감 태스크 없음</span>`;return;}
-      p.innerHTML=`<div style="font-size:12px;font-weight:600;color:#888;margin-bottom:8px">${tcMonth+1}월 ${d}일 마감 (${dt.length}개)</div>`+
-        dt.map(t=>`<div class="cdr" style="cursor:pointer" onclick="openTaskPanel(${t.id})"><span style="flex:1;font-weight:500">${t.name}</span><span class="badge s-${t.status}">${sLabel(t.status)}</span><span class="badge p-${t.priority}">${pLabel(t.priority)}</span></div>`).join('');
+      p.innerHTML=`<div style="font-size:12px;font-weight:600;color:#888;margin-bottom:8px">${tcMonth+1}월 ${d}일 마감 (${dt.length}개)</div>`+dt.map(t=>`<div class="cdr" style="cursor:pointer" onclick="openTaskPanel(${t.id})"><span style="flex:1;font-weight:500">${t.name}</span><span class="badge s-${t.status}">${sLabel(t.status)}</span><span class="badge p-${t.priority}">${pLabel(t.priority)}</span></div>`).join('');
     });
     grid.appendChild(cell);
   }
 }
 function renderInvMetrics(){
   const total=inventory.length,out=inventory.filter(i=>i.qty===0).length,low=inventory.filter(i=>i.qty>0&&i.qty<=i.min).length;
-  document.getElementById('inv-metrics').innerHTML=`
-    <div class="metric"><div class="metric-label">전체 품목</div><div class="metric-value">${total}</div></div>
-    <div class="metric"><div class="metric-label">정상</div><div class="metric-value" style="color:#166534">${total-out-low}</div></div>
-    <div class="metric"><div class="metric-label">재고 부족</div><div class="metric-value" style="color:#92400e">${low}</div></div>
-    <div class="metric"><div class="metric-label">품절</div><div class="metric-value" style="color:#991b1b">${out}</div></div>`;
+  document.getElementById('inv-metrics').innerHTML=`<div class="metric"><div class="metric-label">전체 품목</div><div class="metric-value">${total}</div></div><div class="metric"><div class="metric-label">정상</div><div class="metric-value" style="color:#166534">${total-out-low}</div></div><div class="metric"><div class="metric-label">재고 부족</div><div class="metric-value" style="color:#92400e">${low}</div></div><div class="metric"><div class="metric-label">품절</div><div class="metric-value" style="color:#991b1b">${out}</div></div>`;
 }
 function renderInventory(){
   renderInvMetrics();
   document.getElementById('inv-body').innerHTML=inventory.map(item=>{
-    const s=stockSt(item);
-    const pct=item.min>0?Math.min(100,Math.round(item.qty/item.min*100)):100;
-    const barColor=s==='out'?'#ef4444':s==='low'?'#f59e0b':'#4caf6e';
-    return`<tr onclick="openInvPanel(${item.id})">
-      <td style="font-weight:500">${item.name}${item.memo?'<span style="font-size:10px;color:#888;margin-left:5px">📝</span>':''}</td>
-      <td style="color:#888">${item.cat}</td>
-      <td style="color:#888">${item.manager||'-'}</td>
-      <td style="font-weight:600">${item.qty} ${item.unit}</td>
-      <td style="color:#aaa">${item.min} ${item.unit}</td>
-      <td><span class="badge ${stockCls(s)}">${stockLb(s)}</span></td>
-      <td><div class="stock-bar-wrap"><div class="stock-bar"><div class="stock-bar-fill" style="width:${pct}%;background:${barColor}"></div></div><span style="font-size:11px;color:#aaa">${pct}%</span></div></td>
-      <td onclick="event.stopPropagation()"><div style="display:flex;gap:4px"><button class="btn" style="height:26px;font-size:12px;padding:0 8px" onclick="adjustInv(${item.id},-1)">－</button><button class="btn" style="height:26px;font-size:12px;padding:0 8px" onclick="adjustInv(${item.id},1)">＋</button></div></td>
-      <td onclick="event.stopPropagation()"><button class="del-btn" onclick="deleteInv(${item.id})">✕</button></td>
-    </tr>`;
+    const s=stockSt(item);const pct=item.min>0?Math.min(100,Math.round(item.qty/item.min*100)):100;const barColor=s==='out'?'#ef4444':s==='low'?'#f59e0b':'#4caf6e';
+    return`<tr onclick="openInvPanel(${item.id})"><td style="font-weight:500">${item.name}${item.memo?'<span style="font-size:10px;color:#888;margin-left:5px">📝</span>':''}</td><td style="color:#888">${item.cat}</td><td style="color:#888">${item.manager||'-'}</td><td style="font-weight:600">${item.qty} ${item.unit}</td><td style="color:#aaa">${item.min} ${item.unit}</td><td><span class="badge ${stockCls(s)}">${stockLb(s)}</span></td><td><div class="stock-bar-wrap"><div class="stock-bar"><div class="stock-bar-fill" style="width:${pct}%;background:${barColor}"></div></div><span style="font-size:11px;color:#aaa">${pct}%</span></div></td><td onclick="event.stopPropagation()"><div style="display:flex;gap:4px"><button class="btn" style="height:26px;font-size:12px;padding:0 8px" onclick="adjustInv(${item.id},-1)">－</button><button class="btn" style="height:26px;font-size:12px;padding:0 8px" onclick="adjustInv(${item.id},1)">＋</button></div></td><td onclick="event.stopPropagation()"><button class="del-btn" onclick="deleteInv(${item.id})">✕</button></td></tr>`;
   }).join('');
   document.getElementById('inv-chart').innerHTML=inventory.map(item=>{
-    const s=stockSt(item);
-    const pct=item.min>0?Math.min(100,Math.round(item.qty/item.min*100)):100;
-    const barColor=s==='out'?'#ef4444':s==='low'?'#f59e0b':'#4caf6e';
-    return`<div style="background:#fff;border:1px solid #ebebeb;border-radius:8px;padding:10px 14px;margin-bottom:8px;cursor:pointer" onclick="openInvPanel(${item.id})">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-        <span style="font-size:13px;font-weight:500">${item.name}</span>
-        <div style="display:flex;align-items:center;gap:8px">
-          <span style="font-size:12px;color:#888">${item.qty}/${item.min} ${item.unit}</span>
-          <span class="badge ${stockCls(s)}">${stockLb(s)}</span>
-        </div>
-      </div>
-      <div style="height:10px;background:#f0f0f0;border-radius:5px;overflow:hidden">
-        <div style="height:100%;width:${pct}%;background:${barColor};border-radius:5px;transition:width 0.4s"></div>
-      </div>
-      <div style="display:flex;justify-content:space-between;margin-top:4px">
-        <span style="font-size:10px;color:#aaa">0</span>
-        <span style="font-size:10px;font-weight:500;color:#aaa">${pct}%</span>
-        <span style="font-size:10px;color:#aaa">최소: ${item.min}</span>
-      </div>
-    </div>`;
+    const s=stockSt(item);const pct=item.min>0?Math.min(100,Math.round(item.qty/item.min*100)):100;const barColor=s==='out'?'#ef4444':s==='low'?'#f59e0b':'#4caf6e';
+    return`<div style="background:#fff;border:1px solid #ebebeb;border-radius:8px;padding:10px 14px;margin-bottom:8px;cursor:pointer" onclick="openInvPanel(${item.id})"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span style="font-size:13px;font-weight:500">${item.name}</span><div style="display:flex;align-items:center;gap:8px"><span style="font-size:12px;color:#888">${item.qty}/${item.min} ${item.unit}</span><span class="badge ${stockCls(s)}">${stockLb(s)}</span></div></div><div style="height:10px;background:#f0f0f0;border-radius:5px;overflow:hidden"><div style="height:100%;width:${pct}%;background:${barColor};border-radius:5px;transition:width 0.4s"></div></div><div style="display:flex;justify-content:space-between;margin-top:4px"><span style="font-size:10px;color:#aaa">0</span><span style="font-size:10px;font-weight:500;color:#aaa">${pct}%</span><span style="font-size:10px;color:#aaa">최소: ${item.min}</span></div></div>`;
   }).join('');
 }
 function renderIncomingCal(){
   document.getElementById('ic-month').textContent=icYear+'년 '+MONTHS[icMonth];
   document.getElementById('ic-daynames').innerHTML=DAYS.map(d=>`<div class="cdname">${d}</div>`).join('');
   const grid=document.getElementById('ic-grid');grid.innerHTML='';
-  const firstDay=new Date(icYear,icMonth,1).getDay();
-  const dim=new Date(icYear,icMonth+1,0).getDate();
-  const today=new Date();
+  const firstDay=new Date(icYear,icMonth,1).getDay();const dim=new Date(icYear,icMonth+1,0).getDate();const today=new Date();
   for(let i=0;i<firstDay;i++){const e=document.createElement('div');e.className='ccell empty';grid.appendChild(e);}
   for(let d=1;d<=dim;d++){
     const cell=document.createElement('div');cell.className='ccell';
     if(today.getFullYear()===icYear&&today.getMonth()===icMonth&&today.getDate()===d)cell.classList.add('today');
-    const ds=icYear+'-'+pad(icMonth+1)+'-'+pad(d);
-    const di=incoming.filter(i=>i.date===ds);
+    const ds=icYear+'-'+pad(icMonth+1)+'-'+pad(d);const di=incoming.filter(i=>i.date===ds);
     cell.innerHTML=`<div class="cnum">${d}</div>`+di.map(i=>`<div class="cchip chip-incoming">${i.name}</div>`).join('');
-    cell.addEventListener('click',()=>{
-      const p=document.getElementById('ic-detail');
-      if(!di.length){p.innerHTML=`<span style="color:#aaa">${icMonth+1}월 ${d}일 — 입고 예정 없음</span>`;return;}
-      p.innerHTML=`<div style="font-size:12px;font-weight:600;color:#888;margin-bottom:8px">${icMonth+1}월 ${d}일 입고 예정 (${di.length}건)</div>`+
-        di.map(i=>`<div class="cdr"><span style="flex:1;font-weight:500">${i.name}</span><span style="font-size:12px;color:#888">${i.qty}·${i.supplier}</span><span class="badge" style="${icStSty(i.status)}">${icStLb(i.status)}</span></div>`).join('');
-    });
+    cell.addEventListener('click',()=>{const p=document.getElementById('ic-detail');if(!di.length){p.innerHTML=`<span style="color:#aaa">${icMonth+1}월 ${d}일 — 입고 예정 없음</span>`;return;}p.innerHTML=`<div style="font-size:12px;font-weight:600;color:#888;margin-bottom:8px">${icMonth+1}월 ${d}일 입고 예정 (${di.length}건)</div>`+di.map(i=>`<div class="cdr"><span style="flex:1;font-weight:500">${i.name}</span><span style="font-size:12px;color:#888">${i.qty}·${i.supplier}</span><span class="badge" style="${icStSty(i.status)}">${icStLb(i.status)}</span></div>`).join('');});
     grid.appendChild(cell);
   }
-  document.getElementById('ic-list-body').innerHTML=incoming.map(i=>`
-    <tr><td style="font-weight:500">${i.name}</td><td>${i.qty}</td>
-    <td style="color:#888">${i.date}</td><td style="color:#888">${i.supplier||'-'}</td>
-    <td><span class="badge" style="${icStSty(i.status)}">${icStLb(i.status)}</span></td>
-    <td><button class="del-btn" onclick="deleteIncoming(${i.id})">✕</button></td></tr>`).join('');
+  document.getElementById('ic-list-body').innerHTML=incoming.map(i=>`<tr><td style="font-weight:500">${i.name}</td><td>${i.qty}</td><td style="color:#888">${i.date}</td><td style="color:#888">${i.supplier||'-'}</td><td><span class="badge" style="${icStSty(i.status)}">${icStLb(i.status)}</span></td><td><button class="del-btn" onclick="deleteIncoming(${i.id})">✕</button></td></tr>`).join('');
 }
 function renderCompleted(){
-  document.getElementById('completed-body').innerHTML=completedProjects.map(p=>`
-    <div class="done-card" onclick="openCompletedPanel(${p.id})">
-      <div class="done-card-hdr"><span class="done-title">${p.name}</span><span class="badge s-done">완료</span></div>
-      <div class="done-meta"><span>팀: ${p.team}</span><span>기간: ${p.startDate} ~ ${p.endDate}</span><span>태스크: ${p.tasks.length}개</span></div>
-      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:${p.result?'10px':'0'}">${p.tasks.map(t=>`<span class="badge" style="background:#f5f5f5;color:#666">${t}</span>`).join('')}</div>
-      ${p.result?`<div style="font-size:12px;color:#888;border-top:1px solid #f0f0f0;padding-top:10px">결과: ${p.result}</div>`:''}
-    </div>`).join('');
+  document.getElementById('completed-body').innerHTML=completedProjects.map(p=>`<div class="done-card" onclick="openCompletedPanel(${p.id})"><div class="done-card-hdr"><span class="done-title">${p.name}</span><span class="badge s-done">완료</span></div><div class="done-meta"><span>팀: ${p.team}</span><span>기간: ${p.startDate} ~ ${p.endDate}</span><span>태스크: ${p.tasks.length}개</span></div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:${p.result?'10px':'0'}">${p.tasks.map(t=>`<span class="badge" style="background:#f5f5f5;color:#666">${t}</span>`).join('')}</div>${p.result?`<div style="font-size:12px;color:#888;border-top:1px solid #f0f0f0;padding-top:10px">결과: ${p.result}</div>`:''}</div>`).join('');
 }
 function renderAll(){saveData();renderProjMetrics();renderDB();renderKanban();renderChecklist();renderTaskCal();renderInventory();renderIncomingCal();renderCompleted();}
 
 function addTask(){
   const name=document.getElementById('f-name').value.trim();if(!name)return;
   const t={id:taskId++,name,assignee:document.getElementById('f-assignee').value.trim(),date:document.getElementById('f-date').value,priority:document.getElementById('f-pri').value,status:document.getElementById('f-status').value,comments:[],images:[],files:[]};
-  tasks.push(t);
-  document.getElementById('f-name').value='';document.getElementById('f-assignee').value='';
-  sendSlack('📌 새 태스크: ['+t.name+'] 담당자: '+(t.assignee||'-')+' 마감: '+(t.date||'-'));
+  tasks.push(t);document.getElementById('f-name').value='';document.getElementById('f-assignee').value='';
+  sendSlack('📌 새 태스크: ['+t.name+'] 담당자: '+(t.assignee||'-'));
   renderAll();
 }
 function deleteTask(id){if(confirm('태스크를 삭제할까요?')){tasks=tasks.filter(t=>t.id!==id);renderAll();}}
-function toggleDone(id){const t=tasks.find(t=>t.id===id);if(t){autoMoveToCompleted(t);}}
+function toggleDone(id){const t=tasks.find(t=>t.id===id);if(t)autoMoveToCompleted(t);}
 function addInventory(){
   const name=document.getElementById('i-name').value.trim();if(!name)return;
   inventory.push({id:invId++,name,cat:document.getElementById('i-cat').value.trim()||'기타',qty:parseInt(document.getElementById('i-qty').value)||0,min:parseInt(document.getElementById('i-min').value)||0,unit:document.getElementById('i-unit').value.trim()||'개',memo:'',manager:document.getElementById('i-manager').value.trim(),images:[],files:[]});
