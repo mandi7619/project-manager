@@ -1566,7 +1566,6 @@ function renderCompleted(){
 function cancelIncomingHistory(id){
   if(!incomingHistory)incomingHistory=[];
   const ih=incomingHistory.find(i=>i.id===id);if(!ih)return;
-  if(!confirm('['+ih.name+'] 입고를 취소할까요?\n재고수량에서 '+ih.qty+'개가 차감됩니다.'))return;
   // 재고 마이너스
   let invItem=inventory.find(inv=>inv.name===ih.name);
   if(invItem){
@@ -1587,7 +1586,7 @@ function cancelIncomingHistory(id){
   const icTab=Array.from(document.querySelectorAll('.top-tab')).find(t=>t.textContent.trim()==='입고 캘린더');
   if(icTab)icTab.classList.add('active');
   document.getElementById('page-incoming').classList.add('active');
-  alert('입고 취소됐어요. 재고에서 '+ih.qty+'개 차감됐습니다.');
+  addLog('🔄 입고취소: '+ih.name+' '+ih.qty+'개 재고 차감');
 }
 
 function renderInHistory(){
@@ -1629,6 +1628,12 @@ function completeIncomingItem(id){
   incoming=incoming.filter(i=>i.id!==id);
   saveData();renderInventory();renderIncomingCal();renderInHistory();
   addLog('✅ 입고완료: '+ic.name+' '+ic.qty+'개 재고 합산');
+  // 입고 이력 탭으로 자동 이동
+  document.querySelectorAll('.top-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  const ihTab=Array.from(document.querySelectorAll('.top-tab')).find(t=>t.textContent.trim()==='입고 이력');
+  if(ihTab)ihTab.classList.add('active');
+  document.getElementById('page-inhistory').classList.add('active');
 }
 
 function renderAll(){saveData();renderProjMetrics();renderDB();renderKanban();renderChecklist();renderTaskCal();renderInventory();renderIncomingCal();renderCompleted();renderInHistory();}
