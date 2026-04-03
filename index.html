@@ -350,11 +350,68 @@ h1{font-size:22px;font-weight:600;color:#1a1a1a}
     <!-- 🔔 Notion 직접 연동 -->
     <div class="settings-section">
       <div class="settings-title">🔔 Notion 직접 연동</div>
-      <div class="settings-desc">Notion Internal Integration Token과 각 DB ID를 입력하면 태스크·재고·입고·완료 데이터가 Notion에 직접 저장·동기화돼요.<br>
-        <span style="color:#f59e0b;font-weight:600">⚠ CORS 제한으로 Notion API는 브라우저에서 직접 호출이 불가합니다.</span><br>
-        <strong style="color:#1e40af">✅ 해결 방법:</strong> 아래 두 가지 중 하나를 선택하세요.<br>
-        <span style="background:#f0f0f0;padding:2px 6px;border-radius:4px;font-size:11px">① Make Webhook(위)을 이미 설정했다면 자동으로 Notion에 전송돼요.</span><br>
-        <span style="background:#f0f0f0;padding:2px 6px;border-radius:4px;font-size:11px">② 아래 Notion Proxy URL(예: n8n, Cloudflare Worker, 자체 서버)을 입력하면 직접 연동돼요.</span>
+
+      <!-- 단계별 설정 가이드 -->
+      <div style="background:#f8faff;border:1px solid #dbeafe;border-radius:10px;padding:16px 18px;margin-bottom:16px">
+        <div style="font-size:13px;font-weight:700;color:#1e40af;margin-bottom:12px">📖 설정 가이드 — 처음이신가요? 순서대로 따라해주세요!</div>
+        <div style="display:flex;gap:12px;margin-bottom:12px;padding:12px;background:#fff;border-radius:8px;border:1px solid #e0e7ff">
+          <div style="width:28px;height:28px;background:#1e40af;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0">1</div>
+          <div style="flex:1">
+            <div style="font-size:13px;font-weight:600;color:#1a1a1a;margin-bottom:4px">API Token 발급</div>
+            <div style="font-size:12px;color:#555;line-height:1.7">
+              ① <a href="https://www.notion.so/profile/integrations" target="_blank" style="color:#1e40af;font-weight:600">notion.so/profile/integrations</a> 접속<br>
+              ② <strong>+ New integration</strong> 클릭<br>
+              ③ 이름 입력 (예: 프로젝트관리앱) → <strong>Submit</strong><br>
+              ④ <strong>Internal Integration Token</strong> 복사 → 아래 API Token에 붙여넣기
+            </div>
+            <a href="https://www.notion.so/profile/integrations" target="_blank" style="display:inline-block;margin-top:8px;height:28px;line-height:28px;padding:0 12px;border-radius:6px;background:#1e40af;color:#fff;font-size:11px;font-weight:600;text-decoration:none">🔑 Notion 연동 페이지 열기 →</a>
+          </div>
+        </div>
+        <div style="display:flex;gap:12px;margin-bottom:12px;padding:12px;background:#fff;border-radius:8px;border:1px solid #e0e7ff">
+          <div style="width:28px;height:28px;background:#1e40af;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0">2</div>
+          <div style="flex:1">
+            <div style="font-size:13px;font-weight:600;color:#1a1a1a;margin-bottom:4px">Notion DB 4개 만들기</div>
+            <div style="font-size:12px;color:#555;line-height:1.7">Notion에서 아래 4개의 <strong>빈 데이터베이스(테이블)</strong>를 만들어주세요.</div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">
+              <span style="background:#dbeafe;color:#1e40af;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600">📌 태스크 DB</span>
+              <span style="background:#dcfce7;color:#166534;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600">📦 재고 DB</span>
+              <span style="background:#fef3c7;color:#92400e;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600">🚚 입고 DB</span>
+              <span style="background:#f3e8ff;color:#6b21a8;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600">✅ 완료 프로젝트 DB</span>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;gap:12px;margin-bottom:12px;padding:12px;background:#fff;border-radius:8px;border:1px solid #e0e7ff">
+          <div style="width:28px;height:28px;background:#1e40af;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0">3</div>
+          <div style="flex:1">
+            <div style="font-size:13px;font-weight:600;color:#1a1a1a;margin-bottom:4px">Integration 연결 (각 DB마다)</div>
+            <div style="font-size:12px;color:#555;line-height:1.7">
+              각 DB 페이지에서:<br>
+              ① 우측 상단 <strong>···</strong> 클릭 → <strong>연결 추가 (Add connections)</strong><br>
+              ② 1단계에서 만든 연동 이름 검색 → 선택 → 확인<br>
+              ③ 4개 DB 모두 동일하게 반복
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;gap:12px;padding:12px;background:#fff;border-radius:8px;border:1px solid #e0e7ff">
+          <div style="width:28px;height:28px;background:#1e40af;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0">4</div>
+          <div style="flex:1">
+            <div style="font-size:13px;font-weight:600;color:#1a1a1a;margin-bottom:4px">DB ID 복사하기</div>
+            <div style="font-size:12px;color:#555;line-height:1.7">
+              각 DB를 <strong>웹 브라우저</strong>에서 열면 URL이 아래처럼 나와요:<br>
+              <code style="background:#f0f0f0;padding:2px 6px;border-radius:4px;font-size:11px">notion.so/워크스페이스/<span style="background:#fef3c7;color:#92400e;font-weight:700">xxxxxxxx...xxxxx</span>?v=...</code><br>
+              <strong>?v= 앞의 32자리</strong>가 DB ID예요 → 각 입력창에 붙여넣기
+            </div>
+            <div style="margin-top:8px;padding:8px 12px;background:#fef3c7;border-radius:6px;font-size:11px;color:#92400e">
+              💡 URL에 <strong>-</strong> 가 있어도 그대로 붙여넣으세요. 자동 처리돼요.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="background:#fef3c7;border:1px solid #fde68a;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:12px;color:#92400e">
+        <strong>⚠ CORS 안내:</strong> 브라우저에서 Notion API 직접 호출이 차단돼요.<br>
+        <strong>→ Make Webhook(위 섹션)을 설정하면</strong> Make를 통해 Notion에 자동 전송돼요. (가장 쉬운 방법!)<br>
+        <strong>→ Proxy URL</strong>이 있으면 직접 연동 가능 (n8n, Cloudflare Worker 등)
       </div>
       <!-- Proxy URL -->
       <div class="settings-row">
@@ -366,11 +423,47 @@ h1{font-size:22px;font-weight:600;color:#1a1a1a}
         <input class="settings-inp" id="notion-token" type="password" placeholder="secret_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx">
       </div>
       <!-- DB ID 설정 -->
-      <div style="margin:10px 0 6px;font-size:12px;color:#888;font-weight:600">📋 Notion Database IDs</div>
-      <div class="settings-row"><label>태스크 DB</label><input class="settings-inp" id="notion-task-db" placeholder="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"></div>
-      <div class="settings-row"><label>재고 DB</label><input class="settings-inp" id="notion-inv-db" placeholder="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"></div>
-      <div class="settings-row"><label>입고 DB</label><input class="settings-inp" id="notion-inc-db" placeholder="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"></div>
-      <div class="settings-row"><label>완료프로젝트 DB</label><input class="settings-inp" id="notion-cp-db" placeholder="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"></div>
+      <div style="margin:10px 0 6px;font-size:12px;color:#888;font-weight:600">📋 Notion Database IDs <span style="font-weight:400;color:#aaa">— DB ID 입력 후 🔍 버튼으로 속성 자동 감지</span></div>
+
+      <!-- 태스크 DB -->
+      <div class="settings-row" style="align-items:flex-start;flex-direction:column;gap:6px">
+        <div style="display:flex;align-items:center;gap:8px;width:100%">
+          <label style="min-width:100px">태스크 DB</label>
+          <input class="settings-inp" id="notion-task-db" placeholder="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" style="flex:1">
+          <button onclick="detectDbProps('task')" style="height:34px;padding:0 12px;border-radius:8px;border:1px solid #93c5fd;background:#dbeafe;color:#1e40af;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">🔍 속성 감지</button>
+        </div>
+        <div id="notion-task-map" style="display:none;width:100%;margin-top:2px"></div>
+      </div>
+
+      <!-- 재고 DB -->
+      <div class="settings-row" style="align-items:flex-start;flex-direction:column;gap:6px">
+        <div style="display:flex;align-items:center;gap:8px;width:100%">
+          <label style="min-width:100px">재고 DB</label>
+          <input class="settings-inp" id="notion-inv-db" placeholder="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" style="flex:1">
+          <button onclick="detectDbProps('inventory')" style="height:34px;padding:0 12px;border-radius:8px;border:1px solid #93c5fd;background:#dbeafe;color:#1e40af;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">🔍 속성 감지</button>
+        </div>
+        <div id="notion-inventory-map" style="display:none;width:100%;margin-top:2px"></div>
+      </div>
+
+      <!-- 입고 DB -->
+      <div class="settings-row" style="align-items:flex-start;flex-direction:column;gap:6px">
+        <div style="display:flex;align-items:center;gap:8px;width:100%">
+          <label style="min-width:100px">입고 DB</label>
+          <input class="settings-inp" id="notion-inc-db" placeholder="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" style="flex:1">
+          <button onclick="detectDbProps('incoming')" style="height:34px;padding:0 12px;border-radius:8px;border:1px solid #93c5fd;background:#dbeafe;color:#1e40af;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">🔍 속성 감지</button>
+        </div>
+        <div id="notion-incoming-map" style="display:none;width:100%;margin-top:2px"></div>
+      </div>
+
+      <!-- 완료 프로젝트 DB -->
+      <div class="settings-row" style="align-items:flex-start;flex-direction:column;gap:6px">
+        <div style="display:flex;align-items:center;gap:8px;width:100%">
+          <label style="min-width:100px">완료프로젝트 DB</label>
+          <input class="settings-inp" id="notion-cp-db" placeholder="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" style="flex:1">
+          <button onclick="detectDbProps('completed')" style="height:34px;padding:0 12px;border-radius:8px;border:1px solid #93c5fd;background:#dbeafe;color:#1e40af;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">🔍 속성 감지</button>
+        </div>
+        <div id="notion-completed-map" style="display:none;width:100%;margin-top:2px"></div>
+      </div>
       <!-- 자동저장 옵션 -->
       <div style="display:flex;align-items:center;gap:10px;margin:10px 0">
         <label style="font-size:12px;color:#888">자동 동기화</label>
@@ -1678,7 +1771,7 @@ function addTask(){
   const t={id:taskId++,name,assignee:document.getElementById('f-assignee').value.trim(),date:document.getElementById('f-date').value,priority:document.getElementById('f-pri').value,status:document.getElementById('f-status').value,comments:[],images:[],files:[]};
   tasks.push(t);document.getElementById('f-name').value='';document.getElementById('f-assignee').value='';
   sendSlack('📌 새 태스크: ['+t.name+'] 담당자: '+(t.assignee||'-'));
-  notionAutoSync('task',t);
+  notionAutoSyncWithMap('task',t);
   renderAll();
 }
 function deleteTask(id){if(confirm('태스크를 삭제할까요?')){tasks=tasks.filter(t=>t.id!==id);renderAll();}}
@@ -1688,7 +1781,7 @@ function addInventory(){
   const newQty=parseInt(document.getElementById('i-qty').value)||0;inventory.push({id:invId++,name,cat:document.getElementById('i-cat').value.trim()||'기타',qty:newQty,min:parseInt(document.getElementById('i-min').value)||0,unit:document.getElementById('i-unit').value.trim()||'개',memo:'',manager:document.getElementById('i-manager').value.trim(),stockQty:newQty,usedQty:0,usageLog:[],images:[],files:[]});
   document.getElementById('i-name').value='';document.getElementById('i-cat').value='';document.getElementById('i-qty').value='';document.getElementById('i-min').value='';document.getElementById('i-unit').value='';document.getElementById('i-manager').value='';
   const newItem=inventory[inventory.length-1];
-  notionAutoSync('inventory',newItem);
+  notionAutoSyncWithMap('inventory',newItem);
   renderInventory();saveData();
 }
 function deleteInv(id){if(confirm('품목을 삭제할까요?')){inventory=inventory.filter(i=>i.id!==id);renderInventory();saveData();}}
@@ -1698,7 +1791,7 @@ function addIncoming(){
   incoming.push({id:icId++,name,qty:parseInt(document.getElementById('ic-qty').value)||0,date:document.getElementById('ic-date').value,supplier:document.getElementById('ic-supplier').value.trim(),manager:document.getElementById('ic-manager').value.trim(),status:document.getElementById('ic-status').value});
   document.getElementById('ic-name').value='';document.getElementById('ic-qty').value='';document.getElementById('ic-supplier').value='';document.getElementById('ic-manager').value='';
   const newIc=incoming[incoming.length-1];
-  notionAutoSync('incoming',newIc);
+  notionAutoSyncWithMap('incoming',newIc);
   renderIncomingCal();saveData();
 }
 function deleteIncoming(id){if(confirm('입고 항목을 삭제할까요?')){incoming=incoming.filter(i=>i.id!==id);renderIncomingCal();saveData();}}
@@ -1707,7 +1800,7 @@ function addCompleted(){
   completedProjects.unshift({id:cpId++,name,team:document.getElementById('cp-team').value.trim()||'-',startDate:document.getElementById('cp-start').value||'-',endDate:document.getElementById('cp-end').value||'-',tasks:[],result:document.getElementById('cp-result').value.trim(),comments:[],images:[],files:[]});
   document.getElementById('cp-name').value='';document.getElementById('cp-team').value='';document.getElementById('cp-start').value='';document.getElementById('cp-end').value='';document.getElementById('cp-result').value='';
   const newCp=completedProjects[0];
-  notionAutoSync('completed',newCp);
+  notionAutoSyncWithMap('completed',newCp);
   renderCompleted();saveData();
 }
 function tcPrev(){tcMonth--;if(tcMonth<0){tcMonth=11;tcYear--;}renderTaskCal();}
@@ -1735,7 +1828,372 @@ function switchSub(name,el){
 }
 
 
-// ========== NOTION 직접 연동 ==========
+// ========== NOTION DB 속성 자동 감지 + 매핑 ==========
+
+// 앱 필드 정의 (각 타입별)
+const APP_FIELDS = {
+  task: [
+    {key:'name',      label:'태스크명',   types:['title']},
+    {key:'assignee',  label:'담당자',     types:['rich_text','people']},
+    {key:'status',    label:'상태',       types:['select','status']},
+    {key:'priority',  label:'우선순위',   types:['select']},
+    {key:'date',      label:'마감일',     types:['date']},
+    {key:'progress',  label:'진행률',     types:['number']},
+  ],
+  inventory: [
+    {key:'name',      label:'품목명',     types:['title']},
+    {key:'cat',       label:'카테고리',   types:['rich_text','select']},
+    {key:'manager',   label:'담당자',     types:['rich_text','people']},
+    {key:'stockQty',  label:'재고수량',   types:['number']},
+    {key:'usedQty',   label:'사용수량',   types:['number']},
+    {key:'qty',       label:'현재수량',   types:['number']},
+    {key:'min',       label:'최소기준',   types:['number']},
+    {key:'unit',      label:'단위',       types:['rich_text','select']},
+    {key:'stockSt',   label:'재고상태',   types:['select','status']},
+  ],
+  incoming: [
+    {key:'name',      label:'품목명',     types:['title']},
+    {key:'qty',       label:'수량',       types:['number']},
+    {key:'date',      label:'입고예정일', types:['date']},
+    {key:'supplier',  label:'공급업체',   types:['rich_text']},
+    {key:'manager',   label:'담당자',     types:['rich_text','people']},
+    {key:'status',    label:'상태',       types:['select','status']},
+  ],
+  completed: [
+    {key:'name',      label:'프로젝트명', types:['title']},
+    {key:'team',      label:'팀',         types:['rich_text','select']},
+    {key:'startDate', label:'시작일',     types:['date']},
+    {key:'endDate',   label:'종료일',     types:['date']},
+    {key:'result',    label:'결과요약',   types:['rich_text']},
+    {key:'taskCount', label:'태스크수',   types:['number']},
+  ],
+};
+
+// DB ID 입력 필드 맵
+const DB_ID_MAP = {
+  task: 'notion-task-db',
+  inventory: 'notion-inv-db',
+  incoming: 'notion-inc-db',
+  completed: 'notion-cp-db',
+};
+
+// 저장된 매핑 {task:{name:'이름', assignee:'담당자', ...}, ...}
+let notionFieldMap = {};
+
+function loadNotionFieldMap(){
+  try{
+    const s=localStorage.getItem('pm_notion_fieldmap');
+    if(s)notionFieldMap=JSON.parse(s);
+  }catch(e){}
+}
+function saveNotionFieldMap(){
+  localStorage.setItem('pm_notion_fieldmap',JSON.stringify(notionFieldMap));
+}
+
+// Notion DB 속성 감지
+async function detectDbProps(type){
+  const dbIdInput = document.getElementById(DB_ID_MAP[type]);
+  const dbId = dbIdInput ? dbIdInput.value.trim() : '';
+  if(!dbId){alert('DB ID를 먼저 입력해주세요!');return;}
+  if(!notionSettings.token){alert('API Token을 먼저 입력하고 저장해주세요!');return;}
+
+  const mapEl = document.getElementById('notion-'+type+'-map');
+  mapEl.style.display='block';
+  mapEl.innerHTML = `<div style="padding:10px 14px;background:#f0f7ff;border:1px solid #bfdbfe;border-radius:8px;font-size:12px;color:#1e40af">🔍 Notion DB 속성 불러오는 중...</div>`;
+
+  let props = null;
+  try{
+    const result = await notionApiCall('databases/'+dbId.replace(/-/g,''),'GET',null);
+    if(result && result.properties){
+      props = result.properties;
+    } else if(result && result.via==='make'){
+      // Make를 통한 경우 실제 속성 가져오기 불가 → 수동 입력 모드
+      renderManualMappingUI(type, mapEl);
+      return;
+    } else {
+      throw new Error('속성을 가져올 수 없어요.');
+    }
+  }catch(e){
+    // Proxy 없이 Make 웹훅만 있는 경우 → 수동 입력 모드
+    if(e.message.includes('Proxy URL') || e.message.includes('make')){
+      renderManualMappingUI(type, mapEl);
+    } else {
+      mapEl.innerHTML=`<div style="padding:10px 14px;background:#fef2f2;border:1px solid #fca5a5;border-radius:8px;font-size:12px;color:#991b1b">
+        ❌ 속성 감지 실패: ${e.message}<br>
+        <span style="color:#888;margin-top:4px;display:block">Proxy URL을 설정하거나 아래에서 수동으로 입력하세요.</span>
+        <button onclick="renderManualMappingUI('${type}',document.getElementById('notion-${type}-map'))" style="margin-top:8px;height:28px;padding:0 12px;border-radius:6px;border:1px solid #ddd;background:#fff;cursor:pointer;font-size:12px">✏ 수동 입력으로 전환</button>
+      </div>`;
+    }
+    return;
+  }
+
+  renderAutoMappingUI(type, mapEl, props);
+}
+
+// 자동 감지된 속성으로 매핑 UI 렌더링
+function renderAutoMappingUI(type, container, notionProps){
+  const appFields = APP_FIELDS[type];
+  const notionPropNames = Object.keys(notionProps);
+  const typeIcons = {title:'🔤',rich_text:'📝',number:'🔢',select:'📌',multi_select:'🏷',date:'📅',people:'👤',status:'🚦',checkbox:'☑',url:'🔗',email:'✉',phone_number:'📞'};
+
+  // 자동 매핑 시도 (유사 이름 매칭)
+  if(!notionFieldMap[type]) notionFieldMap[type]={};
+  appFields.forEach(f=>{
+    if(notionFieldMap[type][f.key]) return; // 이미 저장된 매핑 유지
+    // 먼저 타입이 맞는 속성 중 이름이 유사한 것 찾기
+    const candidates = notionPropNames.filter(n=>{
+      const ptype = notionProps[n].type;
+      return f.types.includes(ptype);
+    });
+    // 한글/영문 이름 유사도 매핑
+    const labelLower = f.label.toLowerCase();
+    const keyLower = f.key.toLowerCase();
+    let matched = candidates.find(n=>{
+      const nl = n.toLowerCase();
+      return nl===labelLower || nl===keyLower || nl.includes(labelLower) || labelLower.includes(nl) || nl.includes(keyLower);
+    });
+    if(matched) notionFieldMap[type][f.key] = matched;
+  });
+
+  const rows = appFields.map(f=>{
+    const currentVal = notionFieldMap[type]?.[f.key] || '';
+    const options = notionPropNames.map(n=>{
+      const ptype = notionProps[n].type;
+      const icon = typeIcons[ptype]||'•';
+      const isRecommended = f.types.includes(ptype);
+      return `<option value="${n}" ${currentVal===n?'selected':''} ${isRecommended?'':'style="color:#aaa"'}>${icon} ${n} (${ptype})</option>`;
+    }).join('');
+    const isAutoMatched = !!notionFieldMap[type]?.[f.key];
+    return `
+      <tr>
+        <td style="padding:6px 10px;font-size:12px;font-weight:600;color:#555;white-space:nowrap;min-width:90px">${f.label}</td>
+        <td style="padding:6px 4px;font-size:11px;color:#aaa;text-align:center">→</td>
+        <td style="padding:6px 4px;width:100%">
+          <select onchange="updateFieldMap('${type}','${f.key}',this.value)"
+            style="width:100%;font-size:12px;padding:5px 8px;border-radius:6px;border:1px solid ${isAutoMatched?'#86efac':'#e5e5e5'};background:${isAutoMatched?'#f0fdf4':'#fff'};outline:none;color:#1a1a1a">
+            <option value="">— 매핑 안 함 —</option>
+            ${options}
+          </select>
+        </td>
+        <td style="padding:6px 4px;font-size:11px;white-space:nowrap;padding-left:6px">
+          ${isAutoMatched?'<span style="color:#166534;font-weight:600">✓ 자동</span>':'<span style="color:#aaa">미매핑</span>'}
+        </td>
+      </tr>`;
+  }).join('');
+
+  container.innerHTML = `
+    <div style="background:#f8faff;border:1px solid #dbeafe;border-radius:10px;padding:12px 14px;margin-top:4px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <span style="font-size:12px;font-weight:600;color:#1e40af">📋 필드 매핑 — Notion DB 속성 ${Object.keys(notionProps).length}개 감지됨</span>
+        <div style="display:flex;gap:6px">
+          <button onclick="saveFieldMapping('${type}')" style="height:28px;padding:0 12px;border-radius:6px;border:none;background:#1e40af;color:#fff;font-size:11px;font-weight:600;cursor:pointer">💾 매핑 저장</button>
+          <button onclick="resetFieldMapping('${type}')" style="height:28px;padding:0 10px;border-radius:6px;border:1px solid #ddd;background:#fff;font-size:11px;cursor:pointer;color:#888">초기화</button>
+        </div>
+      </div>
+      <div style="font-size:11px;color:#888;margin-bottom:8px">✅ 자동 매핑된 항목은 초록색으로 표시돼요. 드롭다운에서 직접 변경 가능해요.</div>
+      <div style="overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse">${rows}</table>
+      </div>
+      <div id="map-save-msg-${type}" style="display:none;margin-top:8px;font-size:12px;color:#166534;font-weight:600">✅ 매핑이 저장됐어요!</div>
+    </div>`;
+
+  saveNotionFieldMap();
+  addLog('🔍 Notion ['+type+'] DB 속성 감지 완료: '+Object.keys(notionProps).length+'개');
+}
+
+// 수동 입력 매핑 UI (Proxy 없는 경우)
+function renderManualMappingUI(type, container){
+  const appFields = APP_FIELDS[type];
+  if(!notionFieldMap[type]) notionFieldMap[type]={};
+
+  const rows = appFields.map(f=>{
+    const currentVal = notionFieldMap[type]?.[f.key] || '';
+    return `
+      <tr>
+        <td style="padding:6px 10px;font-size:12px;font-weight:600;color:#555;white-space:nowrap;min-width:90px">${f.label}</td>
+        <td style="padding:6px 4px;font-size:11px;color:#aaa;text-align:center">→</td>
+        <td style="padding:6px 4px;width:100%">
+          <input value="${currentVal}" placeholder="Notion 속성 이름 입력 (예: 이름, Name)" 
+            onchange="updateFieldMap('${type}','${f.key}',this.value)"
+            style="width:100%;font-size:12px;padding:5px 8px;border-radius:6px;border:1px solid #e5e5e5;outline:none;color:#1a1a1a">
+        </td>
+        <td style="padding:6px 4px;font-size:11px;color:#aaa;white-space:nowrap;padding-left:6px">권장: ${f.types.join('/')}</td>
+      </tr>`;
+  }).join('');
+
+  container.innerHTML = `
+    <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:12px 14px;margin-top:4px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <span style="font-size:12px;font-weight:600;color:#92400e">✏ 수동 필드 매핑 <span style="font-weight:400;font-size:11px">(Proxy URL 없이 Make Webhook 사용 중)</span></span>
+        <button onclick="saveFieldMapping('${type}')" style="height:28px;padding:0 12px;border-radius:6px;border:none;background:#92400e;color:#fff;font-size:11px;font-weight:600;cursor:pointer">💾 저장</button>
+      </div>
+      <div style="font-size:11px;color:#888;margin-bottom:8px">Notion DB의 속성(컬럼) 이름을 정확히 입력해주세요. 대소문자와 띄어쓰기를 일치시켜야 해요.</div>
+      <table style="width:100%;border-collapse:collapse">${rows}</table>
+      <div id="map-save-msg-${type}" style="display:none;margin-top:8px;font-size:12px;color:#166534;font-weight:600">✅ 매핑이 저장됐어요!</div>
+    </div>`;
+}
+
+function updateFieldMap(type, key, val){
+  if(!notionFieldMap[type]) notionFieldMap[type]={};
+  if(val) notionFieldMap[type][key]=val;
+  else delete notionFieldMap[type][key];
+}
+
+function saveFieldMapping(type){
+  saveNotionFieldMap();
+  const msg=document.getElementById('map-save-msg-'+type);
+  if(msg){msg.style.display='block';setTimeout(()=>msg.style.display='none',2000);}
+  addLog('💾 Notion ['+type+'] 필드 매핑 저장 완료');
+}
+
+function resetFieldMapping(type){
+  if(!confirm('이 DB의 매핑을 초기화할까요?'))return;
+  notionFieldMap[type]={};
+  saveNotionFieldMap();
+  const mapEl=document.getElementById('notion-'+type+'-map');
+  if(mapEl)mapEl.innerHTML='';
+  addLog('🔄 Notion ['+type+'] 필드 매핑 초기화');
+}
+
+// 매핑된 필드를 사용해 Notion 속성 빌드
+function buildNotionPropsWithMap(type, data){
+  const fieldMap = notionFieldMap[type];
+  // 매핑이 없으면 기본 속성 함수 사용
+  if(!fieldMap || Object.keys(fieldMap).length===0){
+    const defaults={task:taskToNotionProps,inventory:invToNotionProps,incoming:incToNotionProps,completed:cpToNotionProps};
+    return defaults[type]?.(data);
+  }
+
+  const props={};
+  const appFields=APP_FIELDS[type];
+
+  appFields.forEach(f=>{
+    const notionKey=fieldMap[f.key];
+    if(!notionKey) return;
+    let val=data[f.key];
+    if(val===undefined||val===null) return;
+
+    // title
+    if(f.key==='name'||f.key==='name'){
+      props[notionKey]={title:[{text:{content:String(val)}}]};
+    }
+    // number
+    else if(['stockQty','usedQty','qty','min','progress','taskCount'].includes(f.key)){
+      props[notionKey]={number:Number(val)||0};
+    }
+    // date
+    else if(['date','startDate','endDate'].includes(f.key)){
+      props[notionKey]={date:val&&val!=='-'?{start:val}:null};
+    }
+    // select (상태, 우선순위 등)
+    else if(f.key==='status'&&type==='task'){
+      const labels={todo:'할 일',inprogress:'진행 중',review:'검토 중',done:'완료'};
+      props[notionKey]={select:{name:labels[val]||val}};
+    }
+    else if(f.key==='priority'){
+      const labels={high:'높음',mid:'중간',low:'낮음'};
+      props[notionKey]={select:{name:labels[val]||val}};
+    }
+    else if(f.key==='status'&&type==='incoming'){
+      const labels={scheduled:'예정',confirmed:'확정',arrived:'입고완료'};
+      props[notionKey]={select:{name:labels[val]||val}};
+    }
+    else if(f.key==='stockSt'){
+      props[notionKey]={select:{name:val<=0?'품절':val<=data.min?'부족':'정상'}};
+    }
+    // rich_text (나머지)
+    else{
+      props[notionKey]={rich_text:[{text:{content:String(val||'')}}]};
+    }
+  });
+
+  return props;
+}
+
+// notionCreatePage를 매핑 기반으로 오버라이드
+async function notionAutoSyncWithMap(type, data){
+  if(!notionSettings.autoSync) return;
+  const dbMap={task:notionSettings.taskDb,inventory:notionSettings.invDb,incoming:notionSettings.incDb,completed:notionSettings.cpDb};
+  const dbId=dbMap[type];if(!dbId)return;
+  try{
+    const props=buildNotionPropsWithMap(type,data);
+    await notionCreatePage(dbId,props);
+    addLog('📋 Notion 자동 동기화: ['+type+'] '+(data.name||''));
+  }catch(e){addLog('❌ Notion 동기화 실패: '+e.message);}
+}
+
+// 전체 동기화도 매핑 기반으로 업데이트
+async function notionSyncAll(){
+  if(!notionSettings.token){alert('먼저 Notion API Token을 입력하고 저장해주세요!');return;}
+  const prog=document.getElementById('notion-sync-progress');
+  prog.style.display='block';
+  prog.innerHTML='🔄 동기화 시작...';
+  let success=0,fail=0;
+
+  async function syncList(list,dbId,type,label){
+    if(!dbId){prog.innerHTML+=`<br>⏭ ${label} DB ID 미설정, 건너뜀`;return;}
+    prog.innerHTML+=`<br>📤 ${label} 동기화 중... (${list.length}건)`;
+    for(const item of list){
+      try{
+        const props=buildNotionPropsWithMap(type,item);
+        await notionCreatePage(dbId,props);
+        success++;
+      }catch(e){fail++;addLog('❌ Notion ['+label+'] 실패: '+item.name+' — '+e.message);}
+      await new Promise(r=>setTimeout(r,350));
+    }
+    prog.innerHTML+=` ✅ ${label} 완료`;
+  }
+
+  try{
+    await syncList(tasks,notionSettings.taskDb,'task','태스크');
+    await syncList(inventory,notionSettings.invDb,'inventory','재고');
+    await syncList(incoming,notionSettings.incDb,'incoming','입고');
+    await syncList(completedProjects,notionSettings.cpDb,'completed','완료 프로젝트');
+  }catch(e){prog.innerHTML+=`<br>❌ 오류: `+e.message;}
+
+  const now=new Date().toLocaleString('ko-KR');
+  notionSettings.lastSync=now;
+  localStorage.setItem('pm_notion',JSON.stringify(notionSettings));
+  const lastEl=document.getElementById('notion-last-sync');
+  if(lastEl)lastEl.textContent='마지막 동기화: '+now;
+  prog.innerHTML+=`<br><br>✅ 동기화 완료 — 성공 ${success}건 / 실패 ${fail}건`;
+  addLog('📋 Notion 전체 동기화 완료: 성공 '+success+', 실패 '+fail);
+  setTimeout(()=>{prog.style.display='none';},8000);
+}
+
+function renderSavedMappingUI(type, container, fieldMap){
+  const appFields=APP_FIELDS[type];
+  const rows=appFields.map(f=>{
+    const val=fieldMap[f.key]||'';
+    return `<tr>
+      <td style="padding:5px 10px;font-size:12px;font-weight:600;color:#555;white-space:nowrap">${f.label}</td>
+      <td style="padding:5px 4px;font-size:11px;color:#aaa;text-align:center">→</td>
+      <td style="padding:5px 4px">
+        <input value="${val}" placeholder="Notion 속성 이름"
+          onchange="updateFieldMap('${type}','${f.key}',this.value)"
+          style="width:100%;font-size:12px;padding:5px 8px;border-radius:6px;border:1px solid ${val?'#86efac':'#e5e5e5'};background:${val?'#f0fdf4':'#fff'};outline:none;color:#1a1a1a">
+      </td>
+      <td style="padding:5px 4px;font-size:11px;white-space:nowrap;padding-left:6px">${val?'<span style="color:#166534;font-weight:600">✓</span>':'<span style="color:#aaa">-</span>'}</td>
+    </tr>`;
+  }).join('');
+  container.style.display='block';
+  container.innerHTML=`
+    <div style="background:#f8faff;border:1px solid #dbeafe;border-radius:10px;padding:12px 14px;margin-top:4px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <span style="font-size:12px;font-weight:600;color:#1e40af">📋 저장된 필드 매핑</span>
+        <div style="display:flex;gap:6px">
+          <button onclick="detectDbProps('${type}')" style="height:28px;padding:0 12px;border-radius:6px;border:1px solid #93c5fd;background:#dbeafe;color:#1e40af;font-size:11px;font-weight:600;cursor:pointer">🔍 재감지</button>
+          <button onclick="saveFieldMapping('${type}')" style="height:28px;padding:0 12px;border-radius:6px;border:none;background:#1e40af;color:#fff;font-size:11px;font-weight:600;cursor:pointer">💾 저장</button>
+          <button onclick="resetFieldMapping('${type}')" style="height:28px;padding:0 10px;border-radius:6px;border:1px solid #ddd;background:#fff;font-size:11px;cursor:pointer;color:#888">초기화</button>
+        </div>
+      </div>
+      <table style="width:100%;border-collapse:collapse">${rows}</table>
+      <div id="map-save-msg-${type}" style="display:none;margin-top:8px;font-size:12px;color:#166534;font-weight:600">✅ 저장됐어요!</div>
+    </div>`;
+}
+
+// ========== NOTION DB 속성 자동 감지 끝 ==========
+
 let notionSettings={token:'',proxyUrl:'',taskDb:'',invDb:'',incDb:'',cpDb:'',autoSync:false};
 
 function saveNotionSettings(){
@@ -1756,6 +2214,7 @@ function loadNotionSettings(){
   if(saved){
     try{notionSettings={...notionSettings,...JSON.parse(saved)};}catch(e){}
   }
+  loadNotionFieldMap();
   updateNotionSettingsUI();
 }
 
@@ -1769,6 +2228,16 @@ function updateNotionSettingsUI(){
   if(f('notion-cp-db'))f('notion-cp-db').value=notionSettings.cpDb||'';
   if(f('notion-auto-sync'))f('notion-auto-sync').checked=!!notionSettings.autoSync;
   updateNotionStatus();
+  // 저장된 매핑이 있으면 수동 UI로 복원
+  ['task','inventory','incoming','completed'].forEach(type=>{
+    const m=notionFieldMap[type];
+    if(m&&Object.keys(m).length>0){
+      const mapEl=document.getElementById('notion-'+type+'-map');
+      if(mapEl&&mapEl.innerHTML===''){
+        renderSavedMappingUI(type,mapEl,m);
+      }
+    }
+  });
 }
 
 function updateNotionStatus(){
