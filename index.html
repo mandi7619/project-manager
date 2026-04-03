@@ -87,7 +87,7 @@ h1{font-size:22px;font-weight:600;color:#1a1a1a}
 .ccell.today{border:2px solid #4f90e5}
 .cnum{font-size:11px;color:#aaa;margin-bottom:4px;font-weight:500}
 .ccell.today .cnum{color:#1e40af;font-weight:700}
-.cchip{font-size:10px;padding:2px 5px;border-radius:3px;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cchip{font-size:10px;padding:2px 5px;border-radius:3px;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
 .chip-high{background:#fee2e2;color:#991b1b}
 .chip-mid{background:#fef3c7;color:#92400e}
 .chip-low{background:#dcfce7;color:#166534}
@@ -174,6 +174,7 @@ h1{font-size:22px;font-weight:600;color:#1a1a1a}
     <div class="top-tab active" onclick="goPage('project',this)">프로젝트 관리</div>
     <div class="top-tab" onclick="goPage('inventory',this)">재고 관리</div>
     <div class="top-tab" onclick="goPage('incoming',this)">입고 캘린더</div>
+    <div class="top-tab" onclick="goPage('inhistory',this)">입고 이력</div>
     <div class="top-tab" onclick="goPage('completed',this)">완료 프로젝트</div>
   </div>
 
@@ -215,13 +216,13 @@ h1{font-size:22px;font-weight:600;color:#1a1a1a}
     <div class="add-form">
       <div class="fg"><label>품목명</label><input id="i-name" placeholder="품목명" style="width:120px"></div>
       <div class="fg"><label>카테고리</label><input id="i-cat" placeholder="카테고리" style="width:90px"></div>
-      <div class="fg"><label>현재 재고</label><input type="number" id="i-qty" placeholder="0" style="width:72px" min="0"></div>
-      <div class="fg"><label>최소 재고</label><input type="number" id="i-min" placeholder="0" style="width:72px" min="0"></div>
+      <div class="fg"><label>재고수량</label><input type="number" id="i-qty" placeholder="0" style="width:72px" min="0"></div>
+      <div class="fg"><label>최소기준</label><input type="number" id="i-min" placeholder="0" style="width:72px" min="0"></div>
       <div class="fg"><label>단위</label><input id="i-unit" placeholder="개/박스" style="width:64px"></div>
       <div class="fg"><label>담당자</label><input id="i-manager" placeholder="담당자" style="width:80px"></div>
       <button class="btn btn-primary" onclick="addInventory()">+ 품목 추가</button>
     </div>
-    <div class="tbl-wrap"><table class="tbl"><thead><tr><th>품목명</th><th>카테고리</th><th>담당자</th><th>현재 재고</th><th>최소 재고</th><th>상태</th><th>재고량</th><th>조정</th><th></th></tr></thead><tbody id="inv-body"></tbody></table></div>
+    <div class="tbl-wrap"><table class="tbl"><thead><tr><th>품목명</th><th>카테고리</th><th>담당자</th><th>재고수량</th><th>사용수량</th><th>현재수량</th><th>최소기준</th><th>상태</th><th>사용기록</th><th></th></tr></thead><tbody id="inv-body"></tbody></table></div>
     <div style="margin-top:20px"><div style="font-size:14px;font-weight:600;margin-bottom:14px">재고 현황 그래프</div><div id="inv-chart"></div></div>
   </div>
 
@@ -231,7 +232,8 @@ h1{font-size:22px;font-weight:600;color:#1a1a1a}
       <div class="fg"><label>수량</label><input type="number" id="ic-qty" placeholder="0" style="width:72px" min="1"></div>
       <div class="fg"><label>입고 예정일</label><input type="date" id="ic-date" style="width:135px"></div>
       <div class="fg"><label>공급업체</label><input id="ic-supplier" placeholder="공급업체" style="width:100px"></div>
-      <div class="fg"><label>상태</label><select id="ic-status"><option value="scheduled">예정</option><option value="confirmed">확정</option><option value="arrived">입고 완료</option></select></div>
+      <div class="fg"><label>담당자</label><input id="ic-manager" placeholder="담당자" style="width:80px"></div>
+      <div class="fg"><label>상태</label><select id="ic-status"><option value="scheduled">예정</option><option value="confirmed">확정</option></select></div>
       <button class="btn btn-primary" onclick="addIncoming()">+ 입고 추가</button>
     </div>
     <div class="cal-nav"><button class="cal-nb" onclick="icPrev()">&#8249;</button><span class="cal-mo" id="ic-month"></span><button class="cal-nb" onclick="icNext()">&#8250;</button></div>
@@ -240,7 +242,19 @@ h1{font-size:22px;font-weight:600;color:#1a1a1a}
     <div class="cdetail" id="ic-detail">날짜를 클릭하면 입고 예정 품목을 확인할 수 있어요.</div>
     <div style="height:20px"></div>
     <div style="font-size:12px;font-weight:600;color:#888;margin-bottom:10px;text-transform:uppercase;letter-spacing:0.04em">입고 전체 목록</div>
-    <div class="tbl-wrap"><table class="tbl"><thead><tr><th>품목명</th><th>수량</th><th>입고 예정일</th><th>공급업체</th><th>상태</th><th></th></tr></thead><tbody id="ic-list-body"></tbody></table></div>
+    <div class="tbl-wrap"><table class="tbl"><thead><tr><th>품목명</th><th>수량</th><th>입고 예정일</th><th>공급업체</th><th>담당자</th><th>상태</th><th></th></tr></thead><tbody id="ic-list-body"></tbody></table></div>
+  </div>
+
+  <!-- 입고 이력 -->
+  <div id="page-inhistory" class="page">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+      <div style="font-size:15px;font-weight:600;color:#1a1a1a">입고 이력</div>
+      <span style="font-size:12px;color:#888">완료된 입고 내역이에요. 취소 시 재고에서 차감됩니다.</span>
+    </div>
+    <div class="tbl-wrap"><table class="tbl">
+      <thead><tr><th>품목명</th><th>수량</th><th>입고일</th><th>공급업체</th><th>재고 반영일</th><th></th></tr></thead>
+      <tbody id="inhistory-body"></tbody>
+    </table></div>
   </div>
 
   <div id="page-completed" class="page">
@@ -270,6 +284,40 @@ h1{font-size:22px;font-weight:600;color:#1a1a1a}
     </div>
 
     <!-- 👥 팀원 이메일 -->
+    <div class="settings-section">
+      <div class="settings-title">✉ 이메일 발송 문구 설정</div>
+      <div class="settings-desc">@멘션 시 발송되는 이메일의 제목과 본문을 직접 수정할 수 있어요.<br>
+        <code style="background:#f0f0f0;padding:2px 5px;border-radius:4px;font-size:11px">{회사명}</code>
+        <code style="background:#f0f0f0;padding:2px 5px;border-radius:4px;font-size:11px">{이름}</code>
+        <code style="background:#f0f0f0;padding:2px 5px;border-radius:4px;font-size:11px">{태스크}</code>
+        <code style="background:#f0f0f0;padding:2px 5px;border-radius:4px;font-size:11px">{내용}</code> 변수를 사용할 수 있어요.
+      </div>
+      <div class="settings-row">
+        <label>이메일 제목</label>
+        <input class="settings-inp" id="email-subject-tpl" placeholder="{회사명}의 업무요청이 왔습니다.">
+      </div>
+      <div style="margin-bottom:10px">
+        <label style="font-size:12px;color:#888;display:block;margin-bottom:6px">이메일 본문</label>
+        <textarea id="email-body-tpl" style="width:100%;min-height:120px;font-size:12px;border:1px solid #ddd;border-radius:8px;padding:10px;resize:vertical;font-family:inherit;outline:none;color:#1a1a1a" placeholder="{이름}님, 안녕하세요.
+
+{회사명}에서 업무 요청드립니다.
+
+━━━━━━━━━━━━━━━━━━━━
+태스크: {태스크}
+내용: {내용}
+━━━━━━━━━━━━━━━━━━━━
+
+확인 후 회신 부탁드립니다.
+
+감사합니다.
+{회사명}"></textarea>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-primary" onclick="saveEmailTemplate()">저장</button>
+        <button class="btn" onclick="resetEmailTemplate()">기본값으로 초기화</button>
+      </div>
+    </div>
+
     <div class="settings-section">
       <div class="settings-title">👥 팀원 이메일 관리</div>
       <div class="settings-desc">팀원 이름과 이메일을 등록하면 @멘션 시 자동으로 업무 요청 이메일이 발송돼요.</div>
@@ -403,7 +451,7 @@ h1{font-size:22px;font-weight:600;color:#1a1a1a}
     <div class="side-sec">
       <div class="side-sec-title">메모 / 코멘트</div>
       <div id="cpp-comments"></div>
-      <textarea class="memo-area" id="cpp-comment-input" placeholder="코멘트를 입력하세요..."></textarea>
+      <textarea class="memo-area" id="cpp-comment-input" placeholder="@이름 으로 멘션하면 업무 요청 메일이 자동 발송돼요"></textarea>
       <button class="btn" style="width:100%;margin-top:6px;font-size:12px" onclick="addCpComment()">+ 코멘트 추가</button>
     </div>
     <div class="side-sec">
@@ -429,22 +477,48 @@ h1{font-size:22px;font-weight:600;color:#1a1a1a}
       <div class="side-sec-title">기본 정보</div>
       <div class="side-row"><span class="side-lbl">품목명</span><input class="side-inp" id="ip-name"></div>
       <div class="side-row"><span class="side-lbl">카테고리</span><input class="side-inp" id="ip-cat"></div>
-      <div class="side-row"><span class="side-lbl">현재 재고</span><input type="number" class="side-inp" id="ip-qty" min="0"></div>
-      <div class="side-row"><span class="side-lbl">최소 재고</span><input type="number" class="side-inp" id="ip-min" min="0"></div>
       <div class="side-row"><span class="side-lbl">단위</span><input class="side-inp" id="ip-unit"></div>
+      <div class="side-row"><span class="side-lbl">최소기준</span><input type="number" class="side-inp" id="ip-min" min="0"></div>
       <div class="side-row"><span class="side-lbl">담당자</span><input class="side-inp" id="ip-manager" placeholder="담당자 이름"></div>
     </div>
     <div class="side-sec">
-      <div class="side-sec-title">수량 빠른 조정</div>
-      <div style="display:flex;gap:8px;align-items:center">
-        <button class="btn" style="flex:1;font-size:18px" onclick="quickAdjust(-1)">－</button>
-        <span id="ip-qty-display" style="font-size:22px;font-weight:600;min-width:60px;text-align:center"></span>
-        <button class="btn" style="flex:1;font-size:18px" onclick="quickAdjust(1)">＋</button>
+      <div class="side-sec-title">재고 현황</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px">
+        <div style="background:#dbeafe;border-radius:8px;padding:10px;text-align:center">
+          <div style="font-size:10px;color:#1e40af;margin-bottom:4px;font-weight:600">재고수량</div>
+          <div id="ip-stock-display" style="font-size:20px;font-weight:700;color:#1e40af">-</div>
+        </div>
+        <div style="background:#fee2e2;border-radius:8px;padding:10px;text-align:center">
+          <div style="font-size:10px;color:#991b1b;margin-bottom:4px;font-weight:600">사용수량</div>
+          <div id="ip-used-display" style="font-size:20px;font-weight:700;color:#991b1b">-</div>
+        </div>
+        <div style="background:#dcfce7;border-radius:8px;padding:10px;text-align:center">
+          <div style="font-size:10px;color:#166534;margin-bottom:4px;font-weight:600">현재수량</div>
+          <div id="ip-curr-display" style="font-size:20px;font-weight:700;color:#166534">-</div>
+        </div>
       </div>
+      <div style="display:flex;gap:8px;margin-top:2px"><button onclick="openAdjustPopup(currentInvId)" style="flex:1;height:32px;font-size:12px;border-radius:8px;border:1px solid #ddd;background:#f7f7f5;cursor:pointer;color:#555;font-weight:500">✏ 수량 수정</button><button onclick="sendLowStockEmail(currentInvId)" style="flex:1;height:32px;font-size:12px;border-radius:8px;border:none;background:#fef3c7;cursor:pointer;color:#92400e;font-weight:600">📧 부족 알림 메일</button></div>
     </div>
     <div class="side-sec">
-      <div class="side-sec-title">메모</div>
-      <textarea class="memo-area" id="ip-memo" placeholder="메모를 입력하세요..."></textarea>
+      <div class="side-sec-title">입고 기록</div>
+      <div id="ip-incoming-log"><div style="font-size:12px;color:#aaa;padding:8px 0">입고 기록이 없어요</div></div>
+    </div>
+    <div class="side-sec">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <div class="side-sec-title" style="margin-bottom:0">사용 기록</div>
+        <button onclick="openUsagePopup(currentInvId)" style="height:28px;font-size:11px;padding:0 10px;border-radius:6px;border:1px solid #fca5a5;background:#fee2e2;cursor:pointer;font-weight:600;color:#991b1b">+ 사용 추가</button>
+      </div>
+      <div id="ip-usage-log"><div style="font-size:12px;color:#aaa;padding:8px 0">사용 기록이 없어요</div></div>
+    </div>
+    <div class="side-sec">
+      <div class="side-sec-title">수량 수정 기록</div>
+      <div id="ip-adjust-log"><div style="font-size:12px;color:#aaa;padding:8px 0">수정 기록이 없어요</div></div>
+    </div>
+    <div class="side-sec">
+      <div class="side-sec-title">메모 / 코멘트</div>
+      <div id="ip-comments"></div>
+      <textarea class="memo-area" id="ip-memo" placeholder="@이름 으로 멘션하면 업무 요청 메일이 자동 발송돼요"></textarea>
+      <button class="btn" style="width:100%;margin-top:6px;font-size:12px" onclick="addInvComment()">+ 코멘트 추가</button>
     </div>
     <div class="side-sec">
       <div class="side-sec-title">사진 첨부</div>
@@ -457,6 +531,44 @@ h1{font-size:22px;font-weight:600;color:#1a1a1a}
       <div id="ip-files"></div>
     </div>
     <button class="save-panel-btn" onclick="saveInvPanel()">저장</button>
+  </div>
+</div>
+
+<!-- 입고 사이드패널 -->
+<div class="side-panel" id="incoming-panel">
+  <div class="side-hdr">
+    <span class="side-hdr-title" id="icp-title">입고 상세</span>
+    <button class="side-close" onclick="closePanel()">×</button>
+  </div>
+  <div class="side-body">
+    <div class="side-sec">
+      <div class="side-sec-title">입고 정보</div>
+      <div class="side-row"><span class="side-lbl">품목명</span><input class="side-inp" id="icp-name"></div>
+      <div class="side-row"><span class="side-lbl">수량</span><input type="number" class="side-inp" id="icp-qty" min="1"></div>
+      <div class="side-row"><span class="side-lbl">입고 예정일</span><input type="date" class="side-inp" id="icp-date"></div>
+      <div class="side-row"><span class="side-lbl">공급업체</span><input class="side-inp" id="icp-supplier"></div>
+      <div class="side-row"><span class="side-lbl">담당자</span><input class="side-inp" id="icp-manager" placeholder="담당자 이름"></div>
+      <div class="side-row"><span class="side-lbl">상태</span>
+        <select class="side-sel" id="icp-status" onchange="onPanelStatusChange(this.value)">
+          <option value="scheduled">예정</option>
+          <option value="confirmed">확정</option>
+          <option value="arrived">완료</option>
+        </select>
+      </div>
+    </div>
+    <div class="side-sec">
+      <div class="side-sec-title">재고 연동</div>
+      <div id="icp-stock-info" style="font-size:12px;color:#888;background:#f7f7f5;border-radius:8px;padding:12px">
+        상태를 <strong>완료</strong>로 변경하면 재고수량에 자동 합산돼요.
+      </div>
+    </div>
+    <div class="side-sec">
+      <div class="side-sec-title">메모 / 코멘트</div>
+      <div id="icp-comments"></div>
+      <textarea class="memo-area" id="icp-comment-input" placeholder="@이름 으로 멘션하면 업무 요청 메일이 자동 발송돼요"></textarea>
+      <button class="btn" style="width:100%;margin-top:6px;font-size:12px" onclick="addIcpComment()">+ 코멘트 추가</button>
+    </div>
+    <button class="save-panel-btn" onclick="saveIncomingPanel()">저장</button>
   </div>
 </div>
 
@@ -480,12 +592,12 @@ const SAMPLE_TASKS=[
   {id:11,name:'최종 런칭',assignee:'홍길동',date:'2026-04-15',priority:'high',status:'todo',comments:[],images:[],files:[]},
 ];
 const SAMPLE_INV=[
-  {id:1,name:'A4 용지',cat:'소모품',qty:150,min:50,unit:'박스',memo:'',manager:'',images:[],files:[]},
-  {id:2,name:'볼펜',cat:'소모품',qty:30,min:20,unit:'개',memo:'',manager:'',images:[],files:[]},
-  {id:3,name:'노트북 거치대',cat:'장비',qty:5,min:3,unit:'개',memo:'',manager:'',images:[],files:[]},
-  {id:4,name:'USB 허브',cat:'장비',qty:2,min:5,unit:'개',memo:'',manager:'',images:[],files:[]},
-  {id:5,name:'명함',cat:'인쇄물',qty:0,min:100,unit:'장',memo:'',manager:'',images:[],files:[]},
-  {id:6,name:'포스트잇',cat:'소모품',qty:80,min:30,unit:'개',memo:'',manager:'',images:[],files:[]},
+  {id:1,name:'A4 용지',cat:'소모품',qty:150,min:50,unit:'박스',memo:'',manager:'',stockQty:150,usedQty:0,usageLog:[],images:[],files:[]},
+  {id:2,name:'볼펜',cat:'소모품',qty:30,min:20,unit:'개',memo:'',manager:'',stockQty:30,usedQty:0,usageLog:[],images:[],files:[]},
+  {id:3,name:'노트북 거치대',cat:'장비',qty:5,min:3,unit:'개',memo:'',manager:'',stockQty:5,usedQty:0,usageLog:[],images:[],files:[]},
+  {id:4,name:'USB 허브',cat:'장비',qty:2,min:5,unit:'개',memo:'',manager:'',stockQty:2,usedQty:0,usageLog:[],images:[],files:[]},
+  {id:5,name:'명함',cat:'인쇄물',qty:0,min:100,unit:'장',memo:'',manager:'',stockQty:0,usedQty:0,usageLog:[],images:[],files:[]},
+  {id:6,name:'포스트잇',cat:'소모품',qty:80,min:30,unit:'개',memo:'',manager:'',stockQty:80,usedQty:0,usageLog:[],images:[],files:[]},
 ];
 const SAMPLE_IC=[
   {id:1,name:'USB 허브',qty:10,date:'2026-04-05',supplier:'테크몰',status:'confirmed'},
@@ -502,18 +614,20 @@ const SAMPLE_CP=[
 let tasks=[];let taskId=12;
 let inventory=[];let invId=7;
 let incoming=[];let icId=6;
+let incomingHistory=[];  // 완료된 입고 이력
 let completedProjects=[];let cpId=4;
 let tcYear=2026,tcMonth=3,icYear=2026,icMonth=3;
 let currentTaskId=null,currentInvId=null,currentCpId=null;
 let teamMembers=[];
 let notifyLog=[];
-let settings={slackUrl:'',companyName:'',makeWebhook:''};
+let settings={slackUrl:'',companyName:'',makeWebhook:'https://hook.eu1.make.com/xgxk2bjujxf8xa4odjqd6t9iwdtk3wn8',emailSubject:'',emailBody:''};
 
 function saveData(){
   try{
     localStorage.setItem('pm_tasks',JSON.stringify(tasks));
     localStorage.setItem('pm_inventory',JSON.stringify(inventory));
     localStorage.setItem('pm_incoming',JSON.stringify(incoming));
+    localStorage.setItem('pm_inhistory',JSON.stringify(incomingHistory));
     localStorage.setItem('pm_completed',JSON.stringify(completedProjects));
     localStorage.setItem('pm_ids',JSON.stringify({taskId,invId,icId,cpId}));
     localStorage.setItem('pm_team',JSON.stringify(teamMembers));
@@ -527,13 +641,14 @@ function loadData(){
     tasks=t?JSON.parse(t):JSON.parse(JSON.stringify(SAMPLE_TASKS));
     const i=localStorage.getItem('pm_inventory');
     inventory=i?JSON.parse(i):JSON.parse(JSON.stringify(SAMPLE_INV));
+    const ih=localStorage.getItem('pm_inhistory');if(ih)incomingHistory=JSON.parse(ih);
     const ic=localStorage.getItem('pm_incoming');
     incoming=ic?JSON.parse(ic):JSON.parse(JSON.stringify(SAMPLE_IC));
     const cp=localStorage.getItem('pm_completed');
     completedProjects=cp?JSON.parse(cp):JSON.parse(JSON.stringify(SAMPLE_CP));
     const ids=localStorage.getItem('pm_ids');if(ids){const o=JSON.parse(ids);taskId=o.taskId;invId=o.invId;icId=o.icId;cpId=o.cpId;}
     const tm=localStorage.getItem('pm_team');if(tm)teamMembers=JSON.parse(tm);
-    const st=localStorage.getItem('pm_settings');if(st)settings={...settings,...JSON.parse(st)};
+    const st=localStorage.getItem('pm_settings');if(st){const sv=JSON.parse(st);settings={...settings,...sv};if(!settings.makeWebhook)settings.makeWebhook='https://hook.eu1.make.com/xgxk2bjujxf8xa4odjqd6t9iwdtk3wn8';}
     const lg=localStorage.getItem('pm_log');if(lg)notifyLog=JSON.parse(lg);
     // 첫 로드 시 샘플 데이터 저장
     if(!t)saveData();
@@ -610,6 +725,8 @@ function updateSettingsStatus(){
   if(document.getElementById('slack-url'))document.getElementById('slack-url').value=settings.slackUrl||'';
   updateMakeStatus();
   if(document.getElementById('company-name'))document.getElementById('company-name').value=settings.companyName||'';
+  if(document.getElementById('email-subject-tpl'))document.getElementById('email-subject-tpl').value=settings.emailSubject||'';
+  if(document.getElementById('email-body-tpl'))document.getElementById('email-body-tpl').value=settings.emailBody||'';
   updateMakeStatus();
 }
 
@@ -632,71 +749,23 @@ function delTeamMember(i){if(confirm('팀원을 삭제할까요?')){teamMembers.
 function checkMentions(text,taskName){
   const mentions=text.match(/@(\S+)/g);if(!mentions)return;
   const company=settings.companyName||'업무 요청';
-  const results=[];
-  mentions.forEach(m=>{
-    const name=m.slice(1);
-    const member=teamMembers.find(tm=>tm.name===name);
-    results.push({name,email:member?member.email:null});
-    if(member&&member.email)sendToMake(name,member.email,taskName,text,company);
-  });
-  showMentionPopup(results,text,taskName,company);
-}
-
-function showMentionPopup(results,text,taskName,company){
-  const old=document.getElementById('mention-popup');if(old)old.remove();
-  const oldOv=document.getElementById('mention-overlay');if(oldOv)oldOv.remove();
-  const rows=results.map((r,i)=>{
-    if(r.email){
-      const subject=company+'의 업무요청이 왔습니다.';
-      const body=r.name+'님, 안녕하세요.\n\n'+company+'에서 업무 요청드립니다.\n\n━━━━━━━━━━━━━━━━━━━━\n태스크: '+taskName+'\n내용: '+text+'\n━━━━━━━━━━━━━━━━━━━━\n\n확인 후 회신 부탁드립니다.\n\n감사합니다.\n'+company;
-      return`<div style="background:#f7f7f5;border-radius:8px;padding:12px 14px;margin-bottom:10px">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-          <span style="font-size:13px;font-weight:600">@${r.name}</span>
-          <span style="font-size:11px;background:#dcfce7;color:#166534;padding:2px 8px;border-radius:20px;font-weight:600">등록됨</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
-          <span style="font-size:11px;color:#aaa;min-width:50px">이메일</span>
-          <span id="mention-email-${i}" style="font-size:13px;color:#4f90e5;flex:1">${r.email}</span>
-          <button onclick="copyMentionEmail('mention-email-${i}')" style="height:28px;font-size:11px;padding:0 10px;border-radius:6px;border:1px solid #e5e5e5;background:#fff;cursor:pointer;color:#555">복사</button>
-        </div>
-        <div style="display:flex;gap:6px">
-          <button onclick="window.location.href='mailto:${r.email}?subject='+encodeURIComponent('${subject}')+'&body='+encodeURIComponent('${body.replace(/'/g,"\\'")}');addLog('✉ 메일앱: ${r.name}');" style="flex:1;height:34px;border-radius:8px;border:1px solid #ddd;background:#fff;cursor:pointer;font-size:12px;color:#555">✉ 메일 앱</button>
-          <button onclick="window.open('https://mail.naver.com/compose?to=${r.email}&subject='+encodeURIComponent('${subject}'),'_blank');addLog('N 네이버: ${r.name}');" style="flex:1;height:34px;border-radius:8px;border:none;background:#03c75a;color:#fff;cursor:pointer;font-size:12px;font-weight:600">N 네이버</button>
-          <button onclick="window.open('https://mail.google.com/mail/?view=cm&to=${r.email}&su='+encodeURIComponent('${subject}')+'&body='+encodeURIComponent('${body.replace(/'/g,"\\'")}'),'_blank');addLog('G Gmail: ${r.name}');" style="flex:1;height:34px;border-radius:8px;border:none;background:#ea4335;color:#fff;cursor:pointer;font-size:12px;font-weight:600">G Gmail</button>
-        </div>
-      </div>`;
+  mentions.forEach(mention=>{
+    const name=mention.slice(1);
+    const member=teamMembers.find(m=>m.name===name);
+    if(member&&member.email){
+      sendToMake(name,member.email,taskName,text,company);
+      const {subject:subj,body:bod}=getEmailContent(name,taskName,text,company);
+      window.open('mailto:'+member.email+'?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(bod));
+      addLog('@멘션 메일: '+name+' ('+member.email+') → '+taskName);
     } else {
-      return`<div style="background:#fff8f8;border:1px solid #fca5a5;border-radius:8px;padding:12px 14px;margin-bottom:10px">
-        <div style="display:flex;align-items:center;justify-content:space-between">
-          <span style="font-size:13px;font-weight:600">@${r.name}</span>
-          <span style="font-size:11px;background:#fee2e2;color:#991b1b;padding:2px 8px;border-radius:20px;font-weight:600">이메일 미등록</span>
-        </div>
-        <div style="font-size:12px;color:#888;margin-top:6px">⚙️ 설정 → 팀원 이메일 관리에서 등록해주세요</div>
-      </div>`;
+      addLog('⚠ @'+name+' — 이메일 미등록');
+      alert('⚠ @'+name+'님의 이메일이 등록되어 있지 않아요.\n⚙️ 설정 → 팀원 이메일 관리에서 등록해주세요!');
     }
-  }).join('');
-  const popup=document.createElement('div');
-  popup.id='mention-popup';
-  popup.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#fff;border:1px solid #e5e5e5;border-radius:12px;padding:20px;z-index:2000;width:380px;max-height:80vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,0.12)';
-  popup.innerHTML=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px"><div style="font-size:15px;font-weight:600">@멘션 업무 요청</div><button onclick="closeMentionPopup()" style="background:none;border:none;font-size:20px;cursor:pointer;color:#aaa">×</button></div><div style="font-size:12px;color:#888;margin-bottom:12px;background:#f7f7f5;border-radius:6px;padding:8px 10px">태스크: <strong style="color:#1a1a1a">${taskName}</strong></div>${rows}<button onclick="closeMentionPopup()" style="width:100%;height:36px;border-radius:8px;border:1px solid #ddd;background:#fff;cursor:pointer;font-size:13px;color:#888;margin-top:4px">닫기</button>`;
-  const overlay=document.createElement('div');
-  overlay.id='mention-overlay';
-  overlay.style.cssText='position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.3);z-index:1999';
-  overlay.onclick=closeMentionPopup;
-  document.body.appendChild(overlay);
-  document.body.appendChild(popup);
-}
-function closeMentionPopup(){const p=document.getElementById('mention-popup');if(p)p.remove();const o=document.getElementById('mention-overlay');if(o)o.remove();}
-function copyMentionEmail(elId){
-  const el=document.getElementById(elId);if(!el)return;
-  const txt=el.textContent;
-  navigator.clipboard.writeText(txt).catch(()=>{const ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);});
-  const orig=el.textContent;el.style.color='#4caf6e';el.textContent='복사됐어요 ✓';
-  setTimeout(()=>{el.style.color='#4f90e5';el.textContent=orig;},1500);
-  addLog('📋 이메일 복사: '+txt);
+  });
 }
 
-// 이메일 확인 팝업
+
+
 function sendEmail(){
   const name=document.getElementById('tp-assignee').value.trim();
   const taskName=document.getElementById('tp-name').value.trim();
@@ -856,8 +925,8 @@ function cancelCompleted(){
   document.querySelector('.top-tab').classList.add('active');
   document.getElementById('page-project').classList.add('active');
 }
-function addCpComment(){const p=completedProjects.find(p=>p.id===currentCpId);if(!p)return;const txt=document.getElementById('cpp-comment-input').value.trim();if(!txt)return;if(!p.comments)p.comments=[];p.comments.push({text:txt,time:new Date().toLocaleString('ko-KR')});document.getElementById('cpp-comment-input').value='';renderCpComments(p);saveData();}
-function renderCpComments(p){const el=document.getElementById('cpp-comments');if(!p.comments||!p.comments.length){el.innerHTML='<div style="font-size:12px;color:#aaa;margin-bottom:8px">아직 코멘트가 없어요</div>';return;}el.innerHTML=p.comments.map((c,i)=>`<div class="comment-item"><div>${c.text}</div><div style="display:flex;justify-content:space-between"><span class="comment-time">${c.time}</span><button class="del-btn" onclick="delCpComment(${i})">✕</button></div></div>`).join('');}
+function addCpComment(){const p=completedProjects.find(p=>p.id===currentCpId);if(!p)return;const txt=document.getElementById('cpp-comment-input').value.trim();if(!txt)return;if(!p.comments)p.comments=[];p.comments.push({text:txt,time:new Date().toLocaleString('ko-KR')});document.getElementById('cpp-comment-input').value='';renderCpComments(p);saveData();if(txt.includes('@'))checkMentions(txt,p.name);}
+function renderCpComments(p){const el=document.getElementById('cpp-comments');if(!p.comments||!p.comments.length){el.innerHTML='<div style="font-size:12px;color:#aaa;margin-bottom:8px">아직 코멘트가 없어요</div>';return;}el.innerHTML=p.comments.map((c,i)=>`<div class="comment-item"><div>${c.text.replace(/@([^\s@]+)/g,'<span style="background:#dbeafe;color:#1e40af;padding:1px 5px;border-radius:4px;font-weight:600">@$1</span>')}</div><div style="display:flex;justify-content:space-between"><span class="comment-time">${c.time}</span><button class="del-btn" onclick="delCpComment(${i})">✕</button></div></div>`).join('');}
 function delCpComment(i){const p=completedProjects.find(p=>p.id===currentCpId);if(!p)return;p.comments.splice(i,1);renderCpComments(p);saveData();}
 function addCpImages(e){const p=completedProjects.find(p=>p.id===currentCpId);if(!p)return;if(!p.images)p.images=[];Array.from(e.target.files).forEach(f=>{const r=new FileReader();r.onload=ev=>{p.images.push({name:f.name,data:ev.target.result});renderCpImages(p);saveData();};r.readAsDataURL(f);});}
 function renderCpImages(p){const el=document.getElementById('cpp-images');if(!p.images||!p.images.length){el.innerHTML='';return;}el.innerHTML=p.images.map((img,i)=>`<div style="position:relative"><img src="${img.data}" class="img-thumb" onclick="window.open('${img.data}')"><button onclick="delCpImg(${i})" style="position:absolute;top:-4px;right:-4px;width:18px;height:18px;border-radius:50%;background:#ef4444;border:none;color:#fff;font-size:10px;cursor:pointer">✕</button></div>`).join('');}
@@ -867,44 +936,448 @@ function renderCpFiles(p){const el=document.getElementById('cpp-files');if(!p.fi
 function delCpFile(i){const p=completedProjects.find(p=>p.id===currentCpId);if(!p)return;p.files.splice(i,1);renderCpFiles(p);saveData();}
 
 // 재고 사이드패널
+// 수량 수정 팝업
+function openAdjustPopup(id){
+  const item=inventory.find(i=>i.id===id);if(!item)return;
+  const old=document.getElementById('adjust-popup');if(old)old.remove();
+  const oldOv=document.getElementById('adjust-popup-ov');if(oldOv)oldOv.remove();
+  const stockQ=item.stockQty||0;
+  const usedQ=item.usedQty||0;
+  const currQ=stockQ-usedQ;
+  const today=new Date().toISOString().slice(0,10);
+  const popup=document.createElement('div');
+  popup.id='adjust-popup';
+  popup.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#fff;border:1px solid #e5e5e5;border-radius:12px;padding:22px;z-index:2000;width:360px;box-shadow:0 8px 32px rgba(0,0,0,0.14)';
+  popup.innerHTML=`
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <div style="font-size:15px;font-weight:600;color:#1a1a1a">${item.name} — 수량 수정</div>
+      <button onclick="closeAdjustPopup()" style="background:none;border:none;font-size:20px;cursor:pointer;color:#aaa">×</button>
+    </div>
+    <div style="background:#f7f7f5;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:12px;color:#555;display:flex;gap:12px;flex-wrap:wrap">
+      <span>재고수량 <strong style="color:#1e40af">${stockQ} ${item.unit}</strong></span>
+      <span>사용수량 <strong style="color:#991b1b">${usedQ} ${item.unit}</strong></span>
+      <span>현재수량 <strong style="color:#166534">${currQ} ${item.unit}</strong></span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;flex-direction:column;gap:3px">
+        <label style="font-size:11px;color:#888;font-weight:500">수정할 항목</label>
+        <select id="adj-type" style="font-size:13px;padding:7px 10px;border-radius:8px;border:1px solid #ddd;outline:none;background:#fff">
+          <option value="stock">재고수량 수정</option>
+          <option value="used">사용수량 수정</option>
+          <option value="current">현재수량 직접 설정</option>
+        </select>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:3px">
+        <label style="font-size:11px;color:#888;font-weight:500">수정 후 수량 *</label>
+        <input type="number" id="adj-qty" placeholder="새 수량 입력" min="0" style="font-size:13px;padding:7px 10px;border-radius:8px;border:1px solid #ddd;outline:none">
+      </div>
+      <div style="display:flex;flex-direction:column;gap:3px">
+        <label style="font-size:11px;color:#888;font-weight:500">수정 날짜</label>
+        <input type="date" id="adj-date" value="${today}" style="font-size:13px;padding:7px 10px;border-radius:8px;border:1px solid #ddd;outline:none">
+      </div>
+      <div style="display:flex;flex-direction:column;gap:3px">
+        <label style="font-size:11px;color:#888;font-weight:500">수정 이유 *</label>
+        <input type="text" id="adj-reason" placeholder="예: 분실, 파손, 오기입 수정 등" style="font-size:13px;padding:7px 10px;border-radius:8px;border:1px solid #ddd;outline:none">
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:16px">
+      <button onclick="closeAdjustPopup()" style="flex:1;height:38px;border-radius:8px;border:1px solid #ddd;background:#fff;cursor:pointer;font-size:13px;color:#888">취소</button>
+      <button onclick="confirmAdjust(${item.id})" style="flex:2;height:38px;border-radius:8px;border:none;background:#1a1a1a;color:#fff;cursor:pointer;font-size:13px;font-weight:600">수정 저장</button>
+    </div>
+  `;
+  const ov=document.createElement('div');
+  ov.id='adjust-popup-ov';
+  ov.style.cssText='position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.2);z-index:1999';
+  ov.onclick=closeAdjustPopup;
+  document.body.appendChild(ov);
+  document.body.appendChild(popup);
+}
+function closeAdjustPopup(){
+  const p=document.getElementById('adjust-popup');if(p)p.remove();
+  const o=document.getElementById('adjust-popup-ov');if(o)o.remove();
+}
+function confirmAdjust(id){
+  const item=inventory.find(i=>i.id===id);if(!item)return;
+  const type=document.getElementById('adj-type').value;
+  const newQty=parseInt(document.getElementById('adj-qty').value);
+  const date=document.getElementById('adj-date').value||new Date().toISOString().slice(0,10);
+  const reason=document.getElementById('adj-reason').value.trim();
+  if(isNaN(newQty)||newQty<0){alert('수량을 올바르게 입력해주세요!');return;}
+  if(!reason){alert('수정 이유를 입력해주세요!');return;}
+  if(!item.adjustLog)item.adjustLog=[];
+  if(!item.stockQty&&item.stockQty!==0)item.stockQty=item.qty||0;
+  if(!item.usedQty)item.usedQty=0;
+  const beforeStock=item.stockQty,beforeUsed=item.usedQty,beforeCurr=item.stockQty-item.usedQty;
+  if(type==='stock'){item.stockQty=newQty;}
+  else if(type==='used'){item.usedQty=newQty;}
+  else{item.stockQty=newQty+item.usedQty;}
+  item.qty=item.stockQty-item.usedQty;
+  const typeLabel={stock:'재고수량',used:'사용수량',current:'현재수량'}[type];
+  const beforeVal={stock:beforeStock,used:beforeUsed,current:beforeCurr}[type];
+  const afterVal={stock:item.stockQty,used:item.usedQty,current:item.qty}[type];
+  item.adjustLog.push({date,type:typeLabel,before:beforeVal,after:afterVal,reason});
+  // 패널 수치 업데이트
+  const sd=document.getElementById('ip-stock-display');
+  const ud=document.getElementById('ip-used-display');
+  const cd=document.getElementById('ip-curr-display');
+  if(sd)sd.textContent=item.stockQty+' '+item.unit;
+  if(ud)ud.textContent=item.usedQty+' '+item.unit;
+  if(cd){cd.textContent=item.qty+' '+item.unit;cd.style.color=item.qty<=0?'#ef4444':item.qty<=item.min?'#f59e0b':'#166534';}
+  renderAdjustLog(item);
+  renderInventory();saveData();
+  if(item.qty<=0)checkStockZero(item);
+  else if(item.qty<=item.min)checkStockLow(item);
+  closeAdjustPopup();
+}
+function renderAdjustLog(item){
+  const el=document.getElementById('ip-adjust-log');if(!el)return;
+  if(!item.adjustLog||!item.adjustLog.length){el.innerHTML='<div style="font-size:12px;color:#aaa;padding:8px 0">수정 기록이 없어요</div>';return;}
+  el.innerHTML=item.adjustLog.slice().reverse().map(l=>`
+    <div style="padding:8px 12px;background:#fffbeb;border-radius:8px;margin-bottom:6px;font-size:12px;border:1px solid #fde68a">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px">
+        <span style="color:#aaa;min-width:76px">${l.date}</span>
+        <span style="color:#92400e;font-weight:700">${l.type}: ${l.before} → ${l.after}</span>
+      </div>
+      <div style="color:#888;padding-left:84px">이유: ${l.reason}</div>
+    </div>`).join('');
+}
+
 function openInvPanel(id){
   const item=inventory.find(i=>i.id===id);if(!item)return;
   currentInvId=id;
+  if(!item.stockQty&&item.stockQty!==0)item.stockQty=item.qty||0;
+  if(!item.usedQty)item.usedQty=0;
+  if(!item.usageLog)item.usageLog=[];
+  if(!item.incomingLog)item.incomingLog=[];
+  const currQ=(item.stockQty||0)-(item.usedQty||0);
   document.getElementById('ip-title').textContent=item.name;
   document.getElementById('ip-name').value=item.name;
   document.getElementById('ip-cat').value=item.cat;
-  document.getElementById('ip-qty').value=item.qty;
-  document.getElementById('ip-min').value=item.min;
   document.getElementById('ip-unit').value=item.unit;
+  document.getElementById('ip-min').value=item.min;
   document.getElementById('ip-memo').value=item.memo||'';
   document.getElementById('ip-manager').value=item.manager||'';
-  document.getElementById('ip-qty-display').textContent=item.qty+' '+item.unit;
+  // 재고현황 (읽기 전용)
+  document.getElementById('ip-stock-display').textContent=(item.stockQty||0)+' '+item.unit;
+  document.getElementById('ip-used-display').textContent=(item.usedQty||0)+' '+item.unit;
+  const currEl=document.getElementById('ip-curr-display');
+  currEl.textContent=currQ+' '+item.unit;
+  currEl.style.color=currQ<=0?'#ef4444':currQ<=item.min?'#f59e0b':'#166534';
+  // 입고기록
+  renderIncomingLog(item);
+  // 사용기록
+  renderUsageLog(item);
+  // 코멘트
+  if(!item.comments)item.comments=[];
+  renderInvComments(item);
+  // 수정기록
+  if(!item.adjustLog)item.adjustLog=[];
+  renderAdjustLog(item);
   renderInvImages(item);renderInvFiles(item);
   document.getElementById('inv-panel').classList.add('open');
   document.getElementById('side-overlay').classList.add('open');
 }
 function quickAdjust(delta){const item=inventory.find(i=>i.id===currentInvId);if(!item)return;item.qty=Math.max(0,item.qty+delta);document.getElementById('ip-qty').value=item.qty;document.getElementById('ip-qty-display').textContent=item.qty+' '+item.unit;renderInventory();saveData();if(item.qty===0)checkStockZero(item);}
+
+// 사용 기록 모달
+function completeIncoming(id){
+  const ic=incoming.find(i=>i.id===id);if(!ic)return;
+  if(!confirm('['+ic.name+'] '+ic.qty+'개를 재고에 추가할까요?'))return;
+  // 재고에서 같은 품목 찾기
+  let invItem=inventory.find(i=>i.name===ic.name);
+  if(invItem){
+    // 기존 품목에 재고수량 추가
+    if(!invItem.stockQty)invItem.stockQty=invItem.qty||0;
+    if(!invItem.usedQty)invItem.usedQty=0;
+    if(!invItem.usageLog)invItem.usageLog=[];
+    invItem.stockQty+=ic.qty;
+    invItem.qty=invItem.stockQty-invItem.usedQty;
+    alert('✅ ['+ic.name+'] 재고수량에 '+ic.qty+ic.unit+' 추가됐어요!');
+  } else {
+    // 새 품목으로 재고에 추가
+    inventory.push({id:invId++,name:ic.name,cat:'입고',qty:ic.qty,min:0,unit:'개',memo:'',manager:'',stockQty:ic.qty,usedQty:0,usageLog:[],images:[],files:[]});
+    alert('✅ ['+ic.name+'] 새 품목으로 재고에 추가됐어요!');
+  }
+  // 입고 상태를 완료로 변경
+  ic.status='arrived';
+  saveData();renderInventory();renderIncomingCal();
+}
+
+
+function openUsagePopup(id){
+  const item=inventory.find(i=>i.id===id);if(!item)return;
+  const old=document.getElementById('usage-popup');if(old)old.remove();
+  const oldOv=document.getElementById('usage-popup-ov');if(oldOv)oldOv.remove();
+  const today=new Date().toISOString().slice(0,10);
+  const popup=document.createElement('div');
+  popup.id='usage-popup';
+  popup.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#fff;border:1px solid #e5e5e5;border-radius:12px;padding:22px;z-index:2000;width:340px;box-shadow:0 8px 32px rgba(0,0,0,0.14)';
+  popup.innerHTML=`
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <div style="font-size:15px;font-weight:600;color:#1a1a1a">${item.name} — 사용 기록</div>
+      <button onclick="closeUsagePopup()" style="background:none;border:none;font-size:20px;cursor:pointer;color:#aaa">×</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div class="fg" style="display:flex;flex-direction:column;gap:3px">
+        <label style="font-size:11px;color:#888;font-weight:500">사용 수량 *</label>
+        <input type="number" id="up-qty" placeholder="0" min="1" style="font-size:13px;padding:7px 10px;border-radius:8px;border:1px solid #ddd;outline:none">
+      </div>
+      <div class="fg" style="display:flex;flex-direction:column;gap:3px">
+        <label style="font-size:11px;color:#888;font-weight:500">사용 날짜 *</label>
+        <input type="date" id="up-date" value="${today}" style="font-size:13px;padding:7px 10px;border-radius:8px;border:1px solid #ddd;outline:none">
+      </div>
+      <div class="fg" style="display:flex;flex-direction:column;gap:3px">
+        <label style="font-size:11px;color:#888;font-weight:500">사용처 / 메모</label>
+        <input type="text" id="up-memo" placeholder="예: 회의실 배치, 행사용 등" style="font-size:13px;padding:7px 10px;border-radius:8px;border:1px solid #ddd;outline:none">
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:16px">
+      <button onclick="closeUsagePopup()" style="flex:1;height:38px;border-radius:8px;border:1px solid #ddd;background:#fff;cursor:pointer;font-size:13px;color:#888">취소</button>
+      <button onclick="confirmUsage(${item.id})" style="flex:2;height:38px;border-radius:8px;border:none;background:#1a1a1a;color:#fff;cursor:pointer;font-size:13px;font-weight:600">기록 추가</button>
+    </div>
+  `;
+  const ov=document.createElement('div');
+  ov.id='usage-popup-ov';
+  ov.style.cssText='position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.2);z-index:1999';
+  ov.onclick=closeUsagePopup;
+  document.body.appendChild(ov);
+  document.body.appendChild(popup);
+  document.getElementById('up-qty').focus();
+}
+function closeUsagePopup(){
+  const p=document.getElementById('usage-popup');if(p)p.remove();
+  const o=document.getElementById('usage-popup-ov');if(o)o.remove();
+}
+function confirmUsage(id){
+  const item=inventory.find(i=>i.id===id);if(!item)return;
+  const qty=parseInt(document.getElementById('up-qty').value)||0;
+  const date=document.getElementById('up-date').value||new Date().toISOString().slice(0,10);
+  const memo=document.getElementById('up-memo').value.trim();
+  if(!qty||qty<=0){alert('사용 수량을 입력해주세요!');return;}
+  if(!item.usageLog)item.usageLog=[];
+  if(!item.stockQty&&item.stockQty!==0)item.stockQty=item.qty||0;
+  if(!item.usedQty)item.usedQty=0;
+  item.usageLog.push({qty,date,memo});
+  item.usedQty+=qty;
+  item.qty=(item.stockQty||0)-item.usedQty;
+  // 메모에 @멘션 체크
+  if(memo&&memo.includes('@'))checkMentions(memo,'[재고 사용] '+item.name);
+  closeUsagePopup();
+  // 사이드패널 수치 업데이트
+  const currQ=item.qty;
+  const sd=document.getElementById('ip-stock-display');
+  const ud=document.getElementById('ip-used-display');
+  const cd=document.getElementById('ip-curr-display');
+  if(sd)sd.textContent=(item.stockQty||0)+' '+item.unit;
+  if(ud)ud.textContent=item.usedQty+' '+item.unit;
+  if(cd){cd.textContent=currQ+' '+item.unit;cd.style.color=currQ<=0?'#ef4444':currQ<=item.min?'#f59e0b':'#166534';}
+  renderUsageLog(item);
+  renderInventory();saveData();
+  if(item.qty<=0)checkStockZero(item);
+  else if(item.qty<=item.min)checkStockLow(item);
+}
+
+// 입고기록 렌더링
+function renderIncomingLog(item){
+  const el=document.getElementById('ip-incoming-log');if(!el)return;
+  // incomingHistory에서 이 품목의 완료된 입고 내역 가져오기
+  const logs=(incomingHistory||[]).filter(ih=>ih.name===item.name);
+  if(!logs.length){el.innerHTML='<div style="font-size:12px;color:#aaa;padding:8px 0">입고 기록이 없어요</div>';return;}
+  el.innerHTML=logs.map(ih=>`
+    <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:#f0fdf4;border-radius:8px;margin-bottom:6px;font-size:12px;border:1px solid #bbf7d0">
+      <span style="color:#aaa;min-width:76px">${ih.date}</span>
+      <span style="color:#166534;font-weight:700">+${ih.qty}개</span>
+      <span style="flex:1;color:#555">${ih.supplier||'-'}</span>
+      <span style="font-size:10px;color:#aaa">${ih.completedAt||''} 완료</span>
+    </div>`).join('');
+}
+
+function renderUsageLog(item){
+  const el=document.getElementById('ip-usage-log');if(!el)return;
+  if(!item.usageLog||!item.usageLog.length){
+    el.innerHTML='<div style="font-size:12px;color:#aaa;padding:8px 0">사용 기록이 없어요</div>';return;
+  }
+  el.innerHTML=item.usageLog.slice().reverse().map((l,idx)=>`
+    <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:#fff8f8;border-radius:8px;margin-bottom:6px;font-size:12px;border:1px solid #fee2e2">
+      <span style="color:#aaa;min-width:76px">${l.date}</span>
+      <span style="color:#ef4444;font-weight:700;min-width:50px">-${l.qty} ${item.unit}</span>
+      <span style="flex:1;color:#555">${l.memo||'-'}</span>
+      <button onclick="delUsageLog(${item.usageLog.length-1-idx})" style="background:none;border:none;cursor:pointer;color:#ccc;font-size:13px;padding:0 2px">✕</button>
+    </div>`).join('');
+}
+
+function delUsageLog(idx){
+  const item=inventory.find(i=>i.id===currentInvId);if(!item||!item.usageLog)return;
+  const log=item.usageLog[idx];
+  if(!confirm('이 사용 기록을 삭제할까요?'))return;
+  item.usedQty-=log.qty;
+  if(item.usedQty<0)item.usedQty=0;
+  item.usageLog.splice(idx,1);
+  item.qty=(item.stockQty||0)-item.usedQty;
+  const sqEl=document.getElementById('ip-stock-qty');
+  const uqEl=document.getElementById('ip-used-qty');
+  const cqEl=document.getElementById('ip-current-qty');
+  if(sqEl)sqEl.textContent=(item.stockQty||0)+' '+item.unit;
+  if(uqEl)uqEl.textContent=item.usedQty+' '+item.unit;
+  if(cqEl){cqEl.textContent=item.qty+' '+item.unit;cqEl.style.color=item.qty<=0?'#ef4444':item.qty<=item.min?'#f59e0b':'#166534';}
+  renderUsageLog(item);renderInventory();saveData();
+}
+
+let currentIcId=null;
+
+function openIncomingPanel(id){
+  const ic=incoming.find(i=>i.id===id);if(!ic)return;
+  currentIcId=id;
+  document.getElementById('icp-title').textContent=ic.name+' 입고 상세';
+  document.getElementById('icp-name').value=ic.name;
+  document.getElementById('icp-qty').value=ic.qty;
+  document.getElementById('icp-date').value=ic.date||'';
+  document.getElementById('icp-supplier').value=ic.supplier||'';
+  document.getElementById('icp-manager').value=ic.manager||'';
+  document.getElementById('icp-status').value=ic.status;
+  document.getElementById('icp-comment-input').value='';
+  if(!ic.comments)ic.comments=[];
+  renderIcpComments(ic);
+  // 재고 연동 정보
+  const invItem=inventory.find(inv=>inv.name===ic.name);
+  const infoEl=document.getElementById('icp-stock-info');
+  if(invItem){
+    const curr=(invItem.stockQty||invItem.qty||0)-(invItem.usedQty||0);
+    infoEl.innerHTML=`<div style="font-size:12px;color:#555">연결된 재고: <strong>${invItem.name}</strong></div>
+      <div style="font-size:12px;color:#888;margin-top:4px">현재 재고수량: <strong style="color:#1e40af">${invItem.stockQty||invItem.qty||0} ${invItem.unit}</strong> | 현재수량: <strong style="color:#166534">${curr} ${invItem.unit}</strong></div>
+      <div style="font-size:11px;color:#aaa;margin-top:4px">완료로 변경 시 ${ic.qty}${invItem.unit} 추가 합산돼요</div>`;
+  } else {
+    infoEl.innerHTML=`<div style="font-size:12px;color:#888">재고에 <strong>${ic.name}</strong> 품목이 없어요.<br>완료로 변경 시 새 품목으로 자동 추가돼요.</div>`;
+  }
+  document.getElementById('incoming-panel').classList.add('open');
+  document.getElementById('side-overlay').classList.add('open');
+}
+
+function onPanelStatusChange(val){
+  const ic=incoming.find(i=>i.id===currentIcId);if(!ic)return;
+  const infoEl=document.getElementById('icp-stock-info');
+  if(val==='arrived'&&ic.status!=='arrived'){
+    infoEl.innerHTML=`<div style="font-size:12px;color:#166534;font-weight:600">✅ 저장 시 재고수량에 ${ic.qty}개가 자동 합산돼요!</div>`;
+  }
+}
+
+function saveIncomingPanel(){
+  const ic=incoming.find(i=>i.id===currentIcId);if(!ic)return;
+  const newStatus=document.getElementById('icp-status').value;
+  ic.name=document.getElementById('icp-name').value.trim()||ic.name;
+  ic.qty=parseInt(document.getElementById('icp-qty').value)||ic.qty;
+  ic.date=document.getElementById('icp-date').value||ic.date;
+  ic.supplier=document.getElementById('icp-supplier').value.trim();
+  ic.manager=document.getElementById('icp-manager').value.trim();
+  // 완료 전환 시 재고 합산
+  if(newStatus==='arrived'&&ic.status!=='arrived'){
+    let invItem=inventory.find(inv=>inv.name===ic.name);
+    if(invItem){
+      if(!invItem.stockQty)invItem.stockQty=invItem.qty||0;
+      if(!invItem.usedQty)invItem.usedQty=0;
+      invItem.stockQty+=ic.qty;
+      invItem.qty=invItem.stockQty-invItem.usedQty;
+    } else {
+      inventory.push({id:invId++,name:ic.name,cat:'입고',qty:ic.qty,min:0,unit:'개',memo:'',manager:'',stockQty:ic.qty,usedQty:0,usageLog:[],images:[],files:[]});
+    }
+    renderInventory();
+    alert('✅ 재고수량에 자동 합산됐어요!');
+  }
+  ic.status=newStatus;
+  saveData();renderIncomingCal();closePanel();
+}
+
+function changeIncomingStatus(id, newStatus){
+  const ic=incoming.find(i=>i.id===id);if(!ic)return;
+  const oldStatus=ic.status;
+  if(newStatus==='arrived'&&oldStatus!=='arrived'){
+    // 재고 자동 합산
+    let invItem=inventory.find(inv=>inv.name===ic.name);
+    if(invItem){
+      if(!invItem.stockQty)invItem.stockQty=invItem.qty||0;
+      if(!invItem.usedQty)invItem.usedQty=0;
+      if(!invItem.usageLog)invItem.usageLog=[];
+      invItem.stockQty+=ic.qty;
+      invItem.qty=invItem.stockQty-invItem.usedQty;
+      alert('✅ ['+ic.name+'] '+ic.qty+' '+( invItem.unit||'개')+' 재고에 합산됐어요!');
+    } else {
+      inventory.push({id:invId++,name:ic.name,cat:'입고',qty:ic.qty,min:0,unit:'개',memo:'',manager:'',stockQty:ic.qty,usedQty:0,usageLog:[],images:[],files:[]});
+      alert('✅ ['+ic.name+'] 새 품목으로 재고에 추가됐어요!');
+    }
+    renderInventory();
+  }
+  ic.status=newStatus;
+  saveData();renderIncomingCal();
+}
+
+// 재고 최소기준 도달 시 담당자 이메일 발송
+function sendLowStockEmail(id){
+  const item=inventory.find(i=>i.id===id);if(!item)return;
+  if(!item.manager){alert('담당자를 먼저 등록해주세요!\n기본 정보 → 담당자 입력 후 저장');return;}
+  const member=teamMembers.find(m=>m.name===item.manager);
+  if(!member||!member.email){alert('⚙️ 설정에서 ['+item.manager+']의 이메일을 먼저 등록해주세요!');return;}
+  const currQ=(item.stockQty||item.qty||0)-(item.usedQty||0);
+  const company=settings.companyName||'관리자';
+  const subject='[재고 부족 알림] '+item.name+' 최소 재고 기준 도달';
+  const body=item.manager+'님, 안녕하세요.\n\n['+item.name+'] 재고가 최소 기준에 도달했습니다.\n\n현재수량: '+currQ+' '+item.unit+'\n최소기준: '+item.min+' '+item.unit+'\n\n재입고를 확인해 주세요.\n\n감사합니다.\n'+company;
+  showStockAlertPopup(item.name, member.name, member.email, subject, body, '부족');
+}
+
+function checkStockLow(item){
+  if(!item.manager)return;
+  const member=teamMembers.find(m=>m.name===item.manager);
+  if(!member||!member.email)return;
+  const currQ=(item.stockQty||item.qty||0)-(item.usedQty||0);
+  if(currQ>item.min)return; // 최소기준 초과 시 발송 안함
+  const company=settings.companyName||'관리자';
+  const subject=encodeURIComponent('[재고 부족 알림] '+item.name+' 최소 재고 기준 도달');
+  const body=encodeURIComponent(
+    item.manager+'님, 안녕하세요.\n\n'+
+    '['+item.name+'] 재고가 최소 기준에 도달했습니다.\n\n'+
+    '━━━━━━━━━━━━━━━━━━━━\n'+
+    '현재수량: '+currQ+' '+item.unit+'\n'+
+    '최소기준: '+item.min+' '+item.unit+'\n'+
+    '━━━━━━━━━━━━━━━━━━━━\n\n'+
+    '재입고를 확인해 주세요.\n\n감사합니다.\n'+company
+  );
+  window.open('mailto:'+member.email+'?subject='+subject+'&body='+body);
+  addLog('📦 재고부족 메일: '+item.manager+' → '+item.name+' (현재: '+currQ+item.unit+')');
+}
+
+// 재고 알림 메일 - 직접 메일 앱 열기
+function showStockAlertPopup(itemName, name, email, subject, body, type){
+  const encSubject=encodeURIComponent(subject);
+  const encBody=encodeURIComponent(body);
+  window.open('mailto:'+email+'?subject='+encSubject+'&body='+encBody);
+  const icon=type==='품절'?'🚨':'⚠️';
+  addLog(icon+' 재고 '+type+' 메일: '+itemName+' → '+name);
+}
+function closeStockAlertPopup(){}
+
+
+
 function checkStockZero(item){
   if(item.qty>0||!item.manager)return;
   const member=teamMembers.find(m=>m.name===item.manager);
-  if(!member||!member.email)return;
-  const subject=encodeURIComponent('[재고 품절] '+item.name+' 재고가 0이 됐어요');
-  const body=encodeURIComponent(item.manager+'님,\n\n['+item.name+'] 재고가 0이 됐어요.\n\n빠른 재입고 확인 부탁드립니다.\n\n현재: 0 '+item.unit+'\n최소 기준: '+item.min+' '+item.unit);
-  window.open('mailto:'+member.email+'?subject='+subject+'&body='+body);
-  addLog('📦 품절 메일: '+item.manager+' → '+item.name);
+  if(!member||!member.email){
+    addLog('⚠ 재고 0: '+item.name+' — 담당자('+item.manager+') 이메일 미등록');
+    return;
+  }
+  const company=settings.companyName||'관리자';
+  const subject='[재고 품절 알림] '+item.name+' 재고가 0이 됐어요';
+  const body=item.manager+'님, 안녕하세요.\n\n['+item.name+'] 재고가 0이 됐어요.\n\n빠른 재입고 확인 부탁드립니다.\n\n현재: 0 '+item.unit+'\n최소 기준: '+item.min+' '+item.unit+'\n\n감사합니다.\n'+company;
+  showStockAlertPopup(item.name, member.name, member.email, subject, body, '품절');
   sendSlack('🚨 재고 품절: ['+item.name+'] 담당: '+item.manager);
 }
 function saveInvPanel(){
   const item=inventory.find(i=>i.id===currentInvId);if(!item)return;
   item.name=document.getElementById('ip-name').value.trim()||item.name;
   item.cat=document.getElementById('ip-cat').value.trim();
-  item.qty=parseInt(document.getElementById('ip-qty').value)||0;
   item.min=parseInt(document.getElementById('ip-min').value)||0;
   item.unit=document.getElementById('ip-unit').value.trim()||item.unit;
   item.memo=document.getElementById('ip-memo').value;
   item.manager=document.getElementById('ip-manager').value.trim();
   document.getElementById('ip-title').textContent=item.name;
-  document.getElementById('ip-qty-display').textContent=item.qty+' '+item.unit;
   renderInventory();saveData();
   const btn=document.querySelector('#inv-panel .save-panel-btn');
   btn.textContent='저장됐어요 ✓';btn.style.background='#4caf6e';
@@ -917,7 +1390,49 @@ function addInvFiles(e){const item=inventory.find(i=>i.id===currentInvId);if(!it
 function renderInvFiles(item){const el=document.getElementById('ip-files');if(!item.files||!item.files.length){el.innerHTML='';return;}el.innerHTML=item.files.map((f,i)=>`<div class="file-row"><span style="font-size:15px">📄</span><span class="file-name">${f.name}</span><span class="file-size">${f.size}</span><a href="${f.data}" download="${f.name}" style="color:#4caf6e;font-size:11px">다운</a><button class="del-btn" onclick="delInvFile(${i})">✕</button></div>`).join('');}
 function delInvFile(i){const item=inventory.find(i=>i.id===currentInvId);if(!item)return;item.files.splice(i,1);renderInvFiles(item);saveData();}
 
-function closePanel(){document.querySelectorAll('.side-panel').forEach(p=>p.classList.remove('open'));document.getElementById('side-overlay').classList.remove('open');currentTaskId=null;currentInvId=null;currentCpId=null;}
+function addIcpComment(){
+  const ic=incoming.find(i=>i.id===currentIcId);if(!ic)return;
+  const txt=document.getElementById('icp-comment-input').value.trim();if(!txt)return;
+  if(!ic.comments)ic.comments=[];
+  ic.comments.push({text:txt,time:new Date().toLocaleString('ko-KR')});
+  document.getElementById('icp-comment-input').value='';
+  renderIcpComments(ic);saveData();
+  if(txt.includes('@'))checkMentions(txt,'[입고] '+ic.name);
+}
+function renderIcpComments(ic){
+  const el=document.getElementById('icp-comments');if(!el)return;
+  if(!ic||!ic.comments||!ic.comments.length){
+    el.innerHTML='<div style="font-size:12px;color:#aaa;margin-bottom:8px">아직 코멘트가 없어요</div>';return;
+  }
+  el.innerHTML=ic.comments.map((c,i)=>`<div class="comment-item"><div>${c.text.replace(/@([^\s@]+)/g,'<span style="background:#dbeafe;color:#1e40af;padding:1px 5px;border-radius:4px;font-weight:600">@$1</span>')}</div><div style="display:flex;justify-content:space-between"><span class="comment-time">${c.time}</span><button class="del-btn" onclick="delIcpComment(${i})">✕</button></div></div>`).join('');
+}
+function delIcpComment(i){
+  const ic=incoming.find(ic=>ic.id===currentIcId);if(!ic||!ic.comments)return;
+  ic.comments.splice(i,1);renderIcpComments(ic);saveData();
+}
+
+function addInvComment(){
+  const item=inventory.find(i=>i.id===currentInvId);if(!item)return;
+  const txt=document.getElementById('ip-memo').value.trim();if(!txt)return;
+  if(!item.comments)item.comments=[];
+  item.comments.push({text:txt,time:new Date().toLocaleString('ko-KR')});
+  document.getElementById('ip-memo').value='';
+  renderInvComments(item);saveData();
+  if(txt.includes('@'))checkMentions(txt,'[재고] '+item.name);
+}
+function renderInvComments(item){
+  const el=document.getElementById('ip-comments');if(!el)return;
+  if(!item.comments||!item.comments.length){
+    el.innerHTML='<div style="font-size:12px;color:#aaa;margin-bottom:8px">아직 코멘트가 없어요</div>';return;
+  }
+  el.innerHTML=item.comments.map((c,i)=>`<div class="comment-item"><div>${c.text.replace(/@([^\s@]+)/g,'<span style="background:#dbeafe;color:#1e40af;padding:1px 5px;border-radius:4px;font-weight:600">@$1</span>')}</div><div style="display:flex;justify-content:space-between"><span class="comment-time">${c.time}</span><button class="del-btn" onclick="delInvComment(${i})">✕</button></div></div>`).join('');
+}
+function delInvComment(i){
+  const item=inventory.find(i=>i.id===currentInvId);if(!item||!item.comments)return;
+  item.comments.splice(i,1);renderInvComments(item);saveData();
+}
+
+function closePanel(){document.querySelectorAll('.side-panel').forEach(p=>p.classList.remove('open'));document.getElementById('side-overlay').classList.remove('open');currentTaskId=null;currentInvId=null;currentCpId=null;currentIcId=null;}
 
 // 렌더링
 function renderProjMetrics(){
@@ -936,7 +1451,7 @@ function renderDB(){
       <td><span class="badge s-${t.status}">${sLabel(t.status)}</span></td>
       <td><span class="badge p-${t.priority}">${pLabel(t.priority)}</span></td>
       <td style="color:#888">${t.date||'-'}</td>
-      <td><div style="display:flex;align-items:center;gap:6px"><div class="stock-bar" style="width:70px"><div class="stock-bar-fill" style="width:${progPct(t)}%;background:#4caf6e"></div></div><span style="font-size:11px;color:#aaa">${progPct(t)}%</span></div></td>
+      <td><div style="white-space:nowrap"><div class="stock-bar" style="width:70px"><div class="stock-bar-fill" style="width:${progPct(t)}%;background:#4caf6e"></div></div><span style="font-size:11px;color:#aaa">${progPct(t)}%</span></div></td>
       <td onclick="event.stopPropagation()"><button class="del-btn" onclick="deleteTask(${t.id})">✕</button></td>
     </tr>`).join('');
 }
@@ -972,11 +1487,11 @@ function renderTaskCal(){
     if(today.getFullYear()===tcYear&&today.getMonth()===tcMonth&&today.getDate()===d)cell.classList.add('today');
     const ds=tcYear+'-'+pad(tcMonth+1)+'-'+pad(d);
     const dt=tasks.filter(t=>t.date===ds);
-    cell.innerHTML=`<div class="cnum">${d}</div>`+dt.map(t=>`<div class="cchip ${chipCls(t)}">${t.name}</div>`).join('');
+    cell.innerHTML=`<div class="cnum">${d}</div>`+dt.map(t=>`<div class="cchip ${chipCls(t)}" onclick="event.stopPropagation();openTaskPanel(${t.id})" title="${t.name}">${t.name}</div>`).join('');
     cell.addEventListener('click',()=>{
       const p=document.getElementById('tc-detail');
       if(!dt.length){p.innerHTML=`<span style="color:#aaa">${tcMonth+1}월 ${d}일 — 마감 태스크 없음</span>`;return;}
-      p.innerHTML=`<div style="font-size:12px;font-weight:600;color:#888;margin-bottom:8px">${tcMonth+1}월 ${d}일 마감 (${dt.length}개)</div>`+dt.map(t=>`<div class="cdr" style="cursor:pointer" onclick="openTaskPanel(${t.id})"><span style="flex:1;font-weight:500">${t.name}</span><span class="badge s-${t.status}">${sLabel(t.status)}</span><span class="badge p-${t.priority}">${pLabel(t.priority)}</span></div>`).join('');
+      p.innerHTML=`<div style="font-size:12px;font-weight:600;color:#888;margin-bottom:8px">${tcMonth+1}월 ${d}일 마감 (${dt.length}개)</div>`+dt.map(t=>`<div class="cdr" style="cursor:pointer" onclick="openTaskPanel(${t.id})"><span style="flex:1;font-weight:500">${t.name}</span><span class="badge s-${t.status}">${sLabel(t.status)}</span><span class="badge p-${t.priority}">${pLabel(t.priority)}</span><span style="font-size:11px;color:#aaa">${t.assignee||''}</span></div>`).join('');
     });
     grid.appendChild(cell);
   }
@@ -988,12 +1503,29 @@ function renderInvMetrics(){
 function renderInventory(){
   renderInvMetrics();
   document.getElementById('inv-body').innerHTML=inventory.map(item=>{
-    const s=stockSt(item);const pct=item.min>0?Math.min(100,Math.round(item.qty/item.min*100)):100;const barColor=s==='out'?'#ef4444':s==='low'?'#f59e0b':'#4caf6e';
-    return`<tr onclick="openInvPanel(${item.id})"><td style="font-weight:500">${item.name}${item.memo?'<span style="font-size:10px;color:#888;margin-left:5px">📝</span>':''}</td><td style="color:#888">${item.cat}</td><td style="color:#888">${item.manager||'-'}</td><td style="font-weight:600">${item.qty} ${item.unit}</td><td style="color:#aaa">${item.min} ${item.unit}</td><td><span class="badge ${stockCls(s)}">${stockLb(s)}</span></td><td><div class="stock-bar-wrap"><div class="stock-bar"><div class="stock-bar-fill" style="width:${pct}%;background:${barColor}"></div></div><span style="font-size:11px;color:#aaa">${pct}%</span></div></td><td onclick="event.stopPropagation()"><div style="display:flex;gap:4px"><button class="btn" style="height:26px;font-size:12px;padding:0 8px" onclick="adjustInv(${item.id},-1)">－</button><button class="btn" style="height:26px;font-size:12px;padding:0 8px" onclick="adjustInv(${item.id},1)">＋</button></div></td><td onclick="event.stopPropagation()"><button class="del-btn" onclick="deleteInv(${item.id})">✕</button></td></tr>`;
+    const s=stockSt(item);
+    const stockQty=item.stockQty||item.qty||0;
+    const usedQty=item.usedQty||0;
+    const currentQty=stockQty-usedQty;
+    item.qty=currentQty;
+    return`<tr style="cursor:pointer" onclick="openInvPanel(${item.id})">
+      <td style="font-weight:500">${item.name}</td>
+      <td style="color:#888">${item.cat}</td>
+      <td style="color:#888">${item.manager||'-'}</td>
+      <td style="font-weight:600;color:#1e40af">${stockQty} ${item.unit}</td>
+      <td style="color:#ef4444">${usedQty} ${item.unit}</td>
+      <td style="font-weight:700;color:${currentQty<=0?'#ef4444':currentQty<=item.min?'#f59e0b':'#166534'}">${currentQty} ${item.unit}</td>
+      <td style="color:#aaa">${item.min} ${item.unit}</td>
+      <td><span class="badge ${stockCls(s)}">${stockLb(s)}</span></td>
+      <td onclick="event.stopPropagation()">
+        <button style="height:26px;font-size:11px;padding:0 10px;border-radius:6px;border:1px solid #fca5a5;background:#fee2e2;color:#991b1b;cursor:pointer;font-weight:600" onclick="openUsagePopup(${item.id})">사용 기록</button>
+      </td>
+      <td onclick="event.stopPropagation()"><button class="del-btn" onclick="deleteInv(${item.id})">✕</button></td>
+    </tr>`;
   }).join('');
   document.getElementById('inv-chart').innerHTML=inventory.map(item=>{
     const s=stockSt(item);const pct=item.min>0?Math.min(100,Math.round(item.qty/item.min*100)):100;const barColor=s==='out'?'#ef4444':s==='low'?'#f59e0b':'#4caf6e';
-    return`<div style="background:#fff;border:1px solid #ebebeb;border-radius:8px;padding:10px 14px;margin-bottom:8px;cursor:pointer" onclick="openInvPanel(${item.id})"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span style="font-size:13px;font-weight:500">${item.name}</span><div style="display:flex;align-items:center;gap:8px"><span style="font-size:12px;color:#888">${item.qty}/${item.min} ${item.unit}</span><span class="badge ${stockCls(s)}">${stockLb(s)}</span></div></div><div style="height:10px;background:#f0f0f0;border-radius:5px;overflow:hidden"><div style="height:100%;width:${pct}%;background:${barColor};border-radius:5px;transition:width 0.4s"></div></div><div style="display:flex;justify-content:space-between;margin-top:4px"><span style="font-size:10px;color:#aaa">0</span><span style="font-size:10px;font-weight:500;color:#aaa">${pct}%</span><span style="font-size:10px;color:#aaa">최소: ${item.min}</span></div></div>`;
+    return`<div style="background:#fff;border:1px solid #ebebeb;border-radius:8px;padding:10px 14px;margin-bottom:8px;cursor:pointer" onclick="openUsagePopup(${item.id})"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span style="font-size:13px;font-weight:500">${item.name}</span><div style="display:flex;align-items:center;gap:8px"><span style="font-size:12px;color:#888">${item.qty}/${item.min} ${item.unit}</span><span class="badge ${stockCls(s)}">${stockLb(s)}</span></div></div><div style="height:10px;background:#f0f0f0;border-radius:5px;overflow:hidden"><div style="height:100%;width:${pct}%;background:${barColor};border-radius:5px;transition:width 0.4s"></div></div><div style="display:flex;justify-content:space-between;margin-top:4px"><span style="font-size:10px;color:#aaa">0</span><span style="font-size:10px;font-weight:500;color:#aaa">${pct}%</span><span style="font-size:10px;color:#aaa">최소: ${item.min}</span></div></div>`;
   }).join('');
 }
 function renderIncomingCal(){
@@ -1006,16 +1538,72 @@ function renderIncomingCal(){
     const cell=document.createElement('div');cell.className='ccell';
     if(today.getFullYear()===icYear&&today.getMonth()===icMonth&&today.getDate()===d)cell.classList.add('today');
     const ds=icYear+'-'+pad(icMonth+1)+'-'+pad(d);const di=incoming.filter(i=>i.date===ds);
-    cell.innerHTML=`<div class="cnum">${d}</div>`+di.map(i=>`<div class="cchip chip-incoming">${i.name}</div>`).join('');
-    cell.addEventListener('click',()=>{const p=document.getElementById('ic-detail');if(!di.length){p.innerHTML=`<span style="color:#aaa">${icMonth+1}월 ${d}일 — 입고 예정 없음</span>`;return;}p.innerHTML=`<div style="font-size:12px;font-weight:600;color:#888;margin-bottom:8px">${icMonth+1}월 ${d}일 입고 예정 (${di.length}건)</div>`+di.map(i=>`<div class="cdr"><span style="flex:1;font-weight:500">${i.name}</span><span style="font-size:12px;color:#888">${i.qty}·${i.supplier}</span><span class="badge" style="${icStSty(i.status)}">${icStLb(i.status)}</span></div>`).join('');});
+    cell.innerHTML=`<div class="cnum">${d}</div>`+di.map(i=>`<div class="cchip chip-incoming" onclick="event.stopPropagation();openIncomingPanel(${i.id})" title="${i.name}">${i.name}</div>`).join('');
+    cell.addEventListener('click',()=>{const p=document.getElementById('ic-detail');if(!di.length){p.innerHTML=`<span style="color:#aaa">${icMonth+1}월 ${d}일 — 입고 예정 없음</span>`;return;}p.innerHTML=`<div style="font-size:12px;font-weight:600;color:#888;margin-bottom:8px">${icMonth+1}월 ${d}일 입고 예정 (${di.length}건)</div>`+di.map(i=>`<div class="cdr" style="cursor:pointer" onclick="openIncomingPanel(${i.id})"><span style="flex:1;font-weight:500">${i.name}</span><span style="font-size:12px;color:#888">${i.qty}·${i.supplier}</span><span class="badge" style="${icStSty(i.status)}">${icStLb(i.status)}</span></div>`).join('');});
     grid.appendChild(cell);
   }
-  document.getElementById('ic-list-body').innerHTML=incoming.map(i=>`<tr><td style="font-weight:500">${i.name}</td><td>${i.qty}</td><td style="color:#888">${i.date}</td><td style="color:#888">${i.supplier||'-'}</td><td><span class="badge" style="${icStSty(i.status)}">${icStLb(i.status)}</span></td><td><button class="del-btn" onclick="deleteIncoming(${i.id})">✕</button></td></tr>`).join('');
+  document.getElementById('ic-list-body').innerHTML=incoming.map(i=>`
+  <tr>
+    <td style="font-weight:500;cursor:pointer" onclick="openIncomingPanel(${i.id})">${i.name}</td>
+    <td style="cursor:pointer" onclick="openIncomingPanel(${i.id})">${i.qty}</td>
+    <td style="color:#888;cursor:pointer" onclick="openIncomingPanel(${i.id})">${i.date}</td>
+    <td style="color:#888;cursor:pointer" onclick="openIncomingPanel(${i.id})">${i.supplier||'-'}</td>
+    <td style="color:#888;cursor:pointer" onclick="openIncomingPanel(${i.id})">${i.manager||'-'}</td>
+    <td style="white-space:nowrap">
+      <select onchange="changeIncomingStatus(${i.id},this.value)" style="font-size:12px;padding:4px 8px;border-radius:6px;border:1px solid #ddd;background:#fff;cursor:pointer;outline:none">
+        <option value="scheduled" ${i.status==='scheduled'?'selected':''}>예정</option>
+        <option value="confirmed" ${i.status==='confirmed'?'selected':''}>확정</option>
+      </select>
+      <button onclick="completeIncomingItem(${i.id})" style="height:28px;padding:0 10px;font-size:11px;font-weight:600;border:none;border-radius:6px;background:#4caf6e;color:#fff;cursor:pointer;white-space:nowrap;margin-left:4px">입고완료</button>
+    </td>
+    <td><button class="del-btn" onclick="deleteIncoming(${i.id})">✕</button></td>
+  </tr>`).join('');
 }
 function renderCompleted(){
   document.getElementById('completed-body').innerHTML=completedProjects.map(p=>`<div class="done-card" onclick="openCompletedPanel(${p.id})"><div class="done-card-hdr"><span class="done-title">${p.name}</span><span class="badge s-done">완료</span></div><div class="done-meta"><span>팀: ${p.team}</span><span>기간: ${p.startDate} ~ ${p.endDate}</span><span>태스크: ${p.tasks.length}개</span></div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:${p.result?'10px':'0'}">${p.tasks.map(t=>`<span class="badge" style="background:#f5f5f5;color:#666">${t}</span>`).join('')}</div>${p.result?`<div style="font-size:12px;color:#888;border-top:1px solid #f0f0f0;padding-top:10px">결과: ${p.result}</div>`:''}</div>`).join('');
 }
-function renderAll(){saveData();renderProjMetrics();renderDB();renderKanban();renderChecklist();renderTaskCal();renderInventory();renderIncomingCal();renderCompleted();}
+
+function renderInHistory(){
+  const el=document.getElementById('inhistory-body');if(!el)return;
+  if(!incomingHistory.length){
+    el.innerHTML='<tr><td colspan="6" style="text-align:center;color:#aaa;padding:24px;font-size:13px">아직 입고 완료된 이력이 없어요</td></tr>';return;
+  }
+  el.innerHTML=incomingHistory.map(ih=>`
+    <tr>
+      <td style="font-weight:500">${ih.name}</td>
+      <td style="font-weight:600;color:#1e40af">${ih.qty}개</td>
+      <td style="color:#888">${ih.date}</td>
+      <td style="color:#888">${ih.supplier||'-'}</td>
+      <td><span style="font-size:11px;background:#dcfce7;color:#166534;padding:3px 8px;border-radius:20px;font-weight:600">✓ ${ih.completedAt} 반영</span></td>
+      <td><button onclick="cancelIncomingHistory(${ih.id})" style="height:28px;padding:0 10px;font-size:11px;font-weight:600;border:1px solid #fca5a5;border-radius:6px;background:#fee2e2;color:#991b1b;cursor:pointer">입고 취소</button></td>
+    </tr>`).join('');
+}
+function completeIncomingItem(id){
+  const ic=incoming.find(i=>i.id===id);if(!ic)return;
+  if(!confirm('['+ic.name+'] '+ic.qty+'개 입고완료 처리할까요?\n재고수량에 자동 합산됩니다.'))return;
+  // 재고 합산
+  let invItem=inventory.find(inv=>inv.name===ic.name);
+  if(invItem){
+    if(!invItem.stockQty&&invItem.stockQty!==0)invItem.stockQty=invItem.qty||0;
+    if(!invItem.usedQty)invItem.usedQty=0;
+    invItem.stockQty+=ic.qty;
+    invItem.qty=invItem.stockQty-invItem.usedQty;
+  } else {
+    inventory.push({id:invId++,name:ic.name,cat:'입고',qty:ic.qty,min:0,unit:'개',memo:'',manager:'',stockQty:ic.qty,usedQty:0,usageLog:[],adjustLog:[],images:[],files:[]});
+  }
+  // 이력으로 이동
+  if(!incomingHistory)incomingHistory=[];
+  incomingHistory.unshift({
+    id:ic.id,name:ic.name,qty:ic.qty,date:ic.date,
+    supplier:ic.supplier||'-',completedAt:new Date().toISOString().slice(0,10)
+  });
+  // 입고 목록에서 제거
+  incoming=incoming.filter(i=>i.id!==id);
+  saveData();renderInventory();renderIncomingCal();renderInHistory();
+  alert('✅ 입고완료! 재고에 합산됐어요.');
+}
+
+function renderAll(){saveData();renderProjMetrics();renderDB();renderKanban();renderChecklist();renderTaskCal();renderInventory();renderIncomingCal();renderCompleted();renderInHistory();}
 
 function addTask(){
   const name=document.getElementById('f-name').value.trim();if(!name)return;
@@ -1028,7 +1616,7 @@ function deleteTask(id){if(confirm('태스크를 삭제할까요?')){tasks=tasks
 function toggleDone(id){const t=tasks.find(t=>t.id===id);if(t)autoMoveToCompleted(t);}
 function addInventory(){
   const name=document.getElementById('i-name').value.trim();if(!name)return;
-  inventory.push({id:invId++,name,cat:document.getElementById('i-cat').value.trim()||'기타',qty:parseInt(document.getElementById('i-qty').value)||0,min:parseInt(document.getElementById('i-min').value)||0,unit:document.getElementById('i-unit').value.trim()||'개',memo:'',manager:document.getElementById('i-manager').value.trim(),images:[],files:[]});
+  const newQty=parseInt(document.getElementById('i-qty').value)||0;inventory.push({id:invId++,name,cat:document.getElementById('i-cat').value.trim()||'기타',qty:newQty,min:parseInt(document.getElementById('i-min').value)||0,unit:document.getElementById('i-unit').value.trim()||'개',memo:'',manager:document.getElementById('i-manager').value.trim(),stockQty:newQty,usedQty:0,usageLog:[],images:[],files:[]});
   document.getElementById('i-name').value='';document.getElementById('i-cat').value='';document.getElementById('i-qty').value='';document.getElementById('i-min').value='';document.getElementById('i-unit').value='';document.getElementById('i-manager').value='';
   renderInventory();saveData();
 }
@@ -1036,8 +1624,8 @@ function deleteInv(id){if(confirm('품목을 삭제할까요?')){inventory=inven
 function adjustInv(id,delta){const i=inventory.find(i=>i.id===id);if(i){i.qty=Math.max(0,i.qty+delta);renderInventory();saveData();if(i.qty===0)checkStockZero(i);}}
 function addIncoming(){
   const name=document.getElementById('ic-name').value.trim();if(!name)return;
-  incoming.push({id:icId++,name,qty:parseInt(document.getElementById('ic-qty').value)||0,date:document.getElementById('ic-date').value,supplier:document.getElementById('ic-supplier').value.trim(),status:document.getElementById('ic-status').value});
-  document.getElementById('ic-name').value='';document.getElementById('ic-qty').value='';document.getElementById('ic-supplier').value='';
+  incoming.push({id:icId++,name,qty:parseInt(document.getElementById('ic-qty').value)||0,date:document.getElementById('ic-date').value,supplier:document.getElementById('ic-supplier').value.trim(),manager:document.getElementById('ic-manager').value.trim(),status:document.getElementById('ic-status').value});
+  document.getElementById('ic-name').value='';document.getElementById('ic-qty').value='';document.getElementById('ic-supplier').value='';document.getElementById('ic-manager').value='';
   renderIncomingCal();saveData();
 }
 function deleteIncoming(id){if(confirm('입고 항목을 삭제할까요?')){incoming=incoming.filter(i=>i.id!==id);renderIncomingCal();saveData();}}
@@ -1057,6 +1645,7 @@ function goPage(name,el){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   el.classList.add('active');
   document.getElementById('page-'+name).classList.add('active');
+  if(name==='inhistory')renderInHistory();
 }
 function goSettings(){
   document.querySelectorAll('.top-tab').forEach(t=>t.classList.remove('active'));
