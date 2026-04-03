@@ -169,7 +169,7 @@ h1{font-size:22px;font-weight:600;color:#1a1a1a}
       <button class="btn" style="font-size:11px;height:28px;padding:0 10px;color:#ef4444;border-color:#fca5a5" onclick="if(confirm('모든 데이터를 초기화할까요?')){localStorage.clear();location.reload();}">초기화</button>
     </div>
   </div>
-  <div class="subtitle">태스크 · 재고 · 입고 캘린더 · 완료 프로젝트</div>
+  <div class="subtitle">태스크 · 재고 · 입고 캘린더 · 입고이력 · 완료 프로젝트</div>
   <div class="top-nav">
     <div class="top-tab active" onclick="goPage('project',this)">프로젝트 관리</div>
     <div class="top-tab" onclick="goPage('inventory',this)">재고 관리</div>
@@ -1564,6 +1564,7 @@ function renderCompleted(){
 }
 
 function cancelIncomingHistory(id){
+  if(!incomingHistory)incomingHistory=[];
   const ih=incomingHistory.find(i=>i.id===id);if(!ih)return;
   if(!confirm('['+ih.name+'] 입고를 취소할까요?\n재고수량에서 '+ih.qty+'개가 차감됩니다.'))return;
   // 재고 마이너스
@@ -1590,6 +1591,7 @@ function cancelIncomingHistory(id){
 }
 
 function renderInHistory(){
+  if(!incomingHistory)incomingHistory=[];
   const el=document.getElementById('inhistory-body');if(!el)return;
   if(!incomingHistory.length){
     el.innerHTML='<tr><td colspan="6" style="text-align:center;color:#aaa;padding:24px;font-size:13px">아직 입고 완료된 이력이 없어요</td></tr>';return;
@@ -1606,7 +1608,7 @@ function renderInHistory(){
 }
 function completeIncomingItem(id){
   const ic=incoming.find(i=>i.id===id);if(!ic)return;
-  if(!confirm('['+ic.name+'] '+ic.qty+'개 입고완료 처리할까요?\n재고수량에 자동 합산됩니다.'))return;
+  if(!incomingHistory)incomingHistory=[];
   // 재고 합산
   let invItem=inventory.find(inv=>inv.name===ic.name);
   if(invItem){
@@ -1626,7 +1628,7 @@ function completeIncomingItem(id){
   // 입고 목록에서 제거
   incoming=incoming.filter(i=>i.id!==id);
   saveData();renderInventory();renderIncomingCal();renderInHistory();
-  alert('✅ 입고완료! 재고에 합산됐어요.');
+  addLog('✅ 입고완료: '+ic.name+' '+ic.qty+'개 재고 합산');
 }
 
 function renderAll(){saveData();renderProjMetrics();renderDB();renderKanban();renderChecklist();renderTaskCal();renderInventory();renderIncomingCal();renderCompleted();renderInHistory();}
