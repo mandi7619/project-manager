@@ -1957,11 +1957,15 @@ function renderAutoMappingUI(type, container, notionProps){
 
   const rows = appFields.map(f=>{
     const currentVal = notionFieldMap[type]?.[f.key] || '';
-    const options = notionPropNames.map(n=>{
+    // 추천 타입 먼저, 나머지는 뒤에
+    const recommended = notionPropNames.filter(n=>f.types.includes(notionProps[n].type));
+    const others = notionPropNames.filter(n=>!f.types.includes(notionProps[n].type));
+    const sorted = [...recommended, ...others];
+    const options = sorted.map(n=>{
       const ptype = notionProps[n].type;
       const icon = typeIcons[ptype]||'•';
       const isRecommended = f.types.includes(ptype);
-      return `<option value="${n}" ${currentVal===n?'selected':''} ${isRecommended?'':'style="color:#aaa"'}>${icon} ${n} (${ptype})</option>`;
+      return `<option value="${n}" ${currentVal===n?'selected':''} ${isRecommended?'':'style="color:#aaa"'}>${icon} ${n} (${ptype})${isRecommended?' ⭐':''}</option>`;
     }).join('');
     const isAutoMatched = !!notionFieldMap[type]?.[f.key];
     return `
