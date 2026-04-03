@@ -349,23 +349,6 @@ h1{font-size:22px;font-weight:600;color:#1a1a1a}
 
     <!-- 📨 Slack -->
     <div class="settings-section">
-      <div class="settings-title">🔗 Make Webhook 연동 (Notion 알림)</div>
-      <div class="settings-desc">Make Webhook URL을 입력하면 @멘션 시 Make를 통해 Notion DB에 자동으로 기록되고 알림이 발송돼요.<br>현재 연결 URL: https://hook.eu1.make.com/xgxk2bjujxf8xa4odjqd6t9iwdtk3wn8</div>
-      <div class="settings-row">
-        <label>Webhook URL</label>
-        <input class="settings-inp" id="make-webhook-url" placeholder="https://hook.eu1.make.com/...">
-      </div>
-      <div class="settings-row">
-        <label>알림 상태</label>
-        <span id="make-status" class="status-badge status-off">비활성</span>
-      </div>
-      <div style="display:flex;gap:8px;margin-top:8px">
-        <button class="btn btn-primary" onclick="saveMakeWebhook()">저장</button>
-        <button class="btn" style="color:#ef4444;border-color:#fca5a5" onclick="clearMakeWebhook()">연동 해제</button>
-      </div>
-    </div>
-
-    <div class="settings-section">
       <div class="settings-title">📨 Slack 알림 연동</div>
       <div class="settings-desc">Slack Incoming Webhook URL을 입력하면 태스크 추가/완료 시 Slack 채널로 자동 알림이 전송돼요.</div>
       <div class="settings-row">
