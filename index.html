@@ -1563,6 +1563,32 @@ function renderCompleted(){
   document.getElementById('completed-body').innerHTML=completedProjects.map(p=>`<div class="done-card" onclick="openCompletedPanel(${p.id})"><div class="done-card-hdr"><span class="done-title">${p.name}</span><span class="badge s-done">완료</span></div><div class="done-meta"><span>팀: ${p.team}</span><span>기간: ${p.startDate} ~ ${p.endDate}</span><span>태스크: ${p.tasks.length}개</span></div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:${p.result?'10px':'0'}">${p.tasks.map(t=>`<span class="badge" style="background:#f5f5f5;color:#666">${t}</span>`).join('')}</div>${p.result?`<div style="font-size:12px;color:#888;border-top:1px solid #f0f0f0;padding-top:10px">결과: ${p.result}</div>`:''}</div>`).join('');
 }
 
+function cancelIncomingHistory(id){
+  const ih=incomingHistory.find(i=>i.id===id);if(!ih)return;
+  if(!confirm('['+ih.name+'] 입고를 취소할까요?\n재고수량에서 '+ih.qty+'개가 차감됩니다.'))return;
+  // 재고 마이너스
+  let invItem=inventory.find(inv=>inv.name===ih.name);
+  if(invItem){
+    if(!invItem.stockQty&&invItem.stockQty!==0)invItem.stockQty=invItem.qty||0;
+    if(!invItem.usedQty)invItem.usedQty=0;
+    invItem.stockQty=Math.max(0,invItem.stockQty-ih.qty);
+    invItem.qty=Math.max(0,invItem.stockQty-invItem.usedQty);
+    if(!invItem.adjustLog)invItem.adjustLog=[];
+    invItem.adjustLog.push({date:new Date().toISOString().slice(0,10),type:'재고수량',before:invItem.stockQty+ih.qty,after:invItem.stockQty,reason:'입고취소 ('+ih.supplier+')'});
+  }
+  // 입고 캘린더로 복귀
+  incoming.push({id:ih.id,name:ih.name,qty:ih.qty,date:ih.date,supplier:ih.supplier,status:'scheduled'});
+  incomingHistory=incomingHistory.filter(i=>i.id!==id);
+  saveData();renderInventory();renderIncomingCal();renderInHistory();
+  // 입고 캘린더 탭으로 이동
+  document.querySelectorAll('.top-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  const icTab=Array.from(document.querySelectorAll('.top-tab')).find(t=>t.textContent.trim()==='입고 캘린더');
+  if(icTab)icTab.classList.add('active');
+  document.getElementById('page-incoming').classList.add('active');
+  alert('입고 취소됐어요. 재고에서 '+ih.qty+'개 차감됐습니다.');
+}
+
 function renderInHistory(){
   const el=document.getElementById('inhistory-body');if(!el)return;
   if(!incomingHistory.length){
