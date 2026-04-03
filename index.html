@@ -1884,6 +1884,8 @@ function loadNotionFieldMap(){
   try{
     const s=localStorage.getItem('pm_notion_fieldmap');
     if(s)notionFieldMap=JSON.parse(s);
+    const t=localStorage.getItem('pm_notion_types');
+    if(t){window._notionDetectedTypes=JSON.parse(t);}
   }catch(e){}
 }
 function saveNotionFieldMap(){
@@ -1926,6 +1928,17 @@ async function detectDbProps(type){
     }
     return;
   }
+
+  // 감지된 속성 타입 저장
+  if(!window._notionDetectedTypes) window._notionDetectedTypes={};
+  window._notionDetectedTypes[type]={};
+  Object.keys(props).forEach(k=>{ window._notionDetectedTypes[type][k]=props[k].type; });
+  // localStorage에도 저장
+  try{
+    const saved=JSON.parse(localStorage.getItem('pm_notion_types')||'{}');
+    saved[type]=window._notionDetectedTypes[type];
+    localStorage.setItem('pm_notion_types',JSON.stringify(saved));
+  }catch(e){}
 
   renderAutoMappingUI(type, mapEl, props);
 }
@@ -2062,23 +2075,22 @@ function resetFieldMapping(type){
 // 매핑된 필드를 사용해 Notion 속성 빌드
 function buildNotionPropsWithMap(type, data){
   const fieldMap = notionFieldMap[type];
-  // 매핑이 없으면 기본 속성 함수 사용
-  if(!fieldMap || Object.keys(fieldMap).length===0){
-    const defaults={task:taskToNotionProps,inventory:invToNotionProps,incoming:incToNotionProps,completed:cpToNotionProps};
-    return defaults[type]?.(data);
-  }
-
   const props={};
   const appFields=APP_FIELDS[type];
 
+  // 감지된 속성 타입 정보 사용
+  const detectedTypes = window._notionDetectedTypes && window._notionDetectedTypes[type] ? window._notionDetectedTypes[type] : {};
+
   appFields.forEach(f=>{
-    const notionKey=fieldMap[f.key];
+    const notionKey=fieldMap ? fieldMap[f.key] : null;
     if(!notionKey) return;
     let val=data[f.key];
-    if(val===undefined||val===null) return;
+    if(val===undefined||val===null||val==='') return;
+
+    const detectedType = detectedTypes[notionKey] || '';
 
     // title
-    if(f.key==='name'||f.key==='name'){
+    if(f.key==='name'){
       props[notionKey]={title:[{text:{content:String(val)}}]};
     }
     // number
@@ -2087,27 +2099,19 @@ function buildNotionPropsWithMap(type, data){
     }
     // date
     else if(['date','startDate','endDate'].includes(f.key)){
-      props[notionKey]={date:val&&val!=='-'?{start:val}:null};
+      if(val && val!=='-') props[notionKey]={date:{start:val}};
     }
-    // select (상태, 우선순위 등)
-    else if(f.key==='status'&&type==='task'){
-      const labels={todo:'할 일',inprogress:'진행 중',review:'검토 중',done:'완료'};
-      props[notionKey]={select:{name:labels[val]||val}};
+    // select 타입이면 select로
+    else if(detectedType==='select'){
+      const statusLabels={todo:'할 일',inprogress:'진행 중',review:'검토 중',done:'완료',scheduled:'예정',confirmed:'확정',arrived:'입고완료',high:'높음',mid:'중간',low:'낮음'};
+      const label=statusLabels[val]||val;
+      props[notionKey]={select:{name:label}};
     }
-    else if(f.key==='priority'){
-      const labels={high:'높음',mid:'중간',low:'낮음'};
-      props[notionKey]={select:{name:labels[val]||val}};
-    }
-    else if(f.key==='status'&&type==='incoming'){
-      const labels={scheduled:'예정',confirmed:'확정',arrived:'입고완료'};
-      props[notionKey]={select:{name:labels[val]||val}};
-    }
-    else if(f.key==='stockSt'){
-      props[notionKey]={select:{name:val<=0?'품절':val<=data.min?'부족':'정상'}};
-    }
-    // rich_text (나머지)
+    // rich_text
     else{
-      props[notionKey]={rich_text:[{text:{content:String(val||'')}}]};
+      const statusLabels={todo:'할 일',inprogress:'진행 중',review:'검토 중',done:'완료',scheduled:'예정',confirmed:'확정',arrived:'입고완료',high:'높음',mid:'중간',low:'낮음'};
+      const label=statusLabels[val]||String(val||'');
+      props[notionKey]={rich_text:[{text:{content:label}}]};
     }
   });
 
