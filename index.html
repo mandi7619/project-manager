@@ -165,6 +165,7 @@ h1{font-size:22px;font-weight:600;color:#1a1a1a}
   <div class="app-header">
     <h1>프로젝트 관리 앱</h1>
     <div class="header-btns">
+      <button class="btn" style="font-size:11px;height:28px;padding:0 10px;color:#166534;border-color:#86efac;background:#f0fdf4" onclick="notionPullAll()" title="Notion에서 최신 데이터 가져오기">📥 불러오기</button>
       <button class="icon-btn" onclick="goSettings()" title="설정">⚙️</button>
       <button class="btn" style="font-size:11px;height:28px;padding:0 10px;color:#ef4444;border-color:#fca5a5" onclick="if(confirm('모든 데이터를 초기화할까요?')){localStorage.clear();location.reload();}">초기화</button>
     </div>
@@ -480,9 +481,15 @@ h1{font-size:22px;font-weight:600;color:#1a1a1a}
       </div>
       <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
         <button class="btn btn-primary" onclick="saveNotionSettings()">저장</button>
-        <button class="btn" onclick="notionSyncAll()" style="background:#f0f7ff;border-color:#93c5fd;color:#1e40af;font-weight:600">🔄 전체 동기화</button>
-        <button class="btn" onclick="notionTestConn()" style="background:#f0fdf4;border-color:#86efac;color:#166534;font-weight:600">🔗 연결 테스트</button>
+        <button class="btn" onclick="notionSyncAll()" style="background:#f0f7ff;border-color:#93c5fd;color:#1e40af;font-weight:600">🔄 전체 내보내기 (앱→Notion)</button>
+        <button class="btn" onclick="notionPullAll()" style="background:#f0fdf4;border-color:#86efac;color:#166534;font-weight:600">📥 전체 가져오기 (Notion→앱)</button>
+        <button class="btn" onclick="notionTestConn()" style="background:#fff7ed;border-color:#fed7aa;color:#c2410c;font-weight:600">🔗 연결 테스트</button>
         <button class="btn" style="color:#ef4444;border-color:#fca5a5" onclick="clearNotionSettings()">연동 해제</button>
+      </div>
+      <div style="display:flex;gap:16px;margin-top:8px;font-size:11px;color:#aaa;flex-wrap:wrap">
+        <span id="notion-last-sync"></span>
+        <span id="notion-last-pull"></span>
+        <span style="color:#4ade80">● 5분마다 자동 불러오기 실행 중</span>
       </div>
       <!-- 동기화 진행 표시 -->
       <div id="notion-sync-progress" style="display:none;margin-top:10px;padding:10px 14px;background:#f0f7ff;border:1px solid #bfdbfe;border-radius:8px;font-size:12px;color:#1e40af"></div>
@@ -854,7 +861,9 @@ function updateSettingsStatus(){
   updateMakeStatus();
   loadNotionSettings();
   const lastEl=document.getElementById('notion-last-sync');
-  if(lastEl&&notionSettings.lastSync)lastEl.textContent='마지막 동기화: '+notionSettings.lastSync;
+  if(lastEl&&notionSettings.lastSync)lastEl.textContent='마지막 내보내기: '+notionSettings.lastSync;
+  const pullEl=document.getElementById('notion-last-pull');
+  if(pullEl&&notionSettings.lastPull)pullEl.textContent='마지막 불러오기: '+notionSettings.lastPull;
 }
 
 // 팀원
@@ -873,6 +882,16 @@ function addTeamMember(){
 function delTeamMember(i){if(confirm('팀원을 삭제할까요?')){teamMembers.splice(i,1);renderTeam();saveData();}}
 
 // @멘션 팝업
+function getEmailContent(name,taskName,text,company){
+  const subject=settings.emailSubject
+    ? settings.emailSubject.replace('{회사명}',company).replace('{이름}',name).replace('{태스크}',taskName)
+    : '['+company+'] 업무 요청: '+taskName;
+  const body=settings.emailBody
+    ? settings.emailBody.replace(/{이름}/g,name).replace(/{태스크}/g,taskName).replace(/{내용}/g,text).replace(/{회사명}/g,company)
+    : '안녕하세요 '+name+'님,\n\n['+taskName+'] 태스크와 관련하여 업무 요청드립니다.\n\n'+text+'\n\n확인 후 회신 부탁드립니다.\n\n감사합니다.\n'+company;
+  return{subject,body};
+}
+
 function checkMentions(text,taskName){
   const mentions=text.match(/@(\S+)/g);if(!mentions)return;
   const company=settings.companyName||'업무 요청';
@@ -883,7 +902,10 @@ function checkMentions(text,taskName){
       sendToMake(name,member.email,taskName,text,company);
       notionMentionLog(name,taskName,text);
       const {subject:subj,body:bod}=getEmailContent(name,taskName,text,company);
-      window.open('mailto:'+member.email+'?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(bod));
+      // window.open 대신 a 태그 클릭으로 팝업차단 우회
+      const a=document.createElement('a');
+      a.href='mailto:'+member.email+'?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(bod);
+      a.click();
       addLog('@멘션 메일: '+name+' ('+member.email+') → '+taskName);
     } else {
       addLog('⚠ @'+name+' — 이메일 미등록');
@@ -931,9 +953,11 @@ function goSettings_page(){
 }
 function confirmSendEmail(name,email,taskName){
   const extra=document.getElementById('email-extra-msg').value.trim();
-  const subject=encodeURIComponent('[태스크 알림] '+taskName);
-  const body=encodeURIComponent('안녕하세요 '+name+'님,\n\n['+taskName+'] 태스크가 배정되었습니다.\n'+(extra?'\n'+extra+'\n':'')+'\n확인 부탁드립니다.\n\n감사합니다.');
-  window.open('mailto:'+email+'?subject='+subject+'&body='+body);
+  const subject='[태스크 알림] '+taskName;
+  const body='안녕하세요 '+name+'님,\n\n['+taskName+'] 태스크가 배정되었습니다.\n'+(extra?'\n'+extra+'\n':'')+'\n확인 부탁드립니다.\n\n감사합니다.';
+  const a=document.createElement('a');
+  a.href='mailto:'+email+'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
+  a.click();
   addLog('✉ 이메일: '+name+' → '+taskName);
   document.getElementById('email-popup').remove();document.getElementById('email-popup-overlay').remove();
 }
@@ -975,20 +999,28 @@ function openTaskPanel(id){
   document.getElementById('task-panel').classList.add('open');
   document.getElementById('side-overlay').classList.add('open');
 }
-function saveTaskPanel(){
+async function saveTaskPanel(){
   const t=tasks.find(t=>t.id===currentTaskId);if(!t)return;
   t.name=document.getElementById('tp-name').value.trim()||t.name;
   t.assignee=document.getElementById('tp-assignee').value.trim();
   t.date=document.getElementById('tp-date').value;
   t.priority=document.getElementById('tp-priority').value;
   const newStatus=document.getElementById('tp-status').value;
-  if(newStatus==='done'){t.status='done';saveData();autoMoveToCompleted(t);return;}
+  const btn=document.querySelector('#task-panel .save-panel-btn');
+  btn.textContent='저장 중...';btn.style.background='#888';btn.disabled=true;
+  if(newStatus==='done'){t.status='done';saveData();
+    await notionAutoSyncWithMap('task',t);
+    autoMoveToCompleted(t);
+    btn.disabled=false;return;
+  }
   t.status=newStatus;
   document.getElementById('tp-title').textContent=t.name;
+  saveData();
+  // Notion 자동 동기화 (이미지/파일 포함)
+  await notionAutoSyncWithMap('task',t);
   renderAll();
-  const btn=document.querySelector('#task-panel .save-panel-btn');
-  btn.textContent='저장됐어요 ✓';btn.style.background='#4caf6e';
-  setTimeout(()=>{btn.textContent='저장';btn.style.background='#1a1a1a';},1500);
+  btn.textContent='저장됐어요 ✓';btn.style.background='#4caf6e';btn.disabled=false;
+  setTimeout(()=>{btn.textContent='저장';btn.style.background='#1a1a1a';},1800);
 }
 function moveToCompleted(){const t=tasks.find(t=>t.id===currentTaskId);if(!t)return;autoMoveToCompleted(t);}
 function addTaskComment(){
@@ -2125,8 +2157,13 @@ async function notionAutoSyncWithMap(type, data){
   const dbId=dbMap[type];if(!dbId)return;
   try{
     const props=buildNotionPropsWithMap(type,data);
-    await notionCreatePage(dbId,props);
+    const page=await notionCreatePage(dbId,props);
     addLog('📋 Notion 자동 동기화: ['+type+'] '+(data.name||''));
+    // 태스크 저장 시 이미지/파일도 Notion에 업로드
+    if(type==='task'&&page&&page.id){
+      const hasFiles=(data.images&&data.images.length)||(data.files&&data.files.length);
+      if(hasFiles) await notionSyncTaskFiles(page.id,data);
+    }
   }catch(e){addLog('❌ Notion 동기화 실패: '+e.message);}
 }
 
@@ -2289,6 +2326,91 @@ async function notionCreatePage(dbId,properties){
   return await notionApiCall('pages','POST',{parent:{database_id:dbId},properties});
 }
 
+// ===== Notion File Upload API =====
+// base64 dataURL → Blob
+function dataURLtoBlob(dataURL){
+  const [header,data]=dataURL.split(',');
+  const mime=header.match(/:(.*?);/)[1];
+  const binary=atob(data);
+  const arr=new Uint8Array(binary.length);
+  for(let i=0;i<binary.length;i++)arr[i]=binary.charCodeAt(i);
+  return new Blob([arr],{type:mime});
+}
+
+// 단일 파일을 Notion File Upload API로 업로드 → file_upload ID 반환
+async function notionUploadFile(filename, dataURL, mimeType){
+  const proxy=notionSettings.proxyUrl;
+  const token=notionSettings.token;
+  if(!proxy||!token)throw new Error('Proxy 또는 Token 미설정');
+
+  // 1단계: 업로드 세션 생성
+  const initRes=await fetch(proxy+'/file-uploads',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','Authorization':'Bearer '+token,'Notion-Version':'2022-06-28'},
+    body:JSON.stringify({filename,content_type:mimeType||'application/octet-stream'})
+  });
+  if(!initRes.ok){const e=await initRes.text();throw new Error('파일업로드 초기화 실패: '+e);}
+  const initData=await initRes.json();
+  const uploadId=initData.id;
+  const uploadUrl=initData.upload_url;
+
+  // 2단계: 파일 데이터 전송 (PUT)
+  const blob=dataURLtoBlob(dataURL);
+  const formData=new FormData();
+  formData.append('file',blob,filename);
+  const putRes=await fetch(uploadUrl,{method:'PUT',body:formData});
+  if(!putRes.ok){const e=await putRes.text();throw new Error('파일 PUT 실패: '+e);}
+
+  return uploadId; // Notion file_upload ID
+}
+
+// 태스크의 images/files를 Notion에 업로드하고 page에 첨부
+async function notionSyncTaskFiles(pageId, task){
+  if(!pageId)return;
+  const proxy=notionSettings.proxyUrl;
+  const token=notionSettings.token;
+  if(!proxy||!token)return;
+
+  const allFiles=[];
+  // 이미지
+  if(task.images&&task.images.length){
+    for(const img of task.images){
+      try{
+        const uploadId=await notionUploadFile(img.name,img.data,img.data.split(';')[0].split(':')[1]);
+        allFiles.push({type:'file_upload',file_upload:{id:uploadId}});
+        addLog('📎 이미지 업로드: '+img.name);
+      }catch(e){addLog('❌ 이미지 업로드 실패: '+img.name+' — '+e.message);}
+    }
+  }
+  // 파일
+  if(task.files&&task.files.length){
+    for(const f of task.files){
+      try{
+        const mime=f.data.split(';')[0].split(':')[1]||'application/octet-stream';
+        const uploadId=await notionUploadFile(f.name,f.data,mime);
+        allFiles.push({type:'file_upload',file_upload:{id:uploadId}});
+        addLog('📎 파일 업로드: '+f.name);
+      }catch(e){addLog('❌ 파일 업로드 실패: '+f.name+' — '+e.message);}
+    }
+  }
+
+  // 파일이 있으면 page 속성 PATCH (files 타입 속성 '첨부파일'에 추가)
+  if(allFiles.length>0){
+    try{
+      // 파일 속성명을 찾기 — fieldMap에서 'files' 타입 우선, 없으면 '첨부파일' 기본값
+      const map=notionFieldMap['task']||{};
+      let filePropName=map['images']||map['files']||'첨부파일';
+      await fetch(proxy+'/pages/'+pageId,{
+        method:'PATCH',
+        headers:{'Content-Type':'application/json','Authorization':'Bearer '+token,'Notion-Version':'2022-06-28'},
+        body:JSON.stringify({properties:{[filePropName]:{files:allFiles}}})
+      });
+      addLog('✅ Notion 파일 첨부 완료 ('+allFiles.length+'개)');
+    }catch(e){addLog('❌ Notion 파일 첨부 실패: '+e.message);}
+  }
+}
+
+
 // 태스크 → Notion 페이지
 function taskToNotionProps(t){
   return{
@@ -2418,12 +2540,203 @@ async function notionMentionLog(name,taskName,text){
   }
 }
 
+// ===== Notion → 앱 불러오기 (양방향 동기화) =====
+
+// Notion 페이지 속성 → 앱 데이터 변환
+function notionPageToAppData(type, page){
+  const p = page.properties;
+  const map = notionFieldMap[type] || {};
+  const types = (window._notionDetectedTypes||{})[type] || {};
+
+  function getVal(key){
+    const notionKey = map[key];
+    if(!notionKey || !p[notionKey]) return '';
+    const prop = p[notionKey];
+    switch(prop.type){
+      case 'title': return prop.title?.map(t=>t.plain_text).join('')||'';
+      case 'rich_text': return prop.rich_text?.map(t=>t.plain_text).join('')||'';
+      case 'select': return prop.select?.name||'';
+      case 'status': return prop.status?.name||'';
+      case 'number': return prop.number??0;
+      case 'date': return prop.date?.start||'';
+      case 'people': return prop.people?.map(p=>p.name).join(', ')||'';
+      case 'checkbox': return prop.checkbox||false;
+      default: return '';
+    }
+  }
+
+  const statusRevMap={'할 일':'todo','진행 중':'inprogress','검토 중':'review','완료':'done'};
+  const priorityRevMap={'높음':'high','중간':'mid','낮음':'low'};
+  const incStatusRevMap={'예정':'scheduled','확정':'confirmed','입고완료':'arrived'};
+
+  if(type==='task'){
+    return {
+      _notionId: page.id,
+      name: getVal('name')||'(제목 없음)',
+      assignee: getVal('assignee'),
+      status: statusRevMap[getVal('status')]||'todo',
+      priority: priorityRevMap[getVal('priority')]||'mid',
+      date: getVal('date'),
+      comments:[], images:[], files:[]
+    };
+  }
+  if(type==='inventory'){
+    const stockQty = Number(getVal('stockQty'))||0;
+    const usedQty  = Number(getVal('usedQty'))||0;
+    return {
+      _notionId: page.id,
+      name: getVal('name')||'(제목 없음)',
+      cat: getVal('cat'),
+      manager: getVal('manager'),
+      stockQty, usedQty,
+      qty: stockQty - usedQty,
+      min: Number(getVal('min'))||0,
+      unit: getVal('unit')||'개',
+      comments:[], usageLog:[], adjustLog:[], incomingLog:[]
+    };
+  }
+  if(type==='incoming'){
+    return {
+      _notionId: page.id,
+      name: getVal('name')||'(제목 없음)',
+      qty: Number(getVal('qty'))||0,
+      date: getVal('date'),
+      supplier: getVal('supplier'),
+      manager: getVal('manager'),
+      status: incStatusRevMap[getVal('status')]||'scheduled'
+    };
+  }
+  if(type==='completed'){
+    return {
+      _notionId: page.id,
+      name: getVal('name')||'(제목 없음)',
+      team: getVal('team'),
+      startDate: getVal('startDate'),
+      endDate: getVal('endDate'),
+      result: getVal('result'),
+      tasks:[], comments:[], images:[], files:[]
+    };
+  }
+  return null;
+}
+
+// Notion DB 전체 조회 (페이지네이션 포함)
+async function fetchNotionDB(dbId){
+  let results=[], cursor=undefined;
+  do {
+    const body = cursor ? {page_size:100, start_cursor:cursor} : {page_size:100};
+    const res = await notionApiCall('databases/'+dbId+'/query','POST',body);
+    results = results.concat(res.results||[]);
+    cursor = res.has_more ? res.next_cursor : undefined;
+  } while(cursor);
+  return results;
+}
+
+// Notion → 앱 전체 가져오기
+async function notionPullAll(silent=false){
+  if(!notionSettings.token||!notionSettings.proxyUrl){
+    if(!silent) alert('Proxy URL과 API Token을 먼저 설정해주세요!');
+    return;
+  }
+  const prog = document.getElementById('notion-sync-progress');
+  if(!silent){ prog.style.display='block'; prog.innerHTML='📥 Notion에서 불러오는 중...'; }
+
+  let pulled=0, failed=0;
+
+  async function pullType(type, dbId, arrRef, idRef){
+    if(!dbId) return;
+    if(!notionFieldMap[type]||!Object.keys(notionFieldMap[type]).length){
+      if(!silent) prog.innerHTML+=`<br>⏭ [${type}] 필드 매핑 없음 — 속성 감지 먼저 해주세요`;
+      return;
+    }
+    try{
+      const pages = await fetchNotionDB(dbId);
+      const converted = pages
+        .filter(p=>!p.archived)
+        .map(p=>{ try{ return notionPageToAppData(type,p); }catch(e){ return null; } })
+        .filter(Boolean);
+
+      // 기존 데이터와 병합: _notionId 기준으로 업데이트, 없으면 추가
+      const existing = arrRef();
+      converted.forEach(item=>{
+        const idx = existing.findIndex(e=>e._notionId===item._notionId);
+        if(idx>=0){
+          // 로컬 전용 필드(comments, images, files 등) 보존
+          const local = existing[idx];
+          existing[idx] = {...item,
+            id: local.id,
+            comments: local.comments||[],
+            images: local.images||[],
+            files: local.files||[],
+            usageLog: local.usageLog||[],
+            adjustLog: local.adjustLog||[],
+            incomingLog: local.incomingLog||[],
+            tasks: local.tasks||[]
+          };
+        } else {
+          item.id = Date.now() + Math.random();
+          existing.push(item);
+        }
+      });
+      pulled += converted.length;
+      if(!silent) prog.innerHTML+=`<br>✅ [${type}] ${converted.length}건 반영`;
+    } catch(e){
+      failed++;
+      if(!silent) prog.innerHTML+=`<br>❌ [${type}] 실패: `+e.message;
+      addLog('❌ Notion Pull ['+type+'] 실패: '+e.message);
+    }
+  }
+
+  await pullType('task',     notionSettings.taskDb, ()=>tasks,             ()=>taskId);
+  await pullType('inventory',notionSettings.invDb,  ()=>inventory,         ()=>invId);
+  await pullType('incoming', notionSettings.incDb,  ()=>incoming,          ()=>icId);
+  await pullType('completed',notionSettings.cpDb,   ()=>completedProjects, ()=>cpId);
+
+  saveData();
+  renderAll();
+  updatePullStatus();
+  addLog('📥 Notion Pull 완료: '+pulled+'건 반영, '+failed+'건 실패');
+
+  if(!silent){
+    prog.innerHTML+=`<br><br>✅ 불러오기 완료 — ${pulled}건 반영 / ${failed}건 실패`;
+    setTimeout(()=>{prog.style.display='none';},5000);
+  }
+}
+
+// 마지막 Pull 시각 표시
+function updatePullStatus(){
+  const now=new Date().toLocaleString('ko-KR');
+  notionSettings.lastPull=now;
+  localStorage.setItem('pm_notion',JSON.stringify(notionSettings));
+  const el=document.getElementById('notion-last-pull');
+  if(el) el.textContent='마지막 불러오기: '+now;
+}
+
+// 5분 자동 폴링
+let _pullTimer=null;
+function startAutoPull(){
+  if(_pullTimer) clearInterval(_pullTimer);
+  _pullTimer = setInterval(()=>{
+    if(notionSettings.token && notionSettings.proxyUrl && Object.keys(notionFieldMap).some(k=>Object.keys(notionFieldMap[k]||{}).length>0)){
+      notionPullAll(true); // silent
+    }
+  }, 5 * 60 * 1000);
+}
+startAutoPull();
+
 loadData();
 const now=new Date();
 const todayStr=now.getFullYear()+'-'+pad(now.getMonth()+1)+'-'+pad(now.getDate());
 document.getElementById('f-date').value=todayStr;
 document.getElementById('ic-date').value=todayStr;
 renderAll();
+
+// 앱 시작 시 자동 Pull (설정 있으면)
+setTimeout(()=>{
+  if(notionSettings.token && notionSettings.proxyUrl){
+    notionPullAll(true);
+  }
+}, 1500);
 </script>
 </body>
 </html>
